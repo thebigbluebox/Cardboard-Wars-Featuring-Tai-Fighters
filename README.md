@@ -1,4 +1,3 @@
-2014GraphicsFinal
+A Google Cardboard Implementation of a Flight Simulator
 =================
-
-An android application for the final of my graphics course at McMaster University
+This is a virtual reality flight simulator for android using google cardboard with interfaces to bluetooth controllers.
