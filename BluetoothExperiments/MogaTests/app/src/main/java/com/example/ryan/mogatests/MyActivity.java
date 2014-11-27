@@ -2,6 +2,7 @@ package com.example.ryan.mogatests;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.bda.controller.Controller;
@@ -11,14 +12,16 @@ import com.bda.controller.Controller;
 public class MyActivity extends Activity {
 
     Controller mController = null;
+    float mX = 0;
+    float mY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
-        //mController = Controller.getInstance(this);
-        //mController.init();
+        mController = Controller.getInstance(this);
+        mController.init();
     }
 
 
@@ -41,7 +44,7 @@ public class MyActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*@Override
+    @Override
     protected void onPause()
     {
         super.onPause();
@@ -69,5 +72,54 @@ public class MyActivity extends Activity {
             mController.exit();
         }
         super.onDestroy();
-    }*/
+    }
+
+
+    void update()
+    {
+        if(mController != null)
+        {
+            // test if controller is connected
+            if(mController.getState(Controller.STATE_CONNECTION) == Controller.ACTION_CONNECTED)
+            {
+                //test if button a is pressed
+                if(mController.getKeyCode(Controller.KEYCODE_BUTTON_A) == Controller.ACTION_DOWN)
+                {
+                    //button a is pressed
+                    Log.d("Label", "a is pushed");
+                }
+                else
+                {
+                    //button A is released
+                }
+
+                //test if d-pad left is pressed
+                if(mController.getKeyCode(Controller.KEYCODE_DPAD_LEFT) == Controller.ACTION_DOWN)
+                {
+                    //d pad left is pressed
+                    Log.d("Label", "dpad left is pushed");
+                }
+                else
+                {
+                    //dpad left is released
+                }
+
+                //read left analog stick
+                mX = mController.getAxisValue(Controller.AXIS_X);
+                mY = mController.getAxisValue(Controller.AXIS_Y);
+
+                //test if controller is in low power state
+                if(mController.getState(Controller.STATE_POWER_LOW) == Controller.ACTION_TRUE)
+                {
+                    //low power state
+                }
+                else
+                {
+                    //normal power state
+                }
+            }
+        }
+    }
+
+
 }
