@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BDA Listener Test</string>
+    <string name="example_activity_label">BDA Listener Test</string>
+    <string name="states">States</string>
+    <string name="keys">Keys</string>
+    <string name="motions">Motions</string>
+
+</resources>
