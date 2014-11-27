@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">BDA JNI Listener Demo</string>
-    <string name="example_activity_label">BDA JNI Listener Demo</string>
-
-</resources>
