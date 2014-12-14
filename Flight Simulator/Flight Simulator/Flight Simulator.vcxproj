@@ -77,14 +77,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DrawClass.cpp" />
     <ClCompile Include="LightControl.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="StereoCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DrawClass.h" />
     <ClInclude Include="GlutHeader.h" />
     <ClInclude Include="LightControl.h" />
-    <ClInclude Include="StereoCamera.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

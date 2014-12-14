@@ -1,11 +1,18 @@
 #include "GlutHeader.h"
+#include "DrawClass.h"
 #include <stdio.h>
 struct setting{
 	GLdouble windowx = 1000;
 	GLdouble windowy = 1000;
+	GLdouble sterooffset;
+	GLdouble eyeDistance;
+	GLdouble parallaxFactor;
+	GLdouble convergenceDistance;
+	GLdouble z = 0;
+	GLdouble x = 0;
 }Set;
 	GLfloat lightposition[] = { 0, 2, 0 };
-
+	DrawClass scene;
 
 void keyboard(unsigned char key, int x, int y)
 {
@@ -25,27 +32,31 @@ void special(int key, int x, int y)
 	switch (key)
 	{
 	case GLUT_KEY_LEFT:
-
+		scene.moveLeft();
+		//Set.x += 0.1;
 		break;
 
 	case GLUT_KEY_RIGHT:
-
+		scene.moveRight();
+		//Set.x -= 0.1;
 		break;
 
 	case GLUT_KEY_UP:
-
+		scene.moveForward();
+		//Set.z += 0.1;
 		break;
 
 	case GLUT_KEY_DOWN:
-
+		scene.moveBackward();
+		//Set.z -= 0.1;
 		break;
 
 	case GLUT_KEY_HOME:
-
+		scene.angleUp();
 		break;
 
 	case GLUT_KEY_END:
-
+		scene.angleDown();
 		break;
 	}
 	glutPostRedisplay();
@@ -57,15 +68,11 @@ void init(void)
 	glEnable(GL_LIGHT0);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
+	//not sure we still need to enable color material?
 	glEnable(GL_COLOR_MATERIAL);
 
 	glEnable(GL_CULL_FACE);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45, (Set.windowx/2)/(Set.windowy), 1, 100);
-	printf("%d",Set.windowx / Set.windowy);
-	//gluPerspective(45, 1, 1, 100);
-
+	
 }
 
 /* display function - GLUT display callback function
@@ -75,26 +82,31 @@ void display(void)
 {
 	glLightfv(GL_LIGHT0, GL_POSITION, lightposition);
 	glShadeModel(GL_SMOOTH);
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glViewport(0, 0, Set.windowx/2, Set.windowy);
+	
+	//Viewport Left
+	glViewport(0, 0, Set.windowx / 2, Set.windowy);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(65, (Set.windowx / 2) / (Set.windowy), 1, 50);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glTranslated(0.2, 0, 0);
+	gluLookAt(0, 0, 6, 0, 0, 0, 0, 1, 0);
+	scene.draw();
 	
-	gluLookAt(1, 0, 6, 0, 0, 0, 0, 1, 0);
 	
-	glColor3f(1, 1, 1);
-	glutSolidCone(0.7, 0.5, 15, 30);
-
+	//Viewport Right
 	glViewport(Set.windowx / 2, 0, Set.windowx / 2, Set.windowy);
-
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(65, (Set.windowx / 2) / (Set.windowy), 1, 50);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glTranslated(-0.2, 0, 0);
+	gluLookAt(0, 0, 6, 0, 0, 0, 0, 1, 0);
+	scene.draw();
 
-	gluLookAt(-1, 0, 6, 0, 0, 0, 0, 1, 0);
-
-	glColor3f(1, 1, 1);
-	glutSolidCone(0.7, 0.5, 15, 30);
 	glutSwapBuffers();
 }
 
@@ -105,7 +117,6 @@ void reshape(int x, int y)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45, (Set.windowx / 2) / (Set.windowy), 1, 100);
-
 }
 
 /* main function - program entry point */

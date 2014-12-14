@@ -21,7 +21,7 @@
     <ClCompile Include="LightControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StereoCamera.cpp">
+    <ClCompile Include="DrawClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,7 +32,7 @@
     <ClInclude Include="LightControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StereoCamera.h">
+    <ClInclude Include="DrawClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
