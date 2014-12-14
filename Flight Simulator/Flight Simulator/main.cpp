@@ -1,5 +1,6 @@
 #include "GlutHeader.h"
 #include "DrawClass.h"
+#include "GUIClass.h"
 #include <stdio.h>
 struct setting{
 	GLdouble windowx = 1000;
@@ -13,6 +14,7 @@ struct setting{
 }Set;
 	GLfloat lightposition[] = { 0, 2, 0 };
 	DrawClass scene;
+	GUIClass gui;
 
 void keyboard(unsigned char key, int x, int y)
 {
@@ -72,6 +74,7 @@ void init(void)
 	glEnable(GL_COLOR_MATERIAL);
 
 	glEnable(GL_CULL_FACE);
+	gui.set(Set.windowx, Set.windowy);
 	
 }
 
@@ -86,6 +89,7 @@ void display(void)
 	
 	//Viewport Left
 	glViewport(0, 0, Set.windowx / 2, Set.windowy);
+	gui.draw();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(65, (Set.windowx / 2) / (Set.windowy), 1, 50);
@@ -98,6 +102,7 @@ void display(void)
 	
 	//Viewport Right
 	glViewport(Set.windowx / 2, 0, Set.windowx / 2, Set.windowy);
+	gui.draw();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(65, (Set.windowx / 2) / (Set.windowy), 1, 50);
@@ -117,6 +122,7 @@ void reshape(int x, int y)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45, (Set.windowx / 2) / (Set.windowy), 1, 100);
+	gui.set(x, y);
 }
 
 /* main function - program entry point */

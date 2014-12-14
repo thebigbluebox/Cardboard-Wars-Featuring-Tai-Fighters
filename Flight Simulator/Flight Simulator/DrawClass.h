@@ -1,5 +1,4 @@
 #include "GlutHeader.h"
-#include <math.h>
 
 class DrawClass{
 public:

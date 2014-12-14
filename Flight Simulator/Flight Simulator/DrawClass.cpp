@@ -100,4 +100,7 @@ void DrawClass::draw(void)
 	glEnd();
 	glColor3f(1, 0, 0);
 	glutSolidCone(0.5, 2, 50, 60);
+	glColor3f(1, 0, 0);
+	glTranslated(0.5, 0, 1);
+	glutSolidCube(0.5);
 }
