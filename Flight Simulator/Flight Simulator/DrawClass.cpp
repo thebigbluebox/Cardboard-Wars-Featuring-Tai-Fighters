@@ -24,32 +24,32 @@ void DrawClass::decreaseSpeed(void)
 
 void DrawClass::rollLeft(void)
 {
-	angleZ -= 0.2;
+	angleZ -= 0.5;
 }
 
 void DrawClass::rollRight(void)
 {
-	angleZ += 0.2;
+	angleZ += 0.5;
 }
 
 void DrawClass::pitchUp(void)
 {
-	angleX += 0.2;
+	angleX += 0.5;
 }
 
 void DrawClass::pitchDown(void)
 {
-	angleX -= 0.2;
+	angleX -= 0.5;
 }
 
 void DrawClass::yawLeft(void)
 {
-	angleY -= 0.2;
+	angleY -= 0.5;
 }
 
 void DrawClass::yawRight(void)
 {
-	angleY += 0.2;
+	angleY += 0.5;
 }
 
 void DrawClass::moveBackward(void)
@@ -85,6 +85,11 @@ void DrawClass::draw(void)
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 	glTranslated(x, 0, z);
+	glPushMatrix();
+	glRotated(angleZ, 0, 0, 1);
+	glPushMatrix();
+	glRotated(angleY, 0, 1, 0);
+	glPushMatrix();
 	glRotated(angleX, 1, 0, 0);
 	glColor3f(1, 0, 1);
 	glBegin(GL_QUADS);
@@ -113,4 +118,7 @@ void DrawClass::draw(void)
 	glColor3f(1, 0, 0);
 	glTranslated(0.5, 0, 1);
 	glutSolidCube(0.5);
+	glPopMatrix();
+	glPopMatrix();
+	glPopMatrix();
 }

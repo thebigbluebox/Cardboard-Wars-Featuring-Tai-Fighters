@@ -24,6 +24,24 @@ void keyboard(unsigned char key, int x, int y)
 	case 27:
 		exit(0);
 		break;
+
+	case 'w':
+	case 'W':
+		scene.moveForward();
+		break;
+	case 'a':
+	case 'A':
+		scene.moveLeft();
+		break;
+	case 's':
+	case 'S':
+		scene.moveBackward();
+		break;
+	case 'd':
+	case 'D':
+		scene.moveRight();
+		break;
+
 	}
 	glutPostRedisplay();
 }
@@ -34,31 +52,31 @@ void special(int key, int x, int y)
 	switch (key)
 	{
 	case GLUT_KEY_LEFT:
-		scene.moveLeft();
+		scene.rollLeft();
 		//Set.x += 0.1;
 		break;
 
 	case GLUT_KEY_RIGHT:
-		scene.moveRight();
+		scene.rollRight();
 		//Set.x -= 0.1;
 		break;
 
 	case GLUT_KEY_UP:
-		scene.moveForward();
+		scene.pitchDown();
 		//Set.z += 0.1;
 		break;
 
 	case GLUT_KEY_DOWN:
-		scene.moveBackward();
+		scene.pitchUp();
 		//Set.z -= 0.1;
 		break;
-
+	case GLUT_KEY_PAGE_DOWN:
 	case GLUT_KEY_HOME:
-		scene.pitchUp();
+		scene.yawLeft();
 		break;
-
+	case GLUT_KEY_PAGE_UP:
 	case GLUT_KEY_END:
-		scene.pitchDown();
+		scene.yawRight();
 		break;
 	}
 	glutPostRedisplay();
