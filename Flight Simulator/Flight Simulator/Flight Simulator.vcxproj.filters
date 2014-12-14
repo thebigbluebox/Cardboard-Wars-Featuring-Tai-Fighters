@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LightControl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DrawClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -30,9 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlutHeader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LightControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DrawClass.h">

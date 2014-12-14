@@ -20,10 +20,10 @@ void GUIClass::set(GLdouble width, GLdouble height)
 
 void GUIClass::draw(void)
 {
-	glPointSize(2);
+	glPointSize(5);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(-width/2, width/2, -height/2, height);
+	gluOrtho2D(-width/2, width/2, -height/2, height/2);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glColor3d(0,1,1);
@@ -37,6 +37,15 @@ void GUIClass::draw(void)
 		glVertex2d(width / 2 - width*0.3, height / 2 - height*0.3);
 
 		glVertex2d(-width / 2 + width*0.3, height / 2 - height*0.3);
+	glEnd();
+	glBegin(GL_POLYGON);
+		glVertex2d(-2, -2);
+
+		glVertex2d(2, -2);
+
+		glVertex2d(2, 2);
+
+		glVertex2d(-2, 2);
 	glEnd();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

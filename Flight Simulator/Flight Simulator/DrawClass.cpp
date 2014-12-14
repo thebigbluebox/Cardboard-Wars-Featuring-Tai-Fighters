@@ -22,24 +22,34 @@ void DrawClass::decreaseSpeed(void)
 	}
 }
 
-void DrawClass::rotateLeft(void)
+void DrawClass::rollLeft(void)
 {
-
+	angleZ -= 0.2;
 }
 
-void DrawClass::rotateRight(void)
+void DrawClass::rollRight(void)
 {
-
+	angleZ += 0.2;
 }
 
-void DrawClass::angleUp(void)
+void DrawClass::pitchUp(void)
 {
 	angleX += 0.2;
 }
 
-void DrawClass::angleDown(void)
+void DrawClass::pitchDown(void)
 {
 	angleX -= 0.2;
+}
+
+void DrawClass::yawLeft(void)
+{
+	angleY -= 0.2;
+}
+
+void DrawClass::yawRight(void)
+{
+	angleY += 0.2;
 }
 
 void DrawClass::moveBackward(void)

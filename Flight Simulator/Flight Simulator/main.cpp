@@ -54,11 +54,11 @@ void special(int key, int x, int y)
 		break;
 
 	case GLUT_KEY_HOME:
-		scene.angleUp();
+		scene.pitchUp();
 		break;
 
 	case GLUT_KEY_END:
-		scene.angleDown();
+		scene.pitchDown();
 		break;
 	}
 	glutPostRedisplay();
@@ -74,7 +74,7 @@ void init(void)
 	glEnable(GL_COLOR_MATERIAL);
 
 	glEnable(GL_CULL_FACE);
-	gui.set(Set.windowx, Set.windowy);
+	gui.set(Set.windowx/2, Set.windowy);
 	
 }
 
@@ -89,7 +89,6 @@ void display(void)
 	
 	//Viewport Left
 	glViewport(0, 0, Set.windowx / 2, Set.windowy);
-	gui.draw();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(65, (Set.windowx / 2) / (Set.windowy), 1, 50);
@@ -98,11 +97,12 @@ void display(void)
 	glTranslated(0.2, 0, 0);
 	gluLookAt(0, 0, 6, 0, 0, 0, 0, 1, 0);
 	scene.draw();
+	//gui has problems with coordinating to the two eyes turned off for comfort.
+	//gui.draw();
 	
 	
 	//Viewport Right
 	glViewport(Set.windowx / 2, 0, Set.windowx / 2, Set.windowy);
-	gui.draw();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(65, (Set.windowx / 2) / (Set.windowy), 1, 50);
@@ -111,6 +111,8 @@ void display(void)
 	glTranslated(-0.2, 0, 0);
 	gluLookAt(0, 0, 6, 0, 0, 0, 0, 1, 0);
 	scene.draw();
+	
+	//gui.draw();
 
 	glutSwapBuffers();
 }

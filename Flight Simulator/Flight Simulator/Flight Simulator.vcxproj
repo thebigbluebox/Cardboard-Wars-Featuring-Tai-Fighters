@@ -79,14 +79,12 @@
   <ItemGroup>
     <ClCompile Include="DrawClass.cpp" />
     <ClCompile Include="GUIClass.cpp" />
-    <ClCompile Include="LightControl.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DrawClass.h" />
     <ClInclude Include="GlutHeader.h" />
     <ClInclude Include="GUIClass.h" />
-    <ClInclude Include="LightControl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

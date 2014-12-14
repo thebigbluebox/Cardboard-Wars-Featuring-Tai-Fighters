@@ -20,19 +20,25 @@ public:
 	/*Decrease speed factor*/
 	void decreaseSpeed(void);
 
-	/*Rotates the scene to the left*/
-	void rotateLeft(void);
+	/*Rolls the scene to the left*/
+	void rollLeft(void);
 
-	/*Rotates the scene to the right*/
-	void rotateRight(void);
+	/*Rolls the scene to the right*/
+	void rollRight(void);
 	
-	/*Angles the scene downwards, in response to camera input
+	/*Pitches the scene downwards, in response to camera input
 	of looking up which means person is looking away from scene*/
-	void angleUp(void);
+	void pitchUp(void);
 
-	/*Angles the scene upwards, in response to camera input
+	/*Pitches the scene upwards, in response to camera input
 	of looking down which means person is looking towards the scene*/
-	void angleDown(void);
+	void pitchDown(void);
+	
+	/*Yaws the scene to the left*/
+	void yawLeft(void);
+
+	/*Yaws the scene to the left*/
+	void yawRight(void);
 
 	/*Translates the scene backwards 
 	for movement thats equivalent to forwards*/
@@ -52,4 +58,6 @@ public:
 
 	/*The drawing of the scene*/
 	void draw(void);
+
+
 };
