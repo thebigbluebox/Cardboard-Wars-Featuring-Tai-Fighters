@@ -9,6 +9,7 @@ public:
 	GLdouble angleY;
 	GLdouble angleZ;
 	GLdouble speedFactor = 1;
+	
 
 	/*Creates the scene object, 
 	should be configurable with additional parameters*/

@@ -74,6 +74,11 @@ void DrawClass::moveRight(void)
 
 void DrawClass::draw(void)
 {
+	
+	GLfloat lightposition[] = { 0, 2, 20, 0 };
+	
+
+	glShadeModel(GL_SMOOTH);
 	GLfloat mat_ambient[] = { 1, 1, 1, 1 };
 	GLfloat mat_diffuse[] = { 0.78, 0.57, 0.11, 1.0 };
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -91,6 +96,8 @@ void DrawClass::draw(void)
 	glRotated(angleY, 0, 1, 0);
 	glPushMatrix();
 	glRotated(angleX, 1, 0, 0);
+	//this way lights are always in sync with which ever postion of the scene
+	glLightfv(GL_LIGHT0, GL_POSITION, lightposition);
 	glColor3f(1, 0, 1);
 	glNormal3d(0, 0, 1);
 	glBegin(GL_QUADS);
