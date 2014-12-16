@@ -67,6 +67,8 @@ ParticleSystem::ParticleSystem(void)
 	tail = iterator1;
 }
 
+
+
 void ParticleSystem::spawnParticle(void)
 {
 	//if the head is not set (the list is empty) then make the new list the head
@@ -349,6 +351,14 @@ void ParticleSystem::updateWind(float newWind[3])
 		if (newWind[i] > gMinWind && newWind[i] < gMaxWind)
 			this->wind[i] = newWind[i];
 	}
+}
+
+//set the position of the generator
+void ParticleSystem::setPosition(float x, float y, float z)
+{
+	this->position[0] = x;
+	this->position[1] = y;
+	this->position[2] = z;
 }
 
 //set the type of particle to make

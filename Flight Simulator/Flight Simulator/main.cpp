@@ -50,7 +50,7 @@ void updateBullets(void)
 		glPushMatrix();
 		glTranslatef(bulletArray[i].location.x, bulletArray[i].location.y, bulletArray[i].location.z);
 		glColor3f(1, 0, 0);
-		glutSolidCube(1);
+		glutSolidCube(0.1);
 		glPopMatrix();
 	}
 }
@@ -215,20 +215,11 @@ void init(void)
 	
 }
 
-void drawEnemies(void)
-{
-	for (auto it = enemies.list.begin(); it != enemies.list.end(); ++it) {
-		glPushMatrix();
-			glColor3fv(it->color.v);
-			glTranslatef(it->position.x, it->position.y, it->position.z);
-			glutSolidCube(it->size);
-		glPopMatrix();
-	}
-}
+
 
 void draw(void)
 {
-	drawEnemies();
+	enemies.drawEnemies();
 	//updateBullets();
 	enemies.updateBullets();
 	

@@ -7,7 +7,7 @@ Particle::Particle(int particleType, float position[3], float direction[3], floa
 {
 	this->particleType = (_property) particleType; //use the particleType from argument list
 	numParticles++; //add to the number of alive particles
-	this->lifeRemaining = 900; //timeout time default
+	this->lifeRemaining = 40; //timeout time default
 	//random rotation on each axis
 	for (int i = 0; i <= 2; i++)
 		this->rotation[i] = rand() % 359; 

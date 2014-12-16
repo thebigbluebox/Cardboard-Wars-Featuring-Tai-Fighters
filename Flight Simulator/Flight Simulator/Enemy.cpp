@@ -26,6 +26,8 @@ EnemyHandler::EnemyHandler(void)
 	spawnInterval = 200; // ms
 	//particleSystem = ParticleSystem(playerPos.v, 0, playerPos.v);
 	//particleSystem = ParticleSystem();
+
+	
 }
 
 void EnemyHandler::updateBullets(void)
@@ -38,7 +40,7 @@ void EnemyHandler::updateBullets(void)
 		glPushMatrix();
 		glTranslatef(bulletArray[i].location.x, bulletArray[i].location.y, bulletArray[i].location.z);
 		glColor3f(1, 0, 0);
-		glutSolidCube(0.1);
+		glutSolidCube(1);
 		glPopMatrix();
 	}
 }
@@ -79,8 +81,9 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 				&& bulletArray[i].location.z + bulletArray[i].hitbox > it->position.z)
 			{
 				std::cout << "hit";
-				/*for (int i = 0; i < 100; i++)
-					particleSystem.spawnParticle();*/
+				particleSystem.setPosition(it->position.x, it->position.y, it->position.z);
+				for (int i = 0; i < 100; i++)
+					particleSystem.spawnParticle();
 			}
 		}
 
@@ -93,7 +96,19 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 		}
 		
 	}
-	particleSystem.spawnParticle();
+	//particleSystem.spawnParticle();
 	particleSystem.updateParticles();
+	
+}
+
+void EnemyHandler::drawEnemies(void)
+{
+	for (auto it = list.begin(); it != list.end(); ++it) {
+		glPushMatrix();
+		glColor3fv(it->color.v);
+		glTranslatef(it->position.x, it->position.y, it->position.z);
+		glutSolidCube(it->size);
+		glPopMatrix();
+	}
 	particleSystem.drawParticles();
 }

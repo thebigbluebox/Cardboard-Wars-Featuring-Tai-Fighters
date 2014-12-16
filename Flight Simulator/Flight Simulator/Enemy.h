@@ -47,6 +47,7 @@ public:
 	int spawnInterval;
 	void updateBullets(void);
 	void spawnBullet(Vector3 location, Vector3 direction);
+	void drawEnemies(void);
 };
 
 #endif

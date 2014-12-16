@@ -22,6 +22,7 @@ public:
 	float getWindBoundary(int direction); // retireves min or max wind
 	void setCannonRotation(float newRotation[3]); //sets rotation of the cannon
 	float getCannonRotation(int axis); 
+	void setPosition(float x, float y, float z);
 
 private:
 	float position[3]; //where the particle system is
