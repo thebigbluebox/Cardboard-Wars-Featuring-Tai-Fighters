@@ -94,7 +94,7 @@ void updateKeyboard(void)
 	{
 		/*bulletArray[0].location = { playerPos.x, playerPos.y, playerPos.z };
 		bulletArray[0].speed = 1;*/
-		enemies.spawnBullet();
+		enemies.spawnBullet(playerPos, playerPos.directionTo(lookAt));
 	}
 
 	// Special Keys

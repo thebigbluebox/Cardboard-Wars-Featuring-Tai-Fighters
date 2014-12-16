@@ -38,14 +38,15 @@ void EnemyHandler::updateBullets(void)
 		glPushMatrix();
 		glTranslatef(bulletArray[i].location.x, bulletArray[i].location.y, bulletArray[i].location.z);
 		glColor3f(1, 0, 0);
-		glutSolidCube(1);
+		glutSolidCube(0.1);
 		glPopMatrix();
 	}
 }
 
-void EnemyHandler::spawnBullet(void)
+void EnemyHandler::spawnBullet(Vector3 location, Vector3 direction)
 {
-	bulletArray[0].location = { playerPos.x, playerPos.y, playerPos.z };
+	bulletArray[0].location = location;
+	bulletArray[0].direction = direction;
 	bulletArray[0].speed = 1;
 }
 
@@ -59,7 +60,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 	if (list.size() < 10 || lastUpdate > spawnInterval) {
 		lastUpdate = 0;
 		//Enemy p = Enemy({ playerPos.x + randFloat(-10, 10), playerPos.y + randFloat(-10, 10), playerPos.z - 10 });
-		Enemy p = Enemy({ playerPos.x + randFloat(-1, 1), playerPos.y + randFloat(-1, 1), playerPos.z - 10 });
+		Enemy p = Enemy({ playerPos.x + randFloat(-10, 10), playerPos.y + randFloat(-10, 10), playerPos.z - 10 });
 		p.color = { randFloat(0, 1), randFloat(0, 1), randFloat(0, 1) };
 		list.push_back(p);
 		//printf("%f %f %f \n", p.position.x, p.position.y, p.position.z);

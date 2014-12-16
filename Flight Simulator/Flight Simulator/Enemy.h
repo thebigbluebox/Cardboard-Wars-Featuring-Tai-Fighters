@@ -46,7 +46,7 @@ public:
 	int lastUpdate;
 	int spawnInterval;
 	void updateBullets(void);
-	void spawnBullet(void);
+	void spawnBullet(Vector3 location, Vector3 direction);
 };
 
 #endif
