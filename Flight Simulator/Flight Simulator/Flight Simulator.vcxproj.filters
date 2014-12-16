@@ -39,6 +39,9 @@
     <ClCompile Include="Particle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="textureloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DrawClass.h">
@@ -65,5 +68,13 @@
     <ClInclude Include="Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="front.ppm">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="metal.ppm">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

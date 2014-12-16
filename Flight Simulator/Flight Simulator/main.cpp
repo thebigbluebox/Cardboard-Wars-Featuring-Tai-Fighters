@@ -211,6 +211,9 @@ void init(void)
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE); // use glColor for material
 
+	// Textures
+	glEnable(GL_TEXTURE_2D);
+
 	gui.set(Set.windowx/2, Set.windowy);
 	
 }
