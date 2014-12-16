@@ -12,34 +12,71 @@ struct setting{
 	GLdouble z = 0;
 	GLdouble x = 0;
 }Set;
-	GLfloat lightposition[] = { 0, 2, 0 };
-	DrawClass scene;
-	GUIClass gui;
 
+int totalTime = 0;
+bool keyStates[256] = { false }; // keyboard state
+bool specialKeys[256] = { false };
+GLfloat lightposition[] = { 0, 2, 0 };
+DrawClass scene;
+GUIClass gui;
+
+/* Keypresses for buttons that can happen at the same time */
+void updateKeyboard(void)
+{
+	// WASD
+	if (keyStates['w'] || keyStates['W']) {
+		scene.moveForward();
+	}
+	else if (keyStates['s'] || keyStates['S']) {
+		scene.moveBackward();
+	}
+	if (keyStates['a'] || keyStates['A']) {
+		scene.moveLeft();
+	}
+	else if (keyStates['d'] || keyStates['D']) {
+		scene.moveRight();
+	}
+
+	// Special Keys
+	if (specialKeys[GLUT_KEY_LEFT]) {
+		scene.rollLeft();
+		//Set.x += 0.1;
+	}
+	else if (specialKeys[GLUT_KEY_RIGHT]) {
+		scene.rollRight();
+		//Set.x -= 0.1;
+	}
+	if (specialKeys[GLUT_KEY_UP]) {
+		scene.pitchDown();
+		//Set.z += 0.1;
+	}
+	else if (specialKeys[GLUT_KEY_DOWN]) {
+		scene.pitchUp();
+		//Set.z -= 0.1;
+	}
+	if (specialKeys[GLUT_KEY_PAGE_DOWN] || specialKeys[GLUT_KEY_HOME]) {
+		scene.yawLeft();
+	}
+	else if (specialKeys[GLUT_KEY_PAGE_UP] || specialKeys[GLUT_KEY_END]) {
+		scene.yawRight();
+	}
+}
+
+/* key released */
+void keyboardUp(unsigned char key, int x, int y)
+{
+	keyStates[key] = false;
+}
+
+/* key pressed */
 void keyboard(unsigned char key, int x, int y)
 {
+	keyStates[key] = true;
 	switch (key)
 	{
 	case 'q':
 	case 27:
 		exit(0);
-		break;
-
-	case 'w':
-	case 'W':
-		scene.moveForward();
-		break;
-	case 'a':
-	case 'A':
-		scene.moveLeft();
-		break;
-	case 's':
-	case 'S':
-		scene.moveBackward();
-		break;
-	case 'd':
-	case 'D':
-		scene.moveRight();
 		break;
 	case 'h':
 	case 'H':
@@ -48,42 +85,34 @@ void keyboard(unsigned char key, int x, int y)
 	}
 	glutPostRedisplay();
 }
-bool buffer[256];
+
+void specialUp(int key, int x, int y)
+{
+	specialKeys[key] = false;
+}
+
 void special(int key, int x, int y)
 {
-	
-	/* arrow key presses move the camera */
+	specialKeys[key] = true;
+
 	switch (key)
 	{
-	case GLUT_KEY_LEFT:
-		scene.rollLeft();
-		//Set.x += 0.1;
-		break;
-
-	case GLUT_KEY_RIGHT:
-		scene.rollRight();
-		//Set.x -= 0.1;
-		break;
-
-	case GLUT_KEY_UP:
-		scene.pitchDown();
-		//Set.z += 0.1;
-		break;
-
-	case GLUT_KEY_DOWN:
-		scene.pitchUp();
-		//Set.z -= 0.1;
-		break;
-	case GLUT_KEY_PAGE_DOWN:
-	case GLUT_KEY_HOME:
-		scene.yawLeft();
-		break;
-	case GLUT_KEY_PAGE_UP:
-	case GLUT_KEY_END:
-		scene.yawRight();
-		break;
 	}
+}
+
+/* timer function. */
+void update(int value)
+{
+	// deltaTime
+	int elapsedTime = glutGet(GLUT_ELAPSED_TIME);
+	int deltaTime = elapsedTime - totalTime;
+	totalTime = elapsedTime;
+
+	// Other update routines
+	updateKeyboard();
+
 	glutPostRedisplay();
+	glutTimerFunc(16, update, 0);
 }
 
 void init(void)
@@ -99,6 +128,12 @@ void init(void)
 	gui.set(Set.windowx/2, Set.windowy);
 	
 }
+
+void update(void)
+{
+
+}
+
 
 /* display function - GLUT display callback function
 *		clears the screen, sets the camera position, draws the ground plane and movable box
@@ -162,7 +197,11 @@ int main(int argc, char** argv)
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);	
 	glutKeyboardFunc(keyboard);
+	glutKeyboardUpFunc(keyboardUp);
 	glutSpecialFunc(special);
+	glutSpecialUpFunc(specialUp);
+
+	glutTimerFunc(16, update, 0);
 
 	init();
 
