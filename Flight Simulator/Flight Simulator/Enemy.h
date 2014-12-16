@@ -21,6 +21,18 @@ public:
 class EnemyHandler
 {
 private:
+	Vector3 playerPos;
+	struct _bullet {
+		Vector3 location = { 0, 0, 0 };
+		Vector3 direction = { 0, 0, -1 };
+		float speed = 0;
+		int hitbox = 10;
+		int duration = 0;
+		int maxDuration = 10;
+	};
+	typedef _bullet bullet;
+
+	bullet bulletArray[10];
 public:
 	std::vector<Enemy> list;
 	//typedef std::list<Enemy>::iterator iter;
@@ -31,6 +43,8 @@ public:
 	void clear(void);
 	int lastUpdate;
 	int spawnInterval;
+	void updateBullets(void);
+	void spawnBullet(void);
 };
 
 #endif
