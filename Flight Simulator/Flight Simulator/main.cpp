@@ -26,6 +26,33 @@ Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negat
 Vector3 lookAt = { 0, 0, -1 };
 Vector3 cameraUp = { 0, 1, 0 };
 
+struct _bullet {
+	Vector3 location = { 0, 0, 0 };
+	Vector3 direction = { 0, 0, -1 };
+	float speed = 0;
+	int hitbox = 10;
+	int duration = 0;
+	int maxDuration = 10;
+};
+typedef _bullet bullet;
+
+bullet bulletArray[10];
+
+
+void updateBullets(void)
+{
+	for (int i = 0; i < sizeof(bulletArray)/sizeof(*bulletArray); i++)
+	{
+		if (bulletArray[i].speed > 0)
+			bulletArray[i].location = bulletArray[i].location.add(bulletArray[i].direction);
+	
+		glPushMatrix();
+		glTranslatef(bulletArray[i].location.x, bulletArray[i].location.y, bulletArray[i].location.z);
+		glColor3f(1, 0, 0);
+		glutSolidCube(1);
+		glPopMatrix();
+	}
+}
 void updatePlayer(int deltaTime)
 {
 	playerPos.z -= 0.01;
@@ -52,6 +79,14 @@ void updateKeyboard(void)
 	}
 	else if (keyStates['d'] || keyStates['D']) {
 		scene.moveRight();
+	}
+
+	//space
+	if (keyStates[' '])
+	{
+		/*bulletArray[0].location = { playerPos.x, playerPos.y, playerPos.z };
+		bulletArray[0].speed = 1;*/
+		enemies.spawnBullet();
 	}
 
 	// Special Keys
@@ -91,7 +126,9 @@ void update(int value)
 	// Other update routines
 	updateKeyboard();
 	updateEnemies(deltaTime);
+	//updateBullets();
 	updatePlayer(deltaTime);
+	
 
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
@@ -107,6 +144,7 @@ void keyboardUp(unsigned char key, int x, int y)
 void keyboard(unsigned char key, int x, int y)
 {
 	keyStates[key] = true;
+	
 	switch (key)
 	{
 	case 'q':
@@ -183,6 +221,9 @@ void drawEnemies(void)
 void draw(void)
 {
 	drawEnemies();
+	//updateBullets();
+	enemies.updateBullets();
+	
 	//scene.draw();
 	//gui has problems with coordinating to the two eyes turned off for comfort.
 	//gui.draw();

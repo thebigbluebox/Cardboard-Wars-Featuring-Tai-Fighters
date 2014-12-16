@@ -17,6 +17,7 @@
 // C++ libraries
 #include <vector>
 #include <cstdlib>
+#include <iostream>
 
 // User libraries
 #include "calculations.h"
