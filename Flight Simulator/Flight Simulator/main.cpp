@@ -25,11 +25,19 @@ GLfloat lightposition[] = { 0, 2, 0 };
 Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negative z direction
 Vector3 lookAt = { 0, 0, -1 };
 Vector3 cameraUp = { 0, 1, 0 };
+Vector3 mover;
 
 void updatePlayer(int deltaTime)
 {
-	playerPos.z -= 0.01;
+	//playerPos.z -= 0.01;
 	lookAt.z -= 0.01;
+	mover = Vector3(lookAt.x - playerPos.x, lookAt.y - playerPos.y, lookAt.z - playerPos.z).normalize();
+	playerPos.x += mover.x/80;
+	playerPos.y += mover.y/80;
+	playerPos.z += mover.z/80;
+	lookAt.x += mover.x / 80;
+	lookAt.y += mover.y / 80;
+	lookAt.z += mover.z / 80;
 }
 
 void updateEnemies(int deltaTime)
