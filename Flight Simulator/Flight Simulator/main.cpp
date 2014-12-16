@@ -1,24 +1,49 @@
-#include "GlutHeader.h"
+#include "stdafx.h"
 #include "DrawClass.h"
 #include "GUIClass.h"
-#include <stdio.h>
-struct setting{
-	GLdouble windowx = 1000;
-	GLdouble windowy = 1000;
+
+struct setting {
+	int windowx = 1000;
+	int windowy = 1000;
 	GLdouble sterooffset;
 	GLdouble eyeDistance;
 	GLdouble parallaxFactor;
 	GLdouble convergenceDistance;
 	GLdouble z = 0;
 	GLdouble x = 0;
-}Set;
+} Set;
 
 int totalTime = 0;
 bool keyStates[256] = { false }; // keyboard state
 bool specialKeys[256] = { false };
-GLfloat lightposition[] = { 0, 2, 0 };
+
 DrawClass scene;
 GUIClass gui;
+EnemyHandler enemies = EnemyHandler();
+
+GLfloat lightposition[] = { 0, 2, 0 };
+Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negative z direction
+Vector3 lookAt = { 0, 0, -1 };
+Vector3 cameraUp = { 0, 1, 0 };
+Vector3 mover;
+
+void updatePlayer(int deltaTime)
+{
+	//playerPos.z -= 0.01;
+	lookAt.z -= 0.01;
+	mover = Vector3(lookAt.x - playerPos.x, lookAt.y - playerPos.y, lookAt.z - playerPos.z).normalize();
+	playerPos.x += mover.x/80;
+	playerPos.y += mover.y/80;
+	playerPos.z += mover.z/80;
+	lookAt.x += mover.x / 80;
+	lookAt.y += mover.y / 80;
+	lookAt.z += mover.z / 80;
+}
+
+void updateEnemies(int deltaTime)
+{
+	enemies.update(playerPos, deltaTime);
+}
 
 /* Keypresses for buttons that can happen at the same time */
 void updateKeyboard(void)
@@ -39,19 +64,19 @@ void updateKeyboard(void)
 
 	// Special Keys
 	if (specialKeys[GLUT_KEY_LEFT]) {
-		scene.rollLeft();
+		lookAt.x -= 0.1;
 		//Set.x += 0.1;
 	}
 	else if (specialKeys[GLUT_KEY_RIGHT]) {
-		scene.rollRight();
+		lookAt.x += 0.1;
 		//Set.x -= 0.1;
 	}
 	if (specialKeys[GLUT_KEY_UP]) {
-		scene.pitchDown();
+		lookAt.y += 0.1;
 		//Set.z += 0.1;
 	}
 	else if (specialKeys[GLUT_KEY_DOWN]) {
-		scene.pitchUp();
+		lookAt.y -= 0.1;
 		//Set.z -= 0.1;
 	}
 	if (specialKeys[GLUT_KEY_PAGE_DOWN] || specialKeys[GLUT_KEY_HOME]) {
@@ -60,6 +85,24 @@ void updateKeyboard(void)
 	else if (specialKeys[GLUT_KEY_PAGE_UP] || specialKeys[GLUT_KEY_END]) {
 		scene.yawRight();
 	}
+}
+
+
+/* timer function. */
+void update(int value)
+{
+	// deltaTime
+	int elapsedTime = glutGet(GLUT_ELAPSED_TIME);
+	int deltaTime = elapsedTime - totalTime;
+	totalTime = elapsedTime;
+
+	// Other update routines
+	updateKeyboard();
+	updateEnemies(deltaTime);
+	updatePlayer(deltaTime);
+
+	glutPostRedisplay();
+	glutTimerFunc(16, update, 0);
 }
 
 /* key released */
@@ -100,70 +143,89 @@ void special(int key, int x, int y)
 	}
 }
 
-/* timer function. */
-void update(int value)
-{
-	// deltaTime
-	int elapsedTime = glutGet(GLUT_ELAPSED_TIME);
-	int deltaTime = elapsedTime - totalTime;
-	totalTime = elapsedTime;
-
-	// Other update routines
-	updateKeyboard();
-
-	glutPostRedisplay();
-	glutTimerFunc(16, update, 0);
-}
-
 void init(void)
 {
+	// Background Color
+	glClearColor(0, 0, 0, 0);
+
+	// Culling
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
+	glCullFace(GL_BACK);
+
+	// Shading
+	//toggleShading(flatShading);
+	glShadeModel(GL_SMOOTH);
+
+	// Lighting
+	//toggleLighting(lightingEnabled);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glShadeModel(GL_SMOOTH);
-	glEnable(GL_DEPTH_TEST);
-	//not sure we still need to enable color material?
-	glEnable(GL_COLOR_MATERIAL);
+	float pureWhite[4] = { 1, 1, 1, 1 };
+	float light0ambient[4] = { 0.804f, 1.f, 0.98f, 1.f };
+	float light0diffuse[4] = { 0.804f, 1.f, 0.98f, 1.f };
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light0ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, pureWhite);
 
-	glEnable(GL_CULL_FACE);
+	// Meterials
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE); // use glColor for material
+
 	gui.set(Set.windowx/2, Set.windowy);
 	
 }
 
+void drawEnemies(void)
+{
+	for (auto it = enemies.list.begin(); it != enemies.list.end(); ++it) {
+		glPushMatrix();
+			glColor3fv(it->color.v);
+			glTranslatef(it->position.x, it->position.y, it->position.z);
+			glutSolidCube(it->size);
+		glPopMatrix();
+	}
+}
+
+void draw(void)
+{
+	drawEnemies();
+	//scene.draw();
+	//gui has problems with coordinating to the two eyes turned off for comfort.
+	//gui.draw();
+}
 
 /* display function - GLUT display callback function
 *		clears the screen, sets the camera position, draws the ground plane and movable box
 */
 void display(void)
 {
-	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	
 	//Viewport Left
 	glViewport(0, 0, Set.windowx / 2, Set.windowy);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(65, (Set.windowx / 2) / (Set.windowy), 1, 50);
+	gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslated(0.2, 0, 0);
-	gluLookAt(0, 0, 6, 0, 0, 0, 0, 1, 0);
-	scene.draw();
-	//gui has problems with coordinating to the two eyes turned off for comfort.
-	//gui.draw();
-	
+	glTranslatef(0.2f, 0, 0);
+	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
+	draw();
 	
 	//Viewport Right
 	glViewport(Set.windowx / 2, 0, Set.windowx / 2, Set.windowy);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(65, (Set.windowx / 2) / (Set.windowy), 1, 50);
+	gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslated(-0.2, 0, 0);
-	gluLookAt(0, 0, 6, 0, 0, 0, 0, 1, 0);
-	scene.draw();
-	
-	//gui.draw();
+	glTranslatef(-0.2f, 0, 0);
+	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
+	draw();
 
 	glutSwapBuffers();
 }

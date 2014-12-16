@@ -23,7 +23,4 @@
 #include "Vector3.h"
 #include "Enemy.h"
 
-// Constants
-#define PI 3.14159265358979323846
-
 #endif 

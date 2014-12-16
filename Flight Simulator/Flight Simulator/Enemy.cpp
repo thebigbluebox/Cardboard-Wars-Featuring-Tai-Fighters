@@ -5,7 +5,7 @@ Enemy::Enemy(void)
 	position = Vector3();
 	color = { 1, 1, 1 };
 	size = 1;
-	shape = Shape::Sphere;
+	shape = Shape::Cube;
 }
 
 Enemy::Enemy(Vector3 pos)
@@ -13,13 +13,13 @@ Enemy::Enemy(Vector3 pos)
 	position = pos;
 	color = { 1, 1, 1 };
 	size = 1;
-	shape = Shape::Sphere;
+	shape = Shape::Cube;
 }
 
 EnemyHandler::EnemyHandler(void)
 {
 	lastUpdate = 0;
-	spawnInterval = 60; // ms
+	spawnInterval = 200; // ms
 }
 
 void EnemyHandler::update(Vector3 playerPos, float deltaTime)

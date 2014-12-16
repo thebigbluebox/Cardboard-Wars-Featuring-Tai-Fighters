@@ -1,4 +1,4 @@
-#include "GlutHeader.h"
+#include "stdafx.h"
 
 class GUIClass{
 public:

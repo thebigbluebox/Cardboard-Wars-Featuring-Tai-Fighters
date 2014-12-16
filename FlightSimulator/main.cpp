@@ -7,6 +7,7 @@ int totalTime = 0;
 float light0[4] = { 5,5,5,1 };
 float light1[4] = { -5,-5,-5,1 };
 Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negative z direction
+Vector3 lookAt = { 0, 0, -1 };
 
 // Environment
 EnemyHandler enemies = EnemyHandler();
@@ -15,6 +16,9 @@ EnemyHandler enemies = EnemyHandler();
 bool keyStates[256] = { false }; // keyboard state
 int windowX = 0;
 int windowY = 0;
+float roll = 0;
+float yaw = 0;
+float pitch = 0;
 
 void updateEnemies(int deltaTime)
 {
@@ -23,19 +27,61 @@ void updateEnemies(int deltaTime)
 
 void updatePlayer(int deltaTime)
 {
-	playerPos.z -= 0.01;
+	//printf("deltaTime: %d\n", deltaTime);
+	//playerPos.z -= 0.01f;
+	//lookAt = playerPos;
+	//lookAt.z -= 1;
 
+	if (keyStates['z'])
+	{
+		printf("%f %f %f\n", lookAt.x, lookAt.y, lookAt.z);
+	}
 	if (keyStates['w']) {
-		playerPos.y += 1;
+		lookAt.y += 1;
 	}
 	else if (keyStates['s']) {
-		playerPos.y -= 1;
+		lookAt.y -= 1;
 	}
 	if (keyStates['a']) {
-		playerPos.x -= 1;
+		yaw -= (yaw > -PI / 2.0f) ? PI / 12.0f : 0;
 	}
 	else if (keyStates['d']) {
-		playerPos.x += 1;
+		yaw += (yaw < PI / 2.0f) ? PI / 12.0f : 0;
+	}
+	if (keyStates['r']) {
+		pitch += (pitch < PI / 2.0f) ? PI / 12.0f : 0;
+	}
+	else if (keyStates['f']) {
+		pitch -= (pitch > -PI / 2.0f) ? PI / 12.0f : 0;
+	}
+
+	//printf("%f", pitch);
+	//lookAt.x = cos(yaw);
+	lookAt.y = sin(pitch);
+	lookAt.x = sin(yaw); //sin(pitch) * cos(yaw);
+
+	// Move to where the player is looking
+	
+	Vector3 normPos = playerPos.directionTo(lookAt);
+	lookAt = playerPos.add(normPos);
+	playerPos = playerPos.add(normPos.scale(0.02f));
+	printf("%f %f %f\n", playerPos.x, playerPos.y, playerPos.z);
+	printf("%f \n", yaw);
+	/*
+	lookAt = playerPos;
+	lookAt.z -=1;
+	*/
+	if (!keyStates['d']) {
+		yaw = (yaw + PI / 24.0f < 0) ? 0 : yaw + PI / 24.0f;
+	}
+	if (!keyStates['a']) {
+		yaw = (yaw - PI / 24.0f > 0) ? 0 : yaw - PI / 24.0f;
+	}
+	if (!keyStates['r']) {
+		if (pitch > 0.2) pitch -= PI / 24.0f;
+	}
+	if (!keyStates['f']) {
+		if (pitch < -0.2) pitch += PI / 24.0f;
 	}
 }
 
@@ -90,7 +136,7 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(0.2f, 0, 0);
-	gluLookAt(playerPos.x, playerPos.y, playerPos.z, playerPos.x, playerPos.y, playerPos.z - 1, 0, 1, 0);
+	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, 0, 1, 0);
 	draw();
 
 	//Viewport Right
@@ -101,7 +147,7 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(-0.2f, 0, 0);
-	gluLookAt(playerPos.x, playerPos.y, playerPos.z, playerPos.x, playerPos.y, playerPos.z - 1, 0, 1, 0);
+	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, 0, 1, 0);
 	draw();
 
 
@@ -185,7 +231,7 @@ int main(int argc, char* argv[])
 
 	glutInitWindowSize(1920/2, 1080/2);
 	glutInitWindowPosition(0, 0);
-	glutCreateWindow("Fault Terrain Modeling");
+	glutCreateWindow("Flight Simulator");
 
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
