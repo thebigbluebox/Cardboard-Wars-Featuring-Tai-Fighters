@@ -56,19 +56,19 @@ void updateKeyboard(void)
 
 	// Special Keys
 	if (specialKeys[GLUT_KEY_LEFT]) {
-		scene.rollLeft();
+		lookAt.x -= 0.1;
 		//Set.x += 0.1;
 	}
 	else if (specialKeys[GLUT_KEY_RIGHT]) {
-		scene.rollRight();
+		lookAt.x += 0.1;
 		//Set.x -= 0.1;
 	}
 	if (specialKeys[GLUT_KEY_UP]) {
-		scene.pitchDown();
+		lookAt.y += 0.1;
 		//Set.z += 0.1;
 	}
 	else if (specialKeys[GLUT_KEY_DOWN]) {
-		scene.pitchUp();
+		lookAt.y -= 0.1;
 		//Set.z -= 0.1;
 	}
 	if (specialKeys[GLUT_KEY_PAGE_DOWN] || specialKeys[GLUT_KEY_HOME]) {
