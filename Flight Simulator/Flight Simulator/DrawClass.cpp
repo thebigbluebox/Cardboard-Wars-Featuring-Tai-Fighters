@@ -1,4 +1,5 @@
 #include "DrawClass.h"
+#include "stdafx.h"
 
 DrawClass::DrawClass(void)
 {

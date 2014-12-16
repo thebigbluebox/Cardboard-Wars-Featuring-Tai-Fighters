@@ -77,14 +77,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="calculations.cpp" />
     <ClCompile Include="DrawClass.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GUIClass.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="calculations.h" />
     <ClInclude Include="DrawClass.h" />
-    <ClInclude Include="GlutHeader.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="GUIClass.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Vector3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
