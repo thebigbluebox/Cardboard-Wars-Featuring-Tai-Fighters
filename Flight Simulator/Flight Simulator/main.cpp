@@ -129,11 +129,6 @@ void init(void)
 	
 }
 
-void update(void)
-{
-
-}
-
 
 /* display function - GLUT display callback function
 *		clears the screen, sets the camera position, draws the ground plane and movable box
