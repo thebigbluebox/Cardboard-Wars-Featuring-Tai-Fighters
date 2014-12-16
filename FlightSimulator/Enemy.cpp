@@ -19,7 +19,7 @@ Enemy::Enemy(Vector3 pos)
 EnemyHandler::EnemyHandler(void)
 {
 	lastUpdate = 0;
-	spawnInterval = 200; // ms
+	spawnInterval = 60; // ms
 }
 
 void EnemyHandler::update(Vector3 playerPos, float deltaTime)
@@ -32,7 +32,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 		Enemy p = Enemy({ playerPos.x + randFloat(-10, 10), playerPos.y + randFloat(-10, 10), playerPos.z - 10 });
 		p.color = { randFloat(0, 1), randFloat(0, 1), randFloat(0, 1) };
 		list.push_back(p);
-		printf("%f %f %f \n", p.position.x, p.position.y, p.position.z);
+		//printf("%f %f %f \n", p.position.x, p.position.y, p.position.z);
 	}
 
 	for (auto it = list.begin(); it != list.end();) {
