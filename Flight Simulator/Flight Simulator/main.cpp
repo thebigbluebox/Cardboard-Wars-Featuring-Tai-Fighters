@@ -41,13 +41,17 @@ void keyboard(unsigned char key, int x, int y)
 	case 'D':
 		scene.moveRight();
 		break;
-
+	case 'h':
+	case 'H':
+		glutFullScreen();
+		break;
 	}
 	glutPostRedisplay();
 }
-
+bool buffer[256];
 void special(int key, int x, int y)
 {
+	
 	/* arrow key presses move the camera */
 	switch (key)
 	{

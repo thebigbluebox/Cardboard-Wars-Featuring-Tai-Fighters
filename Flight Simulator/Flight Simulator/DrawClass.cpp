@@ -92,6 +92,7 @@ void DrawClass::draw(void)
 	glPushMatrix();
 	glRotated(angleX, 1, 0, 0);
 	glColor3f(1, 0, 1);
+	glNormal3d(0, 0, 1);
 	glBegin(GL_QUADS);
 		
 		glVertex3f(-5,-2,-5);
@@ -103,6 +104,7 @@ void DrawClass::draw(void)
 		glVertex3f(-5,2,-5);
 	glEnd();
 	glColor3f(1, 1, 1);
+	glNormal3d(0, 1, 0);
 	glBegin(GL_QUADS);
 
 		glVertex3f(-5, -2, -5);
