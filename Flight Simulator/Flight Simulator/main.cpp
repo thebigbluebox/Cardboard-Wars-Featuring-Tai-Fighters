@@ -25,11 +25,17 @@ GLfloat lightposition[] = { 0, 2, 0 };
 Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negative z direction
 Vector3 lookAt = { 0, 0, -1 };
 Vector3 cameraUp = { 0, 1, 0 };
+Vector3 mover;
+float thetaR = 0;
+float thetaY = 0;
+float thetaP = 0;
 
 void updatePlayer(int deltaTime)
 {
-	playerPos.z -= 0.01;
-	lookAt.z -= 0.01;
+	mover = playerPos.directionTo(lookAt); // Vector3(lookAt.x - playerPos.x, lookAt.y - playerPos.y, lookAt.z - playerPos.z).normalize();
+	//playerPos = playerPos.add(mover.scale(+0.1f));
+	//lookAt.z -= 0.01;
+	
 }
 
 void updateEnemies(int deltaTime)
@@ -42,34 +48,44 @@ void updateKeyboard(void)
 {
 	// WASD
 	if (keyStates['w'] || keyStates['W']) {
-		scene.moveForward();
+		
 	}
 	else if (keyStates['s'] || keyStates['S']) {
-		scene.moveBackward();
+		
 	}
 	if (keyStates['a'] || keyStates['A']) {
-		scene.moveLeft();
+		thetaR += 0.1;
+		cameraUp.x = cos(thetaR);
 	}
 	else if (keyStates['d'] || keyStates['D']) {
-		scene.moveRight();
+		thetaR -= 0.1;
+		cameraUp.x = cos(thetaR);
 	}
 
 	// Special Keys
 	if (specialKeys[GLUT_KEY_LEFT]) {
-		scene.rollLeft();
-		//Set.x += 0.1;
+		thetaY -= 0.1;
+		lookAt.x = cos(thetaY) + playerPos.x;
+		lookAt.z = sin(thetaY) + playerPos.z;
 	}
 	else if (specialKeys[GLUT_KEY_RIGHT]) {
-		scene.rollRight();
-		//Set.x -= 0.1;
+		thetaY += 0.1;
+		lookAt.x = cos(thetaY) + playerPos.x;
+		lookAt.z = sin(thetaY) + playerPos.z;
 	}
 	if (specialKeys[GLUT_KEY_UP]) {
-		scene.pitchDown();
-		//Set.z += 0.1;
+		/*thetaP += 0.1;
+		lookAt.y = 200 * cos(thetaP) + playerPos.y;
+		lookAt.z = 200 * sin(thetaP) + playerPos.z;
+		cameraUp.y = 300 * cos(thetaP);
+		cameraUp.z = 300 * sin(thetaP);*/
 	}
 	else if (specialKeys[GLUT_KEY_DOWN]) {
-		scene.pitchUp();
-		//Set.z -= 0.1;
+		/*thetaP -= 0.1;
+		lookAt.y = 300*cos(thetaP) + playerPos.y;
+		lookAt.z = 300*sin(thetaP) + playerPos.z;
+		cameraUp.y = 300*cos(thetaP);
+		cameraUp.z = 300*sin(thetaP);*/
 	}
 	if (specialKeys[GLUT_KEY_PAGE_DOWN] || specialKeys[GLUT_KEY_HOME]) {
 		scene.yawLeft();
@@ -201,7 +217,7 @@ void display(void)
 	glViewport(0, 0, Set.windowx / 2, Set.windowy);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
+	gluPerspective(125, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(0.2f, 0, 0);
