@@ -3,7 +3,7 @@
 
 
 Particle* particle; //temporary particle that is manipulated and used to create new particles in the linked list
-float gParticleSize = 0.5; //size of particles to generate
+float gParticleSize = 0.2; //size of particles to generate
 float gAmountToRotate = 3; //amount to rotate each particle each frame
 float gSpeed = 0.09; //speed multiplier
 float gFriction = 0.9; //particles lose 10% speed upon hitting the ground
@@ -77,9 +77,22 @@ void ParticleSystem::spawnParticle(void)
 		head = iterator1;
 	
 	//initialize the particle's color values to be random
-	float newColor[3] = { (float)(rand() / (float)(RAND_MAX + 1)), 
-		(float)(rand() / (float)(RAND_MAX + 1)), 
-		(float)(rand() / (float)(RAND_MAX + 1)) };
+	int whiteParticle = rand() % 10 + 1;
+	float newColor[3];
+	if (whiteParticle == 1 || whiteParticle == 2) {
+		newColor[0] = 1;
+		newColor[1] = 1;
+		newColor[2] = 1;
+	}
+	else {
+		newColor[0] = 1;
+		newColor[1] = (float)(rand() / (float)(RAND_MAX + 1)) - 0.2;
+		newColor[2] = 0;
+	}
+	
+	//float newColor[3] = { (float)(rand() / (float)(RAND_MAX + 1)), 
+		//(float)(rand() / (float)(RAND_MAX + 1)), 
+		//(float)(rand() / (float)(RAND_MAX + 1)) };
 
 	//initialize the particle's direction to be random
 	float direction[3] = { 2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f,
