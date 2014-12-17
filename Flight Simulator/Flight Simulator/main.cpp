@@ -1,34 +1,27 @@
 #include "stdafx.h"
 #include "DrawClass.h"
-#include "GUIClass.h"
+#include "Hud.h"
+#include "main.h"
 #include "TextureLoader.h"
 
 struct setting {
-	int windowx = 1000;
-	int windowy = 1000;
-	GLdouble sterooffset;
-	GLdouble eyeDistance;
-	GLdouble parallaxFactor;
-	GLdouble convergenceDistance;
-	GLdouble z = 0;
-	GLdouble x = 0;
+	int windowx = 1920/2;
+	int windowy = 1080/2;
+	//float stereoOffset;
+	float eyeDistance = 0.2f;
+	//float parallaxFactor;
+	//float convergenceDistance;
 } Set;
-
-struct _player {
-	int score = 1;
-	int lives = 3;
-	char deleteThis = 'R';
-	char* scoreAsString = &deleteThis;
-
-} Player;
 
 int totalTime = 0;
 bool keyStates[256] = { false }; // keyboard state
 bool specialKeys[256] = { false };
 
-DrawClass scene;
-GUIClass gui;
+Hud hud;
 EnemyHandler enemies = EnemyHandler();
+GameInfo gameInfo = { 3, 3 };
+GameInfo getGameInfo(void){	return gameInfo;}
+
 double thetaR = 3.14 / 2;
 double thetaY = 3 * 3.14 / 2;
 GLfloat lightposition[] = { 0, 2, 0 };
@@ -36,16 +29,18 @@ Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negat
 Vector3 lookAt = { 300 * cosf(thetaY), 0, 300 * sinf(thetaY) };
 Vector3 cameraUp = { 300 * cosf(thetaR), 300 * sinf(thetaR), 0 };
 Vector3 mover;
-
 double thetaP = 3.14;
-
 float between;
 int count = 0;
 
+void updateGameInfo(void)
+{
+	gameInfo.score = totalTime/100;
+	gameInfo.lives = 3;
+}
 
 
 
-	
 void updatePlayer(int deltaTime)
 {
 	playerPos.z -= 0.01;
@@ -74,10 +69,10 @@ void updateKeyboard(void)
 {
 	// WASD
 	if (keyStates['w'] || keyStates['W']) {
-		scene.moveForward();
+		
 	}
 	else if (keyStates['s'] || keyStates['S']) {
-		scene.moveBackward();
+		
 	}
 	if (keyStates['a'] || keyStates['A']) {
 		thetaR += 0.1;
@@ -138,10 +133,10 @@ void updateKeyboard(void)
 		
 	}
 	if (specialKeys[GLUT_KEY_PAGE_DOWN] || specialKeys[GLUT_KEY_HOME]) {
-		scene.yawLeft();
+		
 	}
 	else if (specialKeys[GLUT_KEY_PAGE_UP] || specialKeys[GLUT_KEY_END]) {
-		scene.yawRight();
+		
 	}
 }
 
@@ -158,7 +153,7 @@ void update(int value)
 	updateKeyboard();
 	updateEnemies(deltaTime);
 	updatePlayer(deltaTime);
-
+	updateGameInfo();
 
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
@@ -236,47 +231,14 @@ void init(void)
 	// Textures
 	glEnable(GL_TEXTURE_2D);
 	loadTextures();
-	
-	gui.set(Set.windowx/2, Set.windowy);
-	
-}
-
-void drawHUD(void)
-{
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-
-	glMatrixMode(GL_PROJECTION);
-	float origin[3] = { 0, 0, 0 };
-	for (auto it = enemies.list.begin(); it != enemies.list.end(); ++it) {
-		glPushMatrix();
-		glLoadIdentity();
-		gluOrtho2D(0, Set.windowx, 0, Set.windowy);
-
-
-		glColor3f(0.0, 0.0, 1.0);
-		glRasterPos2i(20, Set.windowy - 30);  // or wherever in window coordinates
-		if (Player.scoreAsString != NULL)
-		{
-			for (char* p = Player.scoreAsString; *p; p++)
-				glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *p);
 		}
 
-		glPopMatrix();
-		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
-	}
-}
 
 void draw(void)
 {
 	enemies.drawEnemies();
 	enemies.updateBullets();
-	drawHUD();	
-	//scene.draw();
-	//gui has problems with coordinating to the two eyes turned off for comfort.
-	gui.draw();
+	//hud.draw(); // moved to display
 }
 
 
@@ -287,8 +249,8 @@ void draw(void)
 void display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
 
 	//Viewport Left
 	glViewport(0, 0, Set.windowx / 2, Set.windowy);
@@ -297,9 +259,12 @@ void display(void)
 	gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(0.2f, 0, 0);
+	glTranslatef(Set.eyeDistance, 0, 0);
+	glPushMatrix(); // Pushing to attempt to save the translate for hud.draw(); not the right idea.
 	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
 	draw();
+	glPopMatrix(); // pop!
+	hud.draw();
 	
 	//Viewport Right
 	glViewport(Set.windowx / 2, 0, Set.windowx / 2, Set.windowy);
@@ -308,9 +273,12 @@ void display(void)
 	gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(-0.2f, 0, 0);
+	glTranslatef(-Set.eyeDistance, 0, 0);
+	glPushMatrix(); // push!
 	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
 	draw();
+	glPopMatrix(); // pop!
+	hud.draw();
 
 	glutSwapBuffers();
 }
@@ -319,10 +287,7 @@ void reshape(int x, int y)
 {
 	Set.windowx = x;
 	Set.windowy = y;
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45, (Set.windowx / 2) / (Set.windowy), 1, 100);
-	gui.set(x, y);
+	hud.setWindowSize(x, y);
 }
 
 /* main function - program entry point */

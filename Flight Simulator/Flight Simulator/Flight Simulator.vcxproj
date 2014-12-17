@@ -80,7 +80,7 @@
     <ClCompile Include="calculations.cpp" />
     <ClCompile Include="DrawClass.cpp" />
     <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="GUIClass.cpp" />
+    <ClCompile Include="Hud.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
@@ -91,7 +91,8 @@
     <ClInclude Include="calculations.h" />
     <ClInclude Include="DrawClass.h" />
     <ClInclude Include="Enemy.h" />
-    <ClInclude Include="GUIClass.h" />
+    <ClInclude Include="Hud.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="stdafx.h" />

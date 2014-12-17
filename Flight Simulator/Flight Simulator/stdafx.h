@@ -18,6 +18,7 @@
 #include <vector>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 
 // User libraries
 #include "calculations.h"
