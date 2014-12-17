@@ -13,6 +13,14 @@ struct setting {
 	GLdouble x = 0;
 } Set;
 
+struct _player {
+	int score = 1;
+	int lives = 3;
+	char deleteThis = 'R';
+	char* scoreAsString = &deleteThis;
+
+} Player;
+
 int totalTime = 0;
 bool keyStates[256] = { false }; // keyboard state
 bool specialKeys[256] = { false };
@@ -33,7 +41,7 @@ Vector3 mover;
 
 void updatePlayer(int deltaTime)
 {
-	//playerPos.z -= 0.01;
+	playerPos.z -= 0.01;
 	lookAt.z -= 0.01;
 	mover = Vector3(lookAt.x - playerPos.x, lookAt.y - playerPos.y, lookAt.z - playerPos.z).normalize();
 	playerPos.x += mover.x/80;
@@ -69,8 +77,6 @@ void updateKeyboard(void)
 	//space
 	if (keyStates[' '])
 	{
-		/*bulletArray[0].location = { playerPos.x, playerPos.y, playerPos.z };
-		bulletArray[0].speed = 1;*/
 		enemies.spawnBullet(playerPos, playerPos.directionTo(lookAt));
 	}
 
@@ -111,7 +117,6 @@ void update(int value)
 	// Other update routines
 	updateKeyboard();
 	updateEnemies(deltaTime);
-	//updateBullets();
 	updatePlayer(deltaTime);
 
 
@@ -192,18 +197,47 @@ void init(void)
 	
 }
 
+void drawHUD(void)
+{
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
 
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	gluOrtho2D(0, Set.windowx, 0, Set.windowy);
+
+	
+	glColor3f(0.0, 0.0, 1.0);
+	glRasterPos2i(20, Set.windowy - 30);  // or wherever in window coordinates
+	if (Player.scoreAsString != NULL)
+	{
+		for (char* p = Player.scoreAsString; *p; p++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *p);
+	}
+
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+}
 
 void draw(void)
 {
 	enemies.drawEnemies();
-	//updateBullets();
 	enemies.updateBullets();
+	drawHUD();
+	
+
+	
+
 	
 	//scene.draw();
 	//gui has problems with coordinating to the two eyes turned off for comfort.
 	//gui.draw();
 }
+
+
 
 /* display function - GLUT display callback function
 *		clears the screen, sets the camera position, draws the ground plane and movable box

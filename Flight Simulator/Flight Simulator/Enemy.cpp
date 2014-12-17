@@ -56,7 +56,6 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 	//deltaTime = deltaTime / 50; // scaling the speed down
 	if (list.size() < 10 || lastUpdate > spawnInterval) {
 		lastUpdate = 0;
-		//Enemy p = Enemy({ playerPos.x + randFloat(-10, 10), playerPos.y + randFloat(-10, 10), playerPos.z - 10 });
 		Enemy p = Enemy({ playerPos.x + randFloat(-10, 10), playerPos.y + randFloat(-10, 10), playerPos.z - 10 });
 		p.color = { randFloat(0, 1), randFloat(0, 1), randFloat(0, 1) };
 		list.push_back(p);
@@ -65,7 +64,19 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 
 	for (auto it = list.begin(); it != list.end();) {
 		// nothing to do
-		bool eraseMe = false;
+		bool eraseMe = false; //whether to erase the current enemy list element
+		//check if enemy has hit player
+		if (playerPos.x - 1 < it->position.x
+			&& playerPos.x + 1 > it->position.x
+			&& playerPos.y - 1 < it->position.y
+			&& playerPos.y + 1 > it->position.y
+			&& playerPos.z - 2 < it->position.z
+			&& playerPos.z + 1 > it->position.z)
+		{
+			std::cout << "\nYou have been hit";
+			eraseMe = true;
+		}
+		//check if bullet has hit enemy
 		for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray); i++)
 		{
 			if (bulletArray[i].location.x - bulletArray[i].hitbox < it->position.x
@@ -79,7 +90,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 				for (int i = 0; i < 50; i++)
 					particleSystem.spawnParticle();
 				eraseMe = true;
-				//it = list.erase(it);
+				
 				bulletArray[i].location = playerPos;
 				bulletArray[i].speed = 0;
 			}
