@@ -26,6 +26,8 @@ Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negat
 Vector3 lookAt = { 0, 0, -1 };
 Vector3 cameraUp = { 0, 1, 0 };
 Vector3 mover;
+double thetaY = 3 * 3.14 / 2;
+double thetaP = 3.14;
 
 struct _bullet {
 	Vector3 location = { 0, 0, 0 };
@@ -98,21 +100,28 @@ void updateKeyboard(void)
 	}
 
 	// Special Keys
-	if (specialKeys[GLUT_KEY_LEFT]) {
-		lookAt.x -= 0.1;
+	if (specialKeys[GLUT_KEY_LEFT] ) {
+		thetaY -= 0.01;
+		lookAt.x = 300 * cos(thetaY);
+		lookAt.z = 300 * sin(thetaY);
 		//Set.x += 0.1;
 	}
 	else if (specialKeys[GLUT_KEY_RIGHT]) {
-		lookAt.x += 0.1;
-		//Set.x -= 0.1;
+		thetaY += 0.01;
+		lookAt.x = 300*cos(thetaY);
+		lookAt.z = 300*sin(thetaY);
+		//lookAt.x += 0.1;
+		
 	}
 	if (specialKeys[GLUT_KEY_UP]) {
-		lookAt.y += 0.1;
-		//Set.z += 0.1;
+		//lookAt.y += 0.1;
+		
 	}
 	else if (specialKeys[GLUT_KEY_DOWN]) {
-		lookAt.y -= 0.1;
-		//Set.z -= 0.1;
+		//lookAt.y -= 0.1;
+		//lookAt.z = cos(thetaP);
+		//lookAt.y = sin(thetaP);
+		
 	}
 	if (specialKeys[GLUT_KEY_PAGE_DOWN] || specialKeys[GLUT_KEY_HOME]) {
 		scene.yawLeft();
