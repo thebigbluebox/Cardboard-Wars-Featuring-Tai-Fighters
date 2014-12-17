@@ -18,6 +18,7 @@ GLuint textures[2];
  *   and draws a polygon using the vertices indexed by the indices
  */
 void drawPolygon(int a, int b, int c, int d, float v[8][3]){
+	
 	glBegin(GL_POLYGON);
 
 		glTexCoord2f(0,0);
@@ -45,26 +46,32 @@ void cube(float v[8][3], bool windowTexture)
 		glBindTexture(GL_TEXTURE_2D,textures[0]);
 	}
 	glColor3fv(cols[1]); 
+	glNormal3f(0, 0, 1);
 	drawPolygon(0, 3, 2, 1, v);
 
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
 	glColor3fv(cols[2]); 
+	glNormal3f(-1, 0, 0);
 	drawPolygon(5, 4, 0, 1, v); //1 0 4 5
 	
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
 	glColor3fv(cols[3]); 
+	glNormal3f(0, 1, 0);
 	drawPolygon(5, 1, 2, 6, v);
 	
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
 	glColor3fv(cols[4]); 
+	glNormal3f(1, 0, 0);
 	drawPolygon(2, 3, 7, 6, v);
 	
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
 	glColor3fv(cols[5]); 
+	glNormal3f(0, 0, -1);
 	drawPolygon(6, 5, 4, 7, v);
 
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
 	glColor3fv(cols[0]); 
+	glNormal3f(0, -1, 0);
 	drawPolygon(7, 3, 0, 4, v); 
 }
 
