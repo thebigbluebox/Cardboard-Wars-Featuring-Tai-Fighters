@@ -20,7 +20,7 @@ GLuint textures[2];
 *    +y  4 -37  2 -z
 *        |   | /
 * -x -y  5 - 6  +z +x
-*/
+ */
 void drawBox(Vector3 centre, Vector3 size, GLuint texture, Vector3 color)
 {
 	float vertices[8][3] = {
@@ -33,7 +33,7 @@ void drawBox(Vector3 centre, Vector3 size, GLuint texture, Vector3 color)
 		{ centre.x + size.x / 2, centre.y - size.y / 2, centre.z + size.z / 2 }, // front RB
 		{ centre.x + size.x / 2, centre.y + size.y / 2, centre.z + size.z / 2 }  // front RT
 	};
-	
+
 	int faces[6][4] = {
 		{ 1, 2, 3, 0 }, // back
 		{ 0, 3, 5, 4 }, // left
@@ -75,20 +75,20 @@ void drawBox(Vector3 centre, Vector3 size, GLuint texture, Vector3 color)
 			glTexCoord2fv(texCoord[j]);
 			glNormal3fv(normals[i]);
 			glVertex3fv(vertices[faces[i][j]]);
-		}
-		glEnd();
 	}
+		glEnd();
+}
 }
 
 void enemyModel(Vector3 centre, Vector3 color) {
 	//draw fuselage
 	float fuselage_size = 0.5;
 	drawBox(centre, { fuselage_size, fuselage_size, fuselage_size }, textures[1], color);
-
+	
 	//draw left wing connector
 	centre.x += fuselage_size / 2 + fuselage_size / 4;
 	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, textures[0], color);
-
+	
 	//draw left wing
 	centre.x += fuselage_size / 2;
 	drawBox(centre, { fuselage_size / 2, fuselage_size * 1.25f, fuselage_size }, textures[0], color);
@@ -97,7 +97,7 @@ void enemyModel(Vector3 centre, Vector3 color) {
 	//draw right wing connector
 	centre.x -= fuselage_size / 2 + fuselage_size / 4;
 	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, textures[0], color);
-
+	
 	//draw right wing
 	centre.x -= fuselage_size / 2;
 	drawBox(centre, { fuselage_size / 2.0f, fuselage_size * 1.25f, fuselage_size }, textures[0], color);
