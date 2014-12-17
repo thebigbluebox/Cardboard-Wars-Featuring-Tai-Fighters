@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DrawClass.h"
 #include "GUIClass.h"
+#include "TextureLoader.h"
 
 struct setting {
 	int windowx = 1000;
@@ -38,7 +39,7 @@ Vector3 mover;
 
 
 
-
+	
 void updatePlayer(int deltaTime)
 {
 	playerPos.z -= 0.01;
@@ -193,6 +194,10 @@ void init(void)
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE); // use glColor for material
 
+	// Textures
+	glEnable(GL_TEXTURE_2D);
+	loadTextures();
+	
 	gui.set(Set.windowx/2, Set.windowy);
 	
 }
@@ -204,34 +209,32 @@ void drawHUD(void)
 	glLoadIdentity();
 
 	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	gluOrtho2D(0, Set.windowx, 0, Set.windowy);
+	float origin[3] = { 0, 0, 0 };
+	for (auto it = enemies.list.begin(); it != enemies.list.end(); ++it) {
+		glPushMatrix();
+		glLoadIdentity();
+		gluOrtho2D(0, Set.windowx, 0, Set.windowy);
 
-	
-	glColor3f(0.0, 0.0, 1.0);
-	glRasterPos2i(20, Set.windowy - 30);  // or wherever in window coordinates
-	if (Player.scoreAsString != NULL)
-	{
-		for (char* p = Player.scoreAsString; *p; p++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *p);
+
+		glColor3f(0.0, 0.0, 1.0);
+		glRasterPos2i(20, Set.windowy - 30);  // or wherever in window coordinates
+		if (Player.scoreAsString != NULL)
+		{
+			for (char* p = Player.scoreAsString; *p; p++)
+				glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *p);
+		}
+
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		glPopMatrix();
 	}
-
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
 }
 
 void draw(void)
 {
 	enemies.drawEnemies();
 	enemies.updateBullets();
-	drawHUD();
-	
-
-	
-
-	
+	drawHUD();	
 	//scene.draw();
 	//gui has problems with coordinating to the two eyes turned off for comfort.
 	//gui.draw();

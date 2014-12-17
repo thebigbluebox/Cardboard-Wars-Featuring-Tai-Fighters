@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "TextureLoader.h"
 
 //this needs to be global (doesn't work otherwise)
 ParticleSystem particleSystem;
@@ -112,11 +113,17 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 
 void EnemyHandler::drawEnemies(void)
 {
+	float origin[3] = { 0, 0, 0 };
 	for (auto it = list.begin(); it != list.end(); ++it) {
 		glPushMatrix();
 		glColor3fv(it->color.v);
-		glTranslatef(it->position.x, it->position.y, it->position.z);
-		glutSolidCube(it->size);
+		origin[0] += it->position.x;
+		origin[1] += it->position.y;
+		origin[2] += it->position.z;
+		enemyModel(origin);
+		origin[0] = 0;
+		origin[1] = 0;
+		origin[2] = 0;
 		glPopMatrix();
 	}
 	particleSystem.drawParticles();
