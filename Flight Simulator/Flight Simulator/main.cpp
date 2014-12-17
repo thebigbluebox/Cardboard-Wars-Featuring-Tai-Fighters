@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "DrawClass.h"
-#include "GUIClass.h"
+#include "Hud.h"
+#include "main.h"
 #include "TextureLoader.h"
 
 struct setting {
-	int windowx = 1000;
-	int windowy = 1000;
+	int windowx = 1920/2;
+	int windowy = 1080/2;
 	GLdouble sterooffset;
 	GLdouble eyeDistance;
 	GLdouble parallaxFactor;
@@ -22,12 +23,20 @@ struct _player {
 
 } Player;
 
+GameInfo gameInfo = { 3, 3 };
+
+GameInfo getGameInfo(void)
+{
+	return gameInfo;
+}
+
+
 int totalTime = 0;
 bool keyStates[256] = { false }; // keyboard state
 bool specialKeys[256] = { false };
 
 DrawClass scene;
-GUIClass gui;
+Hud hud;
 EnemyHandler enemies = EnemyHandler();
 
 GLfloat lightposition[] = { 0, 2, 0 };
@@ -38,7 +47,11 @@ Vector3 mover;
 
 
 
-
+void updateGameInfo(void)
+{
+	gameInfo.score = totalTime/100;
+	gameInfo.lives = 3;
+}
 	
 void updatePlayer(int deltaTime)
 {
@@ -119,7 +132,7 @@ void update(int value)
 	updateKeyboard();
 	updateEnemies(deltaTime);
 	updatePlayer(deltaTime);
-
+	updateGameInfo();
 
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
@@ -197,47 +210,17 @@ void init(void)
 	// Textures
 	glEnable(GL_TEXTURE_2D);
 	loadTextures();
-	
-	gui.set(Set.windowx/2, Set.windowy);
-	
 }
 
-void drawHUD(void)
-{
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-
-	glMatrixMode(GL_PROJECTION);
-	float origin[3] = { 0, 0, 0 };
-	for (auto it = enemies.list.begin(); it != enemies.list.end(); ++it) {
-		glPushMatrix();
-		glLoadIdentity();
-		gluOrtho2D(0, Set.windowx, 0, Set.windowy);
-
-
-		glColor3f(0.0, 0.0, 1.0);
-		glRasterPos2i(20, Set.windowy - 30);  // or wherever in window coordinates
-		if (Player.scoreAsString != NULL)
-		{
-			for (char* p = Player.scoreAsString; *p; p++)
-				glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *p);
-		}
-
-		glPopMatrix();
-		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
-	}
-}
 
 void draw(void)
 {
 	enemies.drawEnemies();
 	enemies.updateBullets();
-	drawHUD();	
 	//scene.draw();
 	//gui has problems with coordinating to the two eyes turned off for comfort.
 	//gui.draw();
+	hud.draw();
 }
 
 
@@ -283,7 +266,7 @@ void reshape(int x, int y)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45, (Set.windowx / 2) / (Set.windowy), 1, 100);
-	gui.set(x, y);
+	hud.setWindowSize(x, y);
 }
 
 /* main function - program entry point */
