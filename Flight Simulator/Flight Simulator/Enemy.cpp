@@ -21,13 +21,8 @@ Enemy::Enemy(Vector3 pos)
 
 EnemyHandler::EnemyHandler(void)
 {
-	
 	lastUpdate = 0;
 	spawnInterval = 200; // ms
-	//particleSystem = ParticleSystem(playerPos.v, 0, playerPos.v);
-	//particleSystem = ParticleSystem();
-
-	
 }
 
 void EnemyHandler::updateBullets(void)
@@ -70,7 +65,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 
 	for (auto it = list.begin(); it != list.end();) {
 		// nothing to do
-
+		bool eraseMe = false;
 		for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray); i++)
 		{
 			if (bulletArray[i].location.x - bulletArray[i].hitbox < it->position.x
@@ -80,15 +75,18 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 				&& bulletArray[i].location.z - bulletArray[i].hitbox < it->position.z
 				&& bulletArray[i].location.z + bulletArray[i].hitbox > it->position.z)
 			{
-				std::cout << "hit";
 				particleSystem.setPosition(it->position.x, it->position.y, it->position.z);
-				for (int i = 0; i < 100; i++)
+				for (int i = 0; i < 50; i++)
 					particleSystem.spawnParticle();
+				eraseMe = true;
+				//it = list.erase(it);
+				bulletArray[i].location = playerPos;
+				bulletArray[i].speed = 0;
 			}
 		}
 
 		// delete enemies behind the player
-		if (it->position.z > playerPos.z) {
+		if (it->position.z > playerPos.z || eraseMe) {
 			it = list.erase(it);
 		}
 		else {
