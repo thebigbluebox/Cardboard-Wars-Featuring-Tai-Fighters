@@ -7,7 +7,7 @@ ParticleSystem particleSystem;
 Enemy::Enemy(void)
 {
 	position = Vector3();
-	color = { 1, 1, 1 };
+	color = { 0.5f, 0.5f, 0.5f };
 	size = 1;
 	shape = Shape::Cube;
 }
@@ -15,7 +15,7 @@ Enemy::Enemy(void)
 Enemy::Enemy(Vector3 pos)
 {
 	position = pos;
-	color = { 1, 1, 1 };
+	color = { 0.5f, 0.5f, 0.5f };
 	size = 1;
 	shape = Shape::Cube;
 }
@@ -87,7 +87,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 	if (list.size() < 10 || lastUpdate > spawnInterval && spawnEnemies) {
 		lastUpdate = 0;
 		Enemy p = Enemy({ playerPos.x + randFloat(-10, 10), playerPos.y + randFloat(-10, 10), playerPos.z - 20 });
-		p.color = { randFloat(0, 1), randFloat(0, 1), randFloat(0, 1) };
+		//p.color = { randFloat(0, 1), randFloat(0, 1), randFloat(0, 1) }; // randomize color
 		list.push_back(p);
 	}
 
@@ -179,19 +179,15 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 
 void EnemyHandler::drawEnemies(void)
 {
-	float origin[3] = { 0, 0, 0 };
+	
 	for (auto it = list.begin(); it != list.end(); ++it) {
+		Vector3 origin = { 0, 0, 0 };
 		glPushMatrix();
-		glColor3fv(it->color.v);
-		
 		
 		glTranslatef(it->position.x, it->position.y, it->position.z);
 
 		glRotatef(it->rotation.z, 0, 0, 1);
-		enemyModel(origin);
-		origin[0] = 0;
-		origin[1] = 0;
-		origin[2] = 0;
+		enemyModel(origin, it->color);
 		glPopMatrix();
 	}
 	particleSystem.drawParticles();

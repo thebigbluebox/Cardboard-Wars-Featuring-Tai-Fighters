@@ -5,110 +5,103 @@
 #include "stdafx.h"
 #include "TextureLoader.h"
 
-float cols[6][3] = { {0.5,0.5,0.5}, {0.5,0.5,0.5}, {0.5,0.5,0.5}, {0.5,0.5,0.5}, {0.5,0.5,0.5}, {0.5,0.5,0.5} };
 
-//an array for iamge data
+
+//an array for image data
 GLubyte* hull_tex;
 GLubyte* window_tex;
 int width, height, max;
 
 GLuint textures[2];
 
-/* drawPolygon - takes 4 indices and an array of vertices
- *   and draws a polygon using the vertices indexed by the indices
- */
-void drawPolygon(int a, int b, int c, int d, float v[8][3]){
-	glBegin(GL_POLYGON);
-
-		glTexCoord2f(0,0);
-		glVertex3fv(v[a]);
-
-		glTexCoord2f(1,0);
-		glVertex3fv(v[b]);
-
-		glTexCoord2f(1,1);
-		glVertex3fv(v[c]);
-
-		glTexCoord2f(0, 1);
-		glVertex3fv(v[d]);
-	glEnd();
-}
-
-/* cube - takes an array of 8 vertices, and draws 6 faces
- *  with drawPolygon, making up a box
- */
-void cube(float v[8][3], bool windowTexture)
+/* Draws a textured box centered at a given position.
+*           0 - 1
+*         /   / |
+*    +y  4 -37  2 -z
+*        |   | /
+* -x -y  5 - 6  +z +x
+*/
+void drawBox(Vector3 centre, Vector3 size, GLuint texture, Vector3 color)
 {
-	if (windowTexture) {
-		glBindTexture(GL_TEXTURE_2D, textures[1]);
-	} else {
-		glBindTexture(GL_TEXTURE_2D,textures[0]);
+	float vertices[8][3] = {
+		{ centre.x - size.x / 2, centre.y + size.y / 2, centre.z - size.z / 2 }, // back LT
+		{ centre.x + size.x / 2, centre.y + size.y / 2, centre.z - size.z / 2 }, // back RT
+		{ centre.x + size.x / 2, centre.y - size.y / 2, centre.z - size.z / 2 }, // back RB
+		{ centre.x - size.x / 2, centre.y - size.y / 2, centre.z - size.z / 2 }, // back LB
+		{ centre.x - size.x / 2, centre.y + size.y / 2, centre.z + size.z / 2 }, // front LT
+		{ centre.x - size.x / 2, centre.y - size.y / 2, centre.z + size.z / 2 }, // front LB
+		{ centre.x + size.x / 2, centre.y - size.y / 2, centre.z + size.z / 2 }, // front RB
+		{ centre.x + size.x / 2, centre.y + size.y / 2, centre.z + size.z / 2 }  // front RT
+	};
+	
+	int faces[6][4] = {
+		{ 1, 2, 3, 0 }, // back
+		{ 0, 3, 5, 4 }, // left
+		{ 2, 6, 5, 3 }, // bottom
+		{ 1, 7, 6, 2 }, // right
+		{ 0, 4, 7, 1 }, // top
+		{ 4, 5, 6, 7 }  // front
+	};
+
+	float normals[6][3] = {
+		{ 0, 0, -1 },
+		{ -1, 0, 0 },
+		{ 0, -1, 0 },
+		{ 1, 0, 0 },
+		{ 0, 1, 0 },
+		{ 0, 0, 1 }
+	};
+
+	/*float faceColors[6][3] = { 
+		{ 0.5f, 0.5f, 0.5f }, 
+		{ 0.5f, 0.5f, 0.5f }, 
+		{ 0.5f, 0.5f, 0.5f }, 
+		{ 0.5f, 0.5f, 0.5f }, 
+		{ 0.5f, 0.5f, 0.5f }, 
+		{ 0.5f, 0.5f, 0.5f } 
+	};*/
+
+	float texCoord[4][2] = { 
+		{ 0, 0 }, { 1, 0 }, 
+		{ 1, 1 }, { 0, 1 } 
+	};
+
+	for (int i = 0; i < 6; i++) {
+		glBindTexture(GL_TEXTURE_2D, texture);
+		//glColor3fv(faceColors[i]);
+		glColor3fv(color.v); // single color for the whole box
+		glBegin(GL_POLYGON);
+		for (int j = 0; j < 4; j++) {
+			glTexCoord2fv(texCoord[j]);
+			glNormal3fv(normals[i]);
+			glVertex3fv(vertices[faces[i][j]]);
+		}
+		glEnd();
 	}
-	glColor3fv(cols[1]); 
-	drawPolygon(0, 3, 2, 1, v);
-
-	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	glColor3fv(cols[2]); 
-	drawPolygon(5, 4, 0, 1, v); //1 0 4 5
-	
-	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	glColor3fv(cols[3]); 
-	drawPolygon(5, 1, 2, 6, v);
-	
-	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	glColor3fv(cols[4]); 
-	drawPolygon(2, 3, 7, 6, v);
-	
-	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	glColor3fv(cols[5]); 
-	drawPolygon(6, 5, 4, 7, v);
-
-	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	glColor3fv(cols[0]); 
-	drawPolygon(7, 3, 0, 4, v); 
 }
 
-/* drawBox - takes centre point, width, height and depth of a box,
- *  calculates its corner vertices, and draws it with the cube function
- */
-void drawBox(float* c, float w, float h, float d, bool window)
-{
-	float vertices[8][3] = { {c[0]-w/2, c[1]-h/2, c[2]+d/2},
-							 {c[0]-w/2, c[1]+h/2, c[2]+d/2},
-							 {c[0]+w/2, c[1]+h/2, c[2]+d/2},
-							 {c[0]+w/2, c[1]-h/2, c[2]+d/2}, 
-							 {c[0]-w/2, c[1]-h/2, c[2]-d/2}, 
-							 {c[0]-w/2, c[1]+h/2, c[2]-d/2}, 
-							 {c[0]+w/2, c[1]+h/2, c[2]-d/2},
-							 {c[0]+w/2, c[1]-h/2, c[2]-d/2} };
-
-	cube(vertices, window);
-}
-
-void enemyModel(float* centre) {
+void enemyModel(Vector3 centre, Vector3 color) {
 	//draw fuselage
 	float fuselage_size = 0.5;
-	drawBox(centre,fuselage_size,fuselage_size,fuselage_size, true);
-	
+	drawBox(centre, { fuselage_size, fuselage_size, fuselage_size }, textures[1], color);
+
 	//draw left wing connector
-	centre[0] += fuselage_size / 2 + fuselage_size / 4;
-	drawBox(centre,fuselage_size / 2, fuselage_size / 2, fuselage_size / 4, false);
-	
+	centre.x += fuselage_size / 2 + fuselage_size / 4;
+	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, textures[0], color);
+
 	//draw left wing
-	centre[0] += fuselage_size / 2;
-	drawBox(centre,fuselage_size / 2, fuselage_size * 1.25, fuselage_size, false);
-	centre[0] -= fuselage_size + fuselage_size / 4;
+	centre.x += fuselage_size / 2;
+	drawBox(centre, { fuselage_size / 2, fuselage_size * 1.25f, fuselage_size }, textures[0], color);
+	centre.x -= fuselage_size + fuselage_size / 4;
 
 	//draw right wing connector
-	centre[0] -= fuselage_size / 2 + fuselage_size / 4;
-	drawBox(centre,fuselage_size / 2, fuselage_size / 2, fuselage_size / 4, false);
-	
+	centre.x -= fuselage_size / 2 + fuselage_size / 4;
+	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, textures[0], color);
+
 	//draw right wing
-	centre[0] -= fuselage_size / 2;
-	drawBox(centre,fuselage_size / 2, fuselage_size * 1.25, fuselage_size, false);
+	centre.x -= fuselage_size / 2;
+	drawBox(centre, { fuselage_size / 2.0f, fuselage_size * 1.25f, fuselage_size }, textures[0], color);
 }
-
-
 
 
 /* LoadPPM -- loads the specified ppm file, and returns the image data as a GLubyte 
