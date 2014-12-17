@@ -95,6 +95,7 @@
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
   <ItemGroup>

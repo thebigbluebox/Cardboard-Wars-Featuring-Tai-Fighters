@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DrawClass.h"
 #include "GUIClass.h"
+#include "TextureLoader.h"
 
 struct setting {
 	int windowx = 1000;
@@ -213,18 +214,25 @@ void init(void)
 
 	// Textures
 	glEnable(GL_TEXTURE_2D);
-
+	loadTextures();
+	
 	gui.set(Set.windowx/2, Set.windowy);
 	
 }
 
 void drawEnemies(void)
 {
+	float origin[3] = { 0, 0, 0 };
 	for (auto it = enemies.list.begin(); it != enemies.list.end(); ++it) {
 		glPushMatrix();
 			glColor3fv(it->color.v);
-			glTranslatef(it->position.x, it->position.y, it->position.z);
-			glutSolidCube(it->size);
+			origin[0] += it->position.x;
+			origin[1] += it->position.y;
+			origin[2] += it->position.z;
+			enemyModel(origin);
+			origin[0] = 0;
+			origin[1] = 0;
+			origin[2] = 0;
 		glPopMatrix();
 	}
 }

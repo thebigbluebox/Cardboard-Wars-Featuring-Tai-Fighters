@@ -3,6 +3,7 @@
  */
 
 #include "stdafx.h"
+#include "TextureLoader.h"
 
 float cols[6][3] = { {0.5,0.5,0.5}, {0.5,0.5,0.5}, {0.5,0.5,0.5}, {0.5,0.5,0.5}, {0.5,0.5,0.5}, {0.5,0.5,0.5} };
 
@@ -49,7 +50,7 @@ void cube(float v[8][3], bool window)
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
 	glColor3fv(cols[2]);
 	drawPolygon(1, 0, 4, 5, v);
-
+	
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
 	glColor3fv(cols[3]);
 	drawPolygon(5, 1, 2, 6, v);
@@ -84,7 +85,7 @@ void drawBox(float* c, float w, float h, float d, bool window)
 	cube(vertices, window);
 }
 
-void enemy(float* centre) {
+void enemyModel(float* centre) {
 	//draw fuselage
 	float fuselage_size = 0.5;
 	drawBox(centre,fuselage_size,fuselage_size,fuselage_size, true);
