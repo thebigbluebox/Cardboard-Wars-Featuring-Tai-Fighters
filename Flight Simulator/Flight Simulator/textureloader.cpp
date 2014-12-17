@@ -23,7 +23,7 @@ void drawPolygon(int a, int b, int c, int d, float v[8][3]){
 		glTexCoord2f(0,0);
 		glVertex3fv(v[a]);
 
-		glTexCoord2f(1, 0);
+		glTexCoord2f(1,0);
 		glVertex3fv(v[b]);
 
 		glTexCoord2f(1,1);
@@ -37,9 +37,9 @@ void drawPolygon(int a, int b, int c, int d, float v[8][3]){
 /* cube - takes an array of 8 vertices, and draws 6 faces
  *  with drawPolygon, making up a box
  */
-void cube(float v[8][3], bool window)
+void cube(float v[8][3], bool windowTexture)
 {
-	if (window) {
+	if (windowTexture) {
 		glBindTexture(GL_TEXTURE_2D, textures[1]);
 	} else {
 		glBindTexture(GL_TEXTURE_2D,textures[0]);
@@ -130,11 +130,9 @@ GLubyte* LoadPPM(char* file, int* width, int* height, int* max)
 	fd = fopen(file, "r");
 	fscanf(fd,"%[^\n] ",b);
 	if(b[0]!='P'|| b[1] != '3')
-	{
-		printf("%s is not a PPM file!\n",file); 
+	{ 
 		exit(0);
 	}
-	printf("%s is a PPM file\n", file);
 	fscanf(fd, "%c",&c);
 	while(c == '#') 
 	{
@@ -145,15 +143,11 @@ GLubyte* LoadPPM(char* file, int* width, int* height, int* max)
 	ungetc(c,fd); 
 	fscanf(fd, "%d %d %d", &n, &m, &k);
 
-	printf("%d rows  %d columns  max value= %d\n",n,m,k);
-
 	nm = n*m;
 
 	img = (GLubyte *)malloc(3*sizeof(GLuint)*nm);
 
-
 	s=255.0/k;
-
 
 	for(i=0;i<nm;i++) 
 	{
@@ -195,8 +189,8 @@ void loadTextures(void)
 	//setup second texture
 	glBindTexture(GL_TEXTURE_2D, textures[1]);
 	//set texture parameters
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	//create a texture using the "tex" array
