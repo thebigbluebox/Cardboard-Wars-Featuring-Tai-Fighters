@@ -44,28 +44,28 @@ void cube(float v[8][3], bool window)
 	} else {
 		glBindTexture(GL_TEXTURE_2D,textures[0]);
 	}
-	glColor3fv(cols[1]);
+	glColor3fv(cols[1]); 
 	drawPolygon(0, 3, 2, 1, v);
 
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	glColor3fv(cols[2]);
-	drawPolygon(1, 0, 4, 5, v);
+	glColor3fv(cols[2]); 
+	drawPolygon(5, 4, 0, 1, v); //1 0 4 5
 	
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	glColor3fv(cols[3]);
+	glColor3fv(cols[3]); 
 	drawPolygon(5, 1, 2, 6, v);
 	
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	glColor3fv(cols[4]);
+	glColor3fv(cols[4]); 
 	drawPolygon(2, 3, 7, 6, v);
 	
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	glColor3fv(cols[5]);
+	glColor3fv(cols[5]); 
 	drawPolygon(6, 5, 4, 7, v);
 
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	glColor3fv(cols[0]);
-	drawPolygon(4, 0, 3, 7, v);
+	glColor3fv(cols[0]); 
+	drawPolygon(7, 3, 0, 4, v); 
 }
 
 /* drawBox - takes centre point, width, height and depth of a box,
@@ -172,10 +172,6 @@ GLubyte* LoadPPM(char* file, int* width, int* height, int* max)
 
 void loadTextures(void)
 {	
-	GLuint id = 1;
-	//enable texturing
-	
-
 	//generate 2 texture IDs, store them in array "textures"
 	glGenTextures(2, textures);
 
@@ -200,7 +196,7 @@ void loadTextures(void)
 	glBindTexture(GL_TEXTURE_2D, textures[1]);
 	//set texture parameters
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	//create a texture using the "tex" array
