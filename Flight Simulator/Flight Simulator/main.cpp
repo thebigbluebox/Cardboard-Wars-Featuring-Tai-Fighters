@@ -100,27 +100,33 @@ void updateKeyboard(void)
 	}
 
 	// Special Keys
-	if (specialKeys[GLUT_KEY_LEFT] ) {
+	if (specialKeys[GLUT_KEY_LEFT] && thetaY > 7*3.14/6) {
 		thetaY -= 0.01;
 		lookAt.x = 300 * cos(thetaY);
 		lookAt.z = 300 * sin(thetaY);
 		//Set.x += 0.1;
 	}
-	else if (specialKeys[GLUT_KEY_RIGHT]) {
+	else if (specialKeys[GLUT_KEY_RIGHT] && thetaY <11*3.14/6) {
 		thetaY += 0.01;
 		lookAt.x = 300*cos(thetaY);
 		lookAt.z = 300*sin(thetaY);
 		//lookAt.x += 0.1;
 		
 	}
-	if (specialKeys[GLUT_KEY_UP]) {
+	if (specialKeys[GLUT_KEY_UP] && thetaP > 4*3.14/6) {
 		//lookAt.y += 0.1;
+		thetaP -= 0.01;
+		lookAt.y = 300*sin(thetaP);
+		lookAt.z = 300*cos(thetaP);
+		//cameraUp.y = 300 * sin(thetaP - 3.14 / 2);
+		//cameraUp.z = 300 * cos(thetaP - 3.14 / 2);
 		
 	}
-	else if (specialKeys[GLUT_KEY_DOWN]) {
+	else if (specialKeys[GLUT_KEY_DOWN] && thetaP < 8*3.14/6) {
 		//lookAt.y -= 0.1;
-		//lookAt.z = cos(thetaP);
-		//lookAt.y = sin(thetaP);
+		thetaP += 0.01;
+		lookAt.y = 300 * sin(thetaP);
+		lookAt.z = 300 * cos(thetaP);
 		
 	}
 	if (specialKeys[GLUT_KEY_PAGE_DOWN] || specialKeys[GLUT_KEY_HOME]) {
