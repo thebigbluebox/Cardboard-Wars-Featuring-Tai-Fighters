@@ -20,14 +20,18 @@ bool specialKeys[256] = { false };
 DrawClass scene;
 GUIClass gui;
 EnemyHandler enemies = EnemyHandler();
-
+double thetaR = 3.14 / 2;
+double thetaY = 3 * 3.14 / 2;
 GLfloat lightposition[] = { 0, 2, 0 };
 Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negative z direction
-Vector3 lookAt = { 0, 0, -1 };
-Vector3 cameraUp = { 0, 1, 0 };
+Vector3 lookAt = { 300 * cosf(thetaY), 0, 300 * sinf(thetaY) };
+Vector3 cameraUp = { 300 * cosf(thetaR), 300 * sinf(thetaR), 0 };
 Vector3 mover;
-double thetaY = 3 * 3.14 / 2;
+
 double thetaP = 3.14;
+
+float between;
+int count = 0;
 
 
 
@@ -44,6 +48,11 @@ void updatePlayer(int deltaTime)
 	lookAt.x += mover.x / 80;
 	lookAt.y += mover.y / 80;
 	lookAt.z += mover.z / 80;
+	Vector3 y = { 0, 1, 0 };
+	between = acos(dotproduct(cameraUp, y) / (magnitude(y)*magnitude(cameraUp)));
+	/*Vector3 rotater = crossproduct(lookAt, cameraUp);
+	Vector3 x = { 1, 0, 0 };
+	between = acos(dotproduct(x, rotater)/(magnitude(x)*magnitude(rotater)));*/
 }
 
 void updateEnemies(int deltaTime)
@@ -62,10 +71,18 @@ void updateKeyboard(void)
 		scene.moveBackward();
 	}
 	if (keyStates['a'] || keyStates['A']) {
-		scene.moveLeft();
+		thetaR += 0.1;
+		cameraUp.x = 300 * cos(thetaR)/50;
+		cameraUp.y = 300 * sin(thetaR)/50;
+		
+		//glRotatef(1,cameraUp.x, cameraUp.y, cameraUp.z);
+		
 	}
 	else if (keyStates['d'] || keyStates['D']) {
-		scene.moveRight();
+		thetaR -= 0.1;
+		cameraUp.x = 300 * cos(thetaR)/50;
+		cameraUp.y = 300 * sin(thetaR)/50;
+		
 	}
 
 	//space
@@ -90,20 +107,27 @@ void updateKeyboard(void)
 		//lookAt.x += 0.1;
 		
 	}
-	if (specialKeys[GLUT_KEY_UP] && thetaP > 4*3.14/6) {
-		//lookAt.y += 0.1;
-		thetaP -= 0.01;
+	if (specialKeys[GLUT_KEY_UP] && lookAt.y < 400/*&& thetaP > 4*3.14/6*/) {
+		lookAt.y += 3;
+		//lookAt.x += cameraUp.x;
+		/*thetaP -= 0.01;
 		lookAt.y = 300*sin(thetaP);
-		lookAt.z = 300*cos(thetaP);
+		lookAt.z = 300*cos(thetaP);*/
 		//cameraUp.y = 300 * sin(thetaP - 3.14 / 2);
 		//cameraUp.z = 300 * cos(thetaP - 3.14 / 2);
 		
 	}
-	else if (specialKeys[GLUT_KEY_DOWN] && thetaP < 8*3.14/6) {
-		//lookAt.y -= 0.1;
-		thetaP += 0.01;
-		lookAt.y = 300 * sin(thetaP);
-		lookAt.z = 300 * cos(thetaP);
+	else if (specialKeys[GLUT_KEY_DOWN] && lookAt.y > -400 /*(thetaP-between) < 8*3.14/6*/) {
+			lookAt.y -= 3;
+			//lookAt.x -= cameraUp.x;
+			/*thetaP += 0.01;
+			float thetaU = thetaP - (3.14 / 2);
+			lookAt.y = 300 * sin(thetaP-between);
+			lookAt.z = 300 * cos(thetaP-between);
+			cameraUp.y = 300 * sin(thetaU - between);
+			cameraUp.z = 300 * cos(thetaU - between);
+			printf("theta %d between %d \n", thetaP, between);*/
+
 		
 	}
 	if (specialKeys[GLUT_KEY_PAGE_DOWN] || specialKeys[GLUT_KEY_HOME]) {
@@ -217,7 +241,7 @@ void draw(void)
 	
 	//scene.draw();
 	//gui has problems with coordinating to the two eyes turned off for comfort.
-	//gui.draw();
+	gui.draw();
 }
 
 /* display function - GLUT display callback function
