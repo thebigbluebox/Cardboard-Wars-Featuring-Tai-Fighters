@@ -29,33 +29,10 @@ Vector3 mover;
 double thetaY = 3 * 3.14 / 2;
 double thetaP = 3.14;
 
-struct _bullet {
-	Vector3 location = { 0, 0, 0 };
-	Vector3 direction = { 0, 0, -1 };
-	float speed = 0;
-	int hitbox = 10;
-	int duration = 0;
-	int maxDuration = 10;
-};
-typedef _bullet bullet;
-
-bullet bulletArray[10];
 
 
-void updateBullets(void)
-{
-	for (int i = 0; i < sizeof(bulletArray)/sizeof(*bulletArray); i++)
-	{
-		if (bulletArray[i].speed > 0)
-			bulletArray[i].location = bulletArray[i].location.add(bulletArray[i].direction);
-	
-		glPushMatrix();
-		glTranslatef(bulletArray[i].location.x, bulletArray[i].location.y, bulletArray[i].location.z);
-		glColor3f(1, 0, 0);
-		glutSolidCube(0.1);
-		glPopMatrix();
-	}
-}
+
+
 void updatePlayer(int deltaTime)
 {
 	//playerPos.z -= 0.01;

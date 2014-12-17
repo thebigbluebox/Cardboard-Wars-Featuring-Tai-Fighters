@@ -189,6 +189,7 @@ void ParticleSystem::updateParticles(void)
 			//this case won't happen unless the time set is really low
 			if (iteratorA->prev == NULL && iteratorA->next == NULL)
 			{
+				std::cout << "hit";
 				iteratorA = NULL;
 			}
 
