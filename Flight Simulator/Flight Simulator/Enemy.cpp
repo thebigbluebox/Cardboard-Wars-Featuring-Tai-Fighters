@@ -24,6 +24,8 @@ EnemyHandler::EnemyHandler(void)
 {
 	lastUpdate = 0;
 	spawnInterval = 200; // ms
+	ai = ONE;
+	spawnEnemies = true;
 }
 
 void EnemyHandler::updateBullets(void)
@@ -54,17 +56,81 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 	this->playerPos = playerPos;
 	lastUpdate += deltaTime;
 
+	//every time the player position is divisible by 10 the ai updates
+	if ((int)playerPos.z % 10 == 0 && (int)playerPos.z != lastAIUpdate)
+	{
+		lastAIUpdate = (int)playerPos.z;
+		std::cout << "\nai update";
+		//update the ai
+		switch (ai)
+		{
+		case ONE:
+			ai = TWO;
+			break;
+		case TWO:
+			ai = THREE;
+			break;
+		case THREE:
+			ai = FOUR;
+			break;
+		case FOUR:
+			ai = ONE;
+			break;
+		default:
+			ai = FOUR;
+			break;
+		}
+	}
+		
+
 	//deltaTime = deltaTime / 50; // scaling the speed down
-	if (list.size() < 10 || lastUpdate > spawnInterval) {
+	if (list.size() < 10 || lastUpdate > spawnInterval && spawnEnemies) {
 		lastUpdate = 0;
-		Enemy p = Enemy({ playerPos.x + randFloat(-10, 10), playerPos.y + randFloat(-10, 10), playerPos.z - 10 });
+		Enemy p = Enemy({ playerPos.x + randFloat(-10, 10), playerPos.y + randFloat(-10, 10), playerPos.z - 20 });
 		p.color = { randFloat(0, 1), randFloat(0, 1), randFloat(0, 1) };
 		list.push_back(p);
-		//printf("%f %f %f \n", p.position.x, p.position.y, p.position.z);
 	}
 
 	for (auto it = list.begin(); it != list.end();) {
-		// nothing to do
+		//bahave based on the ai
+		if (ai == ONE)
+		{
+			it->position.x += 0.02 * sin(playerPos.z);
+			it->position.y -= 0.02 * sin(playerPos.z);
+		}
+		if (ai == TWO)
+		{
+			if (it->position.x < playerPos.x)
+				it->position.x += 0.01;
+			if (it->position.x > playerPos.x)
+				it->position.x -= 0.01;
+		}
+		if (ai == THREE)
+		{
+			if (it->position.x < playerPos.x + 400)
+			{
+				it->position.x += 0.02;
+			}
+			else
+			{
+				std::cout << "not this";
+			}
+			it->position.y += 0.04 * sin(it->position.x);
+		}
+		if (ai == FOUR)
+		{
+			if (it->rotation.z <= 359)
+			{
+				it->rotation.z += 5;
+				spawnEnemies = false;
+			}
+			else
+			{
+				ai = ONE;
+				spawnEnemies = true;
+			}
+		}
+		//it->position.x += sin(playerPos.z);
 		bool eraseMe = false; //whether to erase the current enemy list element
 		//check if enemy has hit player
 		if (playerPos.x - 1 < it->position.x
@@ -117,9 +183,11 @@ void EnemyHandler::drawEnemies(void)
 	for (auto it = list.begin(); it != list.end(); ++it) {
 		glPushMatrix();
 		glColor3fv(it->color.v);
-		origin[0] += it->position.x;
-		origin[1] += it->position.y;
-		origin[2] += it->position.z;
+		
+		
+		glTranslatef(it->position.x, it->position.y, it->position.z);
+
+		glRotatef(it->rotation.z, 0, 0, 1);
 		enemyModel(origin);
 		origin[0] = 0;
 		origin[1] = 0;

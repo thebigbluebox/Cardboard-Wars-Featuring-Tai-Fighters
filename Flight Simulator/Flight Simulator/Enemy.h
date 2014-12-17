@@ -16,6 +16,7 @@ public:
 	Shape shape;
 	Enemy(void);
 	Enemy(Vector3 pos);
+	
 };
 
 
@@ -35,6 +36,11 @@ private:
 	
 	//ParticleSystem particleSystem;
 	bullet bulletArray[10];
+	enum AI { ZERO, ONE, TWO, THREE, FOUR };
+	AI ai;
+	float lastAIUpdate;
+	bool spawnEnemies;
+	
 public:
 	std::vector<Enemy> list;
 	//typedef std::list<Enemy>::iterator iter;
