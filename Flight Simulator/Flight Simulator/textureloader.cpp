@@ -5,14 +5,9 @@
 #include "stdafx.h"
 #include "TextureLoader.h"
 
-
-
-//an array for image data
+GLuint textures[2];
 GLubyte* hull_tex;
 GLubyte* window_tex;
-int width, height, max;
-
-GLuint textures[2];
 
 /* Draws a textured box centered at a given position.
 *           0 - 1
@@ -21,7 +16,7 @@ GLuint textures[2];
 *        |   | /
 * -x -y  5 - 6  +z +x
  */
-void drawBox(Vector3 centre, Vector3 size, GLuint texture, Vector3 color)
+void drawBox(Vector3 centre, Vector3 size, GLuint* faceTextures, Vector3 color)
 {
 	float vertices[8][3] = {
 		{ centre.x - size.x / 2, centre.y + size.y / 2, centre.z - size.z / 2 }, // back LT
@@ -67,7 +62,7 @@ void drawBox(Vector3 centre, Vector3 size, GLuint texture, Vector3 color)
 	};
 
 	for (int i = 0; i < 6; i++) {
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, faceTextures[i]);
 		//glColor3fv(faceColors[i]);
 		glColor3fv(color.v); // single color for the whole box
 		glBegin(GL_POLYGON);
@@ -81,26 +76,30 @@ void drawBox(Vector3 centre, Vector3 size, GLuint texture, Vector3 color)
 }
 
 void enemyModel(Vector3 centre, Vector3 color) {
+	GLuint cubeFaceTextures[6] = { textures[0], textures[0], textures[0], textures[0], textures[0], textures[1] };
+
 	//draw fuselage
 	float fuselage_size = 0.5;
-	drawBox(centre, { fuselage_size, fuselage_size, fuselage_size }, textures[1], color);
+	drawBox(centre, { fuselage_size, fuselage_size, fuselage_size }, cubeFaceTextures, color);
 	
+	cubeFaceTextures[5] = textures[0];
+
 	//draw left wing connector
 	centre.x += fuselage_size / 2 + fuselage_size / 4;
-	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, textures[0], color);
+	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, cubeFaceTextures, color);
 	
 	//draw left wing
 	centre.x += fuselage_size / 2;
-	drawBox(centre, { fuselage_size / 2, fuselage_size * 1.25f, fuselage_size }, textures[0], color);
+	drawBox(centre, { fuselage_size / 2, fuselage_size * 1.25f, fuselage_size }, cubeFaceTextures, color);
 	centre.x -= fuselage_size + fuselage_size / 4;
 
 	//draw right wing connector
 	centre.x -= fuselage_size / 2 + fuselage_size / 4;
-	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, textures[0], color);
+	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, cubeFaceTextures, color);
 	
 	//draw right wing
 	centre.x -= fuselage_size / 2;
-	drawBox(centre, { fuselage_size / 2.0f, fuselage_size * 1.25f, fuselage_size }, textures[0], color);
+	drawBox(centre, { fuselage_size / 2.0f, fuselage_size * 1.25f, fuselage_size }, cubeFaceTextures, color);
 }
 
 
@@ -112,21 +111,21 @@ GLubyte* LoadPPM(char* file, int* width, int* height, int* max)
 {
 	GLubyte* img;
 	FILE *fd;
-	int n, m;
-	int  k, nm;
+	int size; // texture size
 	char c;
-	int i;
-	char b[100];
-	float s;
+	char b[100]; // holds the first line
+	float scale; // color scale
 	int red, green, blue;
-	
+	int w, h, m; // width, height, max
+
+	// Open file
 	fd = fopen(file, "r");
-	fscanf(fd,"%[^\n] ",b);
-	if(b[0]!='P'|| b[1] != '3')
-	{ 
-		exit(0);
-	}
+	fscanf(fd,"%[^\n] ",b); // Read in the first line
+	if(b[0]!='P'|| b[1] != '3') exit(1); // Error if != P3
+
+	// Remove comments
 	fscanf(fd, "%c",&c);
+	printf("%c\n", c);
 	while(c == '#') 
 	{
 		fscanf(fd, "%[^\n] ", b);
@@ -134,37 +133,36 @@ GLubyte* LoadPPM(char* file, int* width, int* height, int* max)
 		fscanf(fd, "%c",&c);
 	}
 	ungetc(c,fd); 
-	fscanf(fd, "%d %d %d", &n, &m, &k);
 
-	nm = n*m;
+	// Get texture info
+	fscanf(fd, "%d %d %d", &w, &h, &m);
+	size = w*h;
+	scale=255.0/m;
+	img = (GLubyte*)malloc(3*sizeof(GLuint)*size);
 
-	img = (GLubyte *)malloc(3*sizeof(GLuint)*nm);
-
-	s=255.0/k;
-
-	for(i=0;i<nm;i++) 
-	{
+	// Store colors
+	for(int i = 0; i < size; i++) {
 		fscanf(fd,"%d %d %d",&red, &green, &blue );
-		img[3*nm-3*i-3]=red*s;
-		img[3*nm-3*i-2]=green*s;
-		img[3*nm-3*i-1]=blue*s;
+		img[3*size-3*i-3]=red*scale;
+		img[3*size-3*i-2]=green*scale;
+		img[3*size-3*i-1]=blue*scale;
 	}
 
-	*width = n;
-	*height = m;
-	*max = k;
-
+	// Return
+	*width = w;
+	*height = h;
+	*max = m;
 	return img;
 }
 
 void loadTextures(void)
 {	
+	int width, height, max;
 	//generate 2 texture IDs, store them in array "textures"
 	glGenTextures(2, textures);
 
 	//load the texture
 	hull_tex = LoadPPM("metal.ppm", &width, &height, &max);
-
 	//setup first texture
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
 	//set texture parameters
@@ -172,13 +170,11 @@ void loadTextures(void)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	
 	//create a texture using the "hull_tex" array data
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, hull_tex);
 	
 	//load the texture
 	window_tex = LoadPPM("front.ppm", &width, &height, &max);
-
 	//setup second texture
 	glBindTexture(GL_TEXTURE_2D, textures[1]);
 	//set texture parameters
@@ -189,6 +185,3 @@ void loadTextures(void)
 	//create a texture using the "tex" array
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, window_tex);	
 }
-
-
-
