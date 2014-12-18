@@ -119,13 +119,16 @@ void Hud::drawCrosshairs(void)
 	glRasterPos2i(-width / 2 + width*0.3f, -height / 2 + height*0.3f);
 	for (int i = 0; i < gameInfo.currentAmmo; i++)
 		glBitmap(32, 32, 0, 0, 32, 0, checker);
-		
+	if (gameInfo.currentAmmo == 0){
+		glColor3d(1, 0, 0);
+		drawSentence("Reload", -width / 2 + width*0.3f, -height / 2 + height*0.3f, { 1, 1, 1 }, GLUT_BITMAP_HELVETICA_18);
+	}
 	std::string text[2];
 	text[0] = "Score: " + std::to_string(gameInfo.score);
 	text[1] = "Lives: " + std::to_string(gameInfo.lives);
 
 	for (int i = 0, Y = height / 2 - height*0.3f; i < 2; i++, Y += 20) {
-		drawSentence(text[i].c_str(), -width / 2 + width*0.3f, Y, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
+		drawSentence(text[i].c_str(), -width / 2 + width*0.3f, Y, { 1, 1, 1 }, GLUT_BITMAP_HELVETICA_18);
 	}
 	glMatrixMode(GL_PROJECTION);
 }

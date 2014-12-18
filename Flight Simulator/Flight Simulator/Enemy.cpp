@@ -261,7 +261,7 @@ void EnemyHandler::drawEnemies(void)
 	for (auto it = list.begin(); it != list.end(); ++it) {
 		Vector3 origin = { 0, 0, 0 };
 		glPushMatrix();
-
+		
 		glTranslatef(it->position.x, it->position.y, it->position.z);
 
 		glRotatef(it->rotation.z, 0, 0, 1);
@@ -277,7 +277,7 @@ void EnemyHandler::drawEnemies(void)
 			glScalef(1, 1, 8);
 			glutSolidCube(0.2);
 			glPopMatrix();
-		}
+	}
 		
 	}
 	particleSystem.drawParticles();

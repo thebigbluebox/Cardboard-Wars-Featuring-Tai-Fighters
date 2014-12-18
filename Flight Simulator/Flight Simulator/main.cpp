@@ -23,20 +23,22 @@ EnemyHandler enemies = EnemyHandler();
 GameInfo gameInfo = { 0, 3, 0, 6, 6 }; //score, lives, currentAmmo, maxAmmo
 GameInfo getGameInfo(void){	return gameInfo;}
 
-double thetaR = 3.14 / 2;
-double thetaY = 3 * 3.14 / 2;
-GLfloat lightposition[] = { 0, 2, 0 };
+double thetaP = 3.14159;
+double thetaR = 3.14159 / 2.0f;
+double thetaY = 3 * 3.14159 / 2.0f;
+int rollDirection = 1;
+bool isRolling = false;
+float playerSpeed = 1.0f/40.0f;
+
 Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negative z direction
 Vector3 lookAt = { 300 * cosf(thetaY), 0, 300 * sinf(thetaY) };
 Vector3 cameraUp = { 300 * cosf(thetaR), 300 * sinf(thetaR), 0 };
 Vector3 mover;
+GLfloat lightposition[] = { 0, 2, 0 };
 
 //float oldx;
 //float oldy;
 
-double thetaP = 3.14;
-bool flag = true;
-bool right = true;
 //float between;
 //int count = 0;
 
@@ -50,37 +52,27 @@ void updateGameInfo(void)
 
 void updatePlayer(int deltaTime)
 {
-	//playerPos.z -= 0.01;
 	lookAt.z -= 0.01;
-	mover = Vector3(lookAt.x - playerPos.x, lookAt.y - playerPos.y, lookAt.z - playerPos.z).normalize();
-	playerPos.x += mover.x/80;
-	playerPos.y += mover.y/80;
-	playerPos.z += mover.z/80;
-	lookAt.x += mover.x / 80;
-	lookAt.y += mover.y / 80;
-	lookAt.z += mover.z / 80;
+	mover = playerPos.directionTo(lookAt);
+	playerPos = playerPos.add(mover.scale(playerSpeed));
+	lookAt = lookAt.add(mover.scale(playerSpeed));
+
 	//Vector3 y = { 0, 1, 0 };
 	//between = acos(dotproduct(cameraUp, y) / (magnitude(y)*magnitude(cameraUp)));
 	/*Vector3 rotater = crossproduct(lookAt, cameraUp);
 	Vector3 x = { 1, 0, 0 };
 	between = acos(dotproduct(x, rotater)/(magnitude(x)*magnitude(rotater)));*/
 
-	if (flag == true){
-		if (sin(thetaR) + 0.001 < 1) {
+	// Roll
+	if (isRolling) {
+		thetaR += rollDirection*(3.14159f / 30.0f); // rotation amount
 
+		if (sin(thetaR) < 1) { // rotate camera
 			cameraUp.x = 300 * cos(thetaR);
 			cameraUp.y = 300 * sin(thetaR);
-
 		}
-		if (sin(thetaR) + 0.001 >= 1){
-			flag = false;
-
-		}
-		if (right == true){
-			thetaR += 3.14159 / 30;
-		}
-		if (right == false){
-			thetaR -= 3.14159 / 30;
+		if (cameraUp.y >= 300) { // stop rolling
+			isRolling = false;
 		}
 	}
 }
@@ -92,9 +84,9 @@ void updateEnemies(int deltaTime)
 
 /*increases speed*/
 void speedUp(){
-	playerPos.x += mover.x / 40;
-	playerPos.y += mover.y / 40;
-	playerPos.z += mover.z / 40;
+	playerPos.x += mover.x / 20.0f;
+	playerPos.y += mover.y / 20.0f;
+	playerPos.z += mover.z / 20.0f;
 }
 
 
@@ -103,18 +95,18 @@ void updateKeyboard(void)
 {
 	// WASD
 	if (keyStates['w'] || keyStates['W']) {
-		
+		playerSpeed += (playerSpeed < 0.1f) ? 0.002f : 0;
 	}
 	else if (keyStates['s'] || keyStates['S']) {
-		speedUp();
+		playerSpeed += (playerSpeed > 0.02f) ? -0.002f : 0;
 	}
 	if ((keyStates['a'] || keyStates['A'])) {
-		flag = true;	
-		right = false;
+		if (!isRolling) rollDirection = -1;
+		isRolling = true;	
 	}
 	else if (keyStates['d'] || keyStates['D']) {
-		right = true;
-		flag = true;
+		if (!isRolling) rollDirection = 1;
+		isRolling = true;
 	}
 
 	//space
