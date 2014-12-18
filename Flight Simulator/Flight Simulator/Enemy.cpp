@@ -62,6 +62,7 @@ void EnemyHandler::updateBullets(void)
 		for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray) - 1; i++)
 		{
 			bulletArray[i].speed = 0;
+			bulletArray[i].location.z *= -1;
 		}
 		gameInfo.currentAmmo = sizeof(bulletArray) / sizeof(*bulletArray);
 	}
@@ -80,9 +81,6 @@ void EnemyHandler::spawnBullet(Vector3 location, Vector3 direction)
 			break;
 		}
 	}
-	/*bulletArray[0].location = location;
-	bulletArray[0].direction = direction;
-	bulletArray[0].speed = 1;*/
 }
 
 void EnemyHandler::update(Vector3 playerPos, float deltaTime)
