@@ -11,7 +11,7 @@ struct setting {
 	float eyeDistance = 0.2f;
 	//float parallaxFactor;
 	//float convergenceDistance;
-	int recoilTime = 800; //in ms
+	int recoilTime = 600; //in ms
 } Set;
 
 int totalTime = 0;
