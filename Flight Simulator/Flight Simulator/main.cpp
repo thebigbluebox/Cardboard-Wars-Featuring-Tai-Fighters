@@ -33,6 +33,7 @@ Vector3 mover;
 
 double thetaP = 3.14;
 bool flag = true;
+bool right = true;
 //float between;
 //int count = 0;
 
@@ -79,12 +80,11 @@ void updateKeyboard(void)
 	}
 	if ((keyStates['a'] || keyStates['A'])) {
 		flag = true;	
+		right = false;
 	}
 	else if (keyStates['d'] || keyStates['D']) {
-		/*thetaR -= 0.1;
-		cameraUp.x = 300 * cos(thetaR)/50;
-		cameraUp.y = 300 * sin(thetaR)/50;*/
-		
+		right = true;
+		flag = true;
 	}
 
 	//space
@@ -166,7 +166,13 @@ void update(int value)
 		flag = false;
 		
 	}
-	thetaR += 3.14159/30;
+	if (right == true){
+		thetaR += 3.14159 / 30;
+	}
+	if (right == false){
+		thetaR -= 3.14159 / 30;
+	}
+	
 	}
 
 
