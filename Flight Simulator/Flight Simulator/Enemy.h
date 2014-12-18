@@ -2,6 +2,7 @@
 #define __ENEMY_H__
 #include "stdafx.h"
 #include "ParticleSystem.h"
+#include "Lighting.h"
 
 class Enemy
 {
@@ -11,6 +12,7 @@ public:
 	//Vector3 direction;
 	Vector3 rotation;
 	Vector3 color;
+	Material material;
 	float size;
 	//float spin;
 	Shape shape;

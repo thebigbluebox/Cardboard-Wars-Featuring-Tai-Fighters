@@ -22,6 +22,7 @@
 
 // User libraries
 #include "calculations.h"
+#include "Lighting.h"
 #include "Vector3.h"
 #include "Enemy.h"
 

@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "DrawClass.h"
 #include "Hud.h"
 #include "main.h"
 #include "TextureLoader.h"

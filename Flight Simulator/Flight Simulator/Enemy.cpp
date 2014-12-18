@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "stdafx.h"
 #include "TextureLoader.h"
 #include "main.h"
 
@@ -9,6 +10,13 @@ Enemy::Enemy(void)
 {
 	position = Vector3();
 	color = { 0.5f, 0.5f, 0.5f };
+	material = {
+		{ 0.5f, 0.5f, 0.5f, 1.0f },
+		{ 0.5f, 0.5f, 0.5f, 1.0f },
+		{ 0.5f, 0.5f, 0.5f, 1.0f },
+		{ 0.0f, 0.8f, 0.0f, 0.5f },
+		32.0
+	};
 	size = 1;
 	shape = Shape::Cube;
 }
@@ -17,6 +25,13 @@ Enemy::Enemy(Vector3 pos)
 {
 	position = pos;
 	color = { 0.5f, 0.5f, 0.5f };
+	material = {
+		{ 0.5f, 0.5f, 0.5f, 1.0f },
+		{ 0.5f, 0.5f, 0.5f, 1.0f },
+		{ 0.5f, 0.5f, 0.5f, 1.0f },
+		{ 0.0f, 0.8f, 0.0f, 0.5f },
+		32.0
+	};
 	size = 1;
 	shape = Shape::Cube;
 }
@@ -217,7 +232,7 @@ void EnemyHandler::drawEnemies(void)
 		glTranslatef(it->position.x, it->position.y, it->position.z);
 
 		glRotatef(it->rotation.z, 0, 0, 1);
-		enemyModel(origin, it->color);
+		enemyModel(origin, it->color, it->material);
 		glPopMatrix();
 	}
 	particleSystem.drawParticles();

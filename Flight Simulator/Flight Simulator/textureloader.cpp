@@ -16,7 +16,7 @@ GLubyte* window_tex;
 *        |   | /
 * -x -y  5 - 6  +z +x
  */
-void drawBox(Vector3 centre, Vector3 size, GLuint* faceTextures, Vector3 color)
+void drawBox(Vector3 centre, Vector3 size, GLuint* faceTextures, Vector3 color, Material material)
 {
 	float vertices[8][3] = {
 		{ centre.x - size.x / 2, centre.y + size.y / 2, centre.z - size.z / 2 }, // back LT
@@ -62,9 +62,9 @@ void drawBox(Vector3 centre, Vector3 size, GLuint* faceTextures, Vector3 color)
 	};
 
 	for (int i = 0; i < 6; i++) {
-		glBindTexture(GL_TEXTURE_2D, faceTextures[i]);
-		//glColor3fv(faceColors[i]);
 		glColor3fv(color.v); // single color for the whole box
+		setMaterial(material);
+		glBindTexture(GL_TEXTURE_2D, faceTextures[i]);
 		glBegin(GL_POLYGON);
 		for (int j = 0; j < 4; j++) {
 			glTexCoord2fv(texCoord[j]);
@@ -75,31 +75,31 @@ void drawBox(Vector3 centre, Vector3 size, GLuint* faceTextures, Vector3 color)
 }
 }
 
-void enemyModel(Vector3 centre, Vector3 color) {
+void enemyModel(Vector3 centre, Vector3 color, Material material) {
 	GLuint cubeFaceTextures[6] = { textures[0], textures[0], textures[0], textures[0], textures[0], textures[1] };
 
 	//draw fuselage
 	float fuselage_size = 0.5;
-	drawBox(centre, { fuselage_size, fuselage_size, fuselage_size }, cubeFaceTextures, color);
+	drawBox(centre, { fuselage_size, fuselage_size, fuselage_size }, cubeFaceTextures, color, material);
 	
 	cubeFaceTextures[5] = textures[0];
 
 	//draw left wing connector
 	centre.x += fuselage_size / 2 + fuselage_size / 4;
-	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, cubeFaceTextures, color);
+	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, cubeFaceTextures, color, material);
 	
 	//draw left wing
 	centre.x += fuselage_size / 2;
-	drawBox(centre, { fuselage_size / 2, fuselage_size * 1.25f, fuselage_size }, cubeFaceTextures, color);
+	drawBox(centre, { fuselage_size / 2, fuselage_size * 1.25f, fuselage_size }, cubeFaceTextures, color, material);
 	centre.x -= fuselage_size + fuselage_size / 4;
 
 	//draw right wing connector
 	centre.x -= fuselage_size / 2 + fuselage_size / 4;
-	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, cubeFaceTextures, color);
+	drawBox(centre, { fuselage_size / 2, fuselage_size / 2, fuselage_size / 4 }, cubeFaceTextures, color, material);
 	
 	//draw right wing
 	centre.x -= fuselage_size / 2;
-	drawBox(centre, { fuselage_size / 2.0f, fuselage_size * 1.25f, fuselage_size }, cubeFaceTextures, color);
+	drawBox(centre, { fuselage_size / 2.0f, fuselage_size * 1.25f, fuselage_size }, cubeFaceTextures, color, material);
 }
 
 
