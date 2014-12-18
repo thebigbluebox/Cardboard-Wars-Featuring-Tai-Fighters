@@ -30,9 +30,14 @@ Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negat
 Vector3 lookAt = { 300 * cosf(thetaY), 0, 300 * sinf(thetaY) };
 Vector3 cameraUp = { 300 * cosf(thetaR), 300 * sinf(thetaR), 0 };
 Vector3 mover;
+
+//float oldx;
+//float oldy;
+
 double thetaP = 3.14;
-float between;
-int count = 0;
+bool flag = true;
+//float between;
+//int count = 0;
 
 void updateGameInfo(void)
 {
@@ -44,7 +49,7 @@ void updateGameInfo(void)
 
 void updatePlayer(int deltaTime)
 {
-	playerPos.z -= 0.01;
+	//playerPos.z -= 0.01;
 	lookAt.z -= 0.01;
 	mover = Vector3(lookAt.x - playerPos.x, lookAt.y - playerPos.y, lookAt.z - playerPos.z).normalize();
 	playerPos.x += mover.x/80;
@@ -53,17 +58,39 @@ void updatePlayer(int deltaTime)
 	lookAt.x += mover.x / 80;
 	lookAt.y += mover.y / 80;
 	lookAt.z += mover.z / 80;
-	Vector3 y = { 0, 1, 0 };
-	between = acos(dotproduct(cameraUp, y) / (magnitude(y)*magnitude(cameraUp)));
+	//Vector3 y = { 0, 1, 0 };
+	//between = acos(dotproduct(cameraUp, y) / (magnitude(y)*magnitude(cameraUp)));
 	/*Vector3 rotater = crossproduct(lookAt, cameraUp);
 	Vector3 x = { 1, 0, 0 };
 	between = acos(dotproduct(x, rotater)/(magnitude(x)*magnitude(rotater)));*/
+
+	if (flag == true){
+		if (sin(thetaR) + 0.001 < 1) {
+
+			cameraUp.x = 300 * cos(thetaR);
+			cameraUp.y = 300 * sin(thetaR);
+
+		}
+		if (sin(thetaR) + 0.001 >= 1){
+			flag = false;
+
+		}
+		thetaR += 3.14159 / 30;
+	}
 }
 
 void updateEnemies(int deltaTime)
 {
 	enemies.update(playerPos, deltaTime);
 }
+
+/*increases speed*/
+void speedUp(){
+	playerPos.x += mover.x / 40;
+	playerPos.y += mover.y / 40;
+	playerPos.z += mover.z / 40;
+}
+
 
 /* Keypresses for buttons that can happen at the same time */
 void updateKeyboard(void)
@@ -73,20 +100,15 @@ void updateKeyboard(void)
 		
 	}
 	else if (keyStates['s'] || keyStates['S']) {
-		
+		speedUp();
 	}
-	if (keyStates['a'] || keyStates['A']) {
-		thetaR += 0.1;
-		cameraUp.x = 300 * cos(thetaR)/50;
-		cameraUp.y = 300 * sin(thetaR)/50;
-		
-		//glRotatef(1,cameraUp.x, cameraUp.y, cameraUp.z);
-		
+	if ((keyStates['a'] || keyStates['A'])) {
+		flag = true;	
 	}
 	else if (keyStates['d'] || keyStates['D']) {
-		thetaR -= 0.1;
+		/*thetaR -= 0.1;
 		cameraUp.x = 300 * cos(thetaR)/50;
-		cameraUp.y = 300 * sin(thetaR)/50;
+		cameraUp.y = 300 * sin(thetaR)/50;*/
 		
 	}
 
@@ -96,7 +118,7 @@ void updateKeyboard(void)
 		//only shoot if the recoil has finished
 		if (gameInfo.lastShotTime + Set.recoilTime < totalTime)
 		{
-			enemies.spawnBullet(playerPos, playerPos.directionTo(lookAt));
+		enemies.spawnBullet(playerPos, playerPos.directionTo(lookAt));
 			gameInfo.lastShotTime = totalTime;
 		}
 	}
@@ -106,18 +128,19 @@ void updateKeyboard(void)
 		thetaY -= 0.01;
 		lookAt.x = 300 * cos(thetaY);
 		lookAt.z = 300 * sin(thetaY);
-		//Set.x += 0.1;
+		speedUp();
 	}
 	else if (specialKeys[GLUT_KEY_RIGHT] && thetaY <11*3.14/6) {
 		thetaY += 0.01;
 		lookAt.x = 300*cos(thetaY);
 		lookAt.z = 300*sin(thetaY);
-		//lookAt.x += 0.1;
+		speedUp();
 		
 	}
 	if (specialKeys[GLUT_KEY_UP] && lookAt.y < 400/*&& thetaP > 4*3.14/6*/) {
 		lookAt.y += 3;
-		//lookAt.x += cameraUp.x;
+		speedUp();
+		//lookAt.x += cameraUp.x;						attempts at real pitch
 		/*thetaP -= 0.01;
 		lookAt.y = 300*sin(thetaP);
 		lookAt.z = 300*cos(thetaP);*/
@@ -127,15 +150,14 @@ void updateKeyboard(void)
 	}
 	else if (specialKeys[GLUT_KEY_DOWN] && lookAt.y > -400 /*(thetaP-between) < 8*3.14/6*/) {
 			lookAt.y -= 3;
-			//lookAt.x -= cameraUp.x;
+			speedUp();
+			//lookAt.x -= cameraUp.x;						attempts at real pitch
 			/*thetaP += 0.01;
 			float thetaU = thetaP - (3.14 / 2);
 			lookAt.y = 300 * sin(thetaP-between);
 			lookAt.z = 300 * cos(thetaP-between);
 			cameraUp.y = 300 * sin(thetaU - between);
-			cameraUp.z = 300 * cos(thetaU - between);
-			printf("theta %d between %d \n", thetaP, between);*/
-
+			cameraUp.z = 300 * cos(thetaU - between);*/
 		
 	}
 	if (specialKeys[GLUT_KEY_PAGE_DOWN] || specialKeys[GLUT_KEY_HOME]) {
@@ -159,7 +181,8 @@ void update(int value)
 	updateKeyboard();
 	updateEnemies(deltaTime);
 	updatePlayer(deltaTime);
-	updateGameInfo();
+
+
 
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
@@ -247,7 +270,7 @@ void draw(void)
 	//hud.draw(); // moved to display
 }
 
-
+	
 
 /* display function - GLUT display callback function
 *		clears the screen, sets the camera position, draws the ground plane and movable box
