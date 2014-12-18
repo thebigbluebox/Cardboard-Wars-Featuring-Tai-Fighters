@@ -4,6 +4,9 @@
 typedef struct {
 	int score;
 	int lives;
+	int lastShotTime;
+	int ammo;
+	int currentAmmo;
 } GameInfo;
 
 extern GameInfo gameInfo;

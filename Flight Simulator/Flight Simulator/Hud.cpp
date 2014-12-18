@@ -8,12 +8,25 @@ Hud::Hud()
 {
 	width = 1920/2;
 	height = 1080/2;
+	bitmapColorArray[0] =  0x00;
+	bitmapColorArray[1] = 0xff;
+	int i, j;
+
+	for (i = 0; i < 64; i++)
+	{
+		for (j = 0; j < 8; j++)
+		{
+			checker[i * 8 + j] = bitmapColorArray[(i / 8 + j) % 2];
+		}
+	}
 }
 
 Hud::Hud(int width, int height)
 {
 	width = width;
 	height = height;
+	bitmapColorArray[0] = 0x00;
+	bitmapColorArray[1] = 0xff;
 }
 
 void Hud::setWindowSize(int width, int height)
@@ -73,7 +86,6 @@ void Hud::drawScoreText()
 	//	for (char* p = Player.scoreAsString; *p; p++)
 	//		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *p);
 	//}
-
 }
 
 void Hud::drawCrosshairs(void)
@@ -113,8 +125,25 @@ void Hud::drawCrosshairs(void)
 	glMatrixMode(GL_PROJECTION);
 }
 
+void Hud::drawAmmo(void)
+{
+	GameInfo gameInfo = getGameInfo();
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	gluOrtho2D(0, width, height, 0); // 0,0 is top left
+
+	
+
+	/* set the 2D drawing position, and draw the mask */
+	glRasterPos2i(32, height - 16);
+	for (int i = 0; i < gameInfo.currentAmmo; i++)
+		glBitmap(64, 64, 0, 0, 64, 0, checker);
+}
+
 void Hud::draw(void)
 {
 	drawCrosshairs();
 	drawScoreText();
+	drawAmmo();
 }
