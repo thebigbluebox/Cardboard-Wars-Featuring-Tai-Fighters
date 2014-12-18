@@ -3,6 +3,16 @@
 #include "stdafx.h"
 #include "ParticleSystem.h"
 
+struct _bullet {
+	Vector3 location = { 0, 0, 0 };
+	Vector3 direction = { 0, 0, 0 };
+	float speed = 0;
+	int hitbox = 1;
+	int duration = 0;
+	int maxDuration = 10;
+};
+typedef _bullet bullet;
+
 class Enemy
 {
 public:
@@ -16,33 +26,17 @@ public:
 	Shape shape;
 	Enemy(void);
 	Enemy(Vector3 pos);
-	
+	bullet bullet;
 };
 
 
 class EnemyHandler
 {
-private:
-	Vector3 playerPos;
-	struct _bullet {
-		Vector3 location = { 0, 0, 0 };
-		Vector3 direction = { 0, 0, -1 };
-		float speed = 0;
-		int hitbox = 1;
-		int duration = 0;
-		int maxDuration = 10;
-	};
-	typedef _bullet bullet;
-	
-	//ParticleSystem particleSystem;
-	bullet bulletArray[5];
-	enum AI { ZERO, ONE, TWO, THREE, FOUR };
-	AI ai;
-	float lastAIUpdate;
-	bool spawnEnemies;
+
 	
 public:
 	std::vector<Enemy> list;
+	
 	//typedef std::list<Enemy>::iterator iter;
 	//iter begin();
 	//iter end();
@@ -54,6 +48,18 @@ public:
 	void updateBullets(void);
 	void spawnBullet(Vector3 location, Vector3 direction);
 	void drawEnemies(void);
+
+private:
+	Vector3 playerPos;
+
+
+	//ParticleSystem particleSystem;
+	bullet bulletArray[6];
+	enum AI { ZERO, ONE, TWO, THREE, FOUR, FIVE };
+	AI ai;
+	float lastAIUpdate;
+	bool spawnEnemies;
+
 };
 
 #endif

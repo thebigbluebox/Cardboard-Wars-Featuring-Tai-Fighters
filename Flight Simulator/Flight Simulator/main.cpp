@@ -11,7 +11,7 @@ struct setting {
 	float eyeDistance = 0.2f;
 	//float parallaxFactor;
 	//float convergenceDistance;
-	int recoilTime = 800; //in ms
+	int recoilTime = 300; //in ms
 } Set;
 
 int totalTime = 0;
@@ -20,7 +20,7 @@ bool specialKeys[256] = { false };
 
 Hud hud;
 EnemyHandler enemies = EnemyHandler();
-GameInfo gameInfo = { 0, 3, 0, 5, 5 }; //score, lives
+GameInfo gameInfo = { 0, 3, 0, 6, 6 }; //score, lives, currentAmmo, maxAmmo
 GameInfo getGameInfo(void){	return gameInfo;}
 
 double thetaR = 3.14 / 2;
@@ -336,8 +336,8 @@ int main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
 	glutInitWindowSize(Set.windowx, Set.windowy);
-	glutInitWindowPosition(100, 100);
-	glutCreateWindow("Final Assignment");
+	glutInitWindowPosition(600, 100);
+	glutCreateWindow("Turret Gunner");
 
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);	
