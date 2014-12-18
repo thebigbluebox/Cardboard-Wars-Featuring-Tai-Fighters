@@ -79,7 +79,15 @@ void EnemyHandler::spawnBullet(Vector3 location, Vector3 direction)
 		}
 		//shoot
 		else if (gameInfo.currentAmmo > 0)
-		{
+		{/*
+			if (gameInfo.leftCannon) {
+				location.x -= 1;
+				gameInfo.leftCannon = false;
+			}
+			else {
+				location.x += 2;
+				gameInfo.leftCannon = true;
+			}*/
 			bulletArray[i].location = location;
 			bulletArray[i].direction = direction;
 			bulletArray[i].speed = 1;
@@ -112,7 +120,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			ai = FOUR;
 			break;
 		case FOUR:
-			ai = FIVE;
+			ai = ONE;
 			break;
 		case FIVE:
 			ai = ONE;
@@ -173,10 +181,11 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			else
 			{
 				//it->rotation.z = 0;
-				ai = FIVE;
+				ai = ONE;
 				spawnEnemies = true;
 			}
 		}
+		/*
 		if (ai == FIVE)
 		{
 			//std::cout << "\n5: " << it->rotation.z;
@@ -197,7 +206,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 				std::cout << spawnInterval;
 			}
 		}
-		
+		*/
 		
 		//check if enemy has bumped player
 		if (playerPos.x - 1 < it->position.x
