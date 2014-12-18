@@ -96,7 +96,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 	lastUpdate += deltaTime;
 
 	//every time the player position is divisible by 10 the ai updates
-	if ((int)playerPos.z % 5 == 0 && (int)playerPos.z != lastAIUpdate)
+	if ((int)playerPos.z % 15 == 0 && (int)playerPos.z != lastAIUpdate)
 	{
 		lastAIUpdate = (int)playerPos.z;
 		//update the ai
