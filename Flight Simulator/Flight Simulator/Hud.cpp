@@ -114,8 +114,11 @@ void Hud::drawCrosshairs(void)
 	glEnd();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+
+
+
 	GameInfo gameInfo = getGameInfo();
-	
+	//bullet status
 	glRasterPos2i(-width / 2 + width*0.3f, -height / 2 + height*0.3f);
 	for (int i = 0; i < gameInfo.currentAmmo; i++)
 		glBitmap(32, 32, 0, 0, 32, 0, checker);
@@ -123,6 +126,7 @@ void Hud::drawCrosshairs(void)
 		glColor3d(1, 0, 0);
 		drawSentence("Reload", -width / 2 + width*0.3f, -height / 2 + height*0.3f, { 1, 1, 1 }, GLUT_BITMAP_HELVETICA_18);
 	}
+	//live and score
 	std::string text[2];
 	text[0] = "Score: " + std::to_string(gameInfo.score);
 	text[1] = "Lives: " + std::to_string(gameInfo.lives);

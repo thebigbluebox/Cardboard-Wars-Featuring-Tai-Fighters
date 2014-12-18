@@ -7,6 +7,8 @@ typedef struct {
 	int lastShotTime;
 	int ammo;
 	int currentAmmo;
+	double anglex;
+	double angley;
 } GameInfo;
 
 extern GameInfo gameInfo;

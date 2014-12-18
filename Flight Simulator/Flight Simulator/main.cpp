@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "DrawClass.h"
 #include "Hud.h"
 #include "main.h"
 #include "TextureLoader.h"
@@ -179,9 +178,6 @@ void update(int value)
 	updateEnemies(deltaTime);
 	updatePlayer(deltaTime);
 
-
-
-
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
 }
@@ -286,6 +282,7 @@ void display(void)
 	gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	skyBox(20);
 	glTranslatef(Set.eyeDistance, 0, 0);
 	glPushMatrix(); // Pushing to attempt to save the translate for hud.draw(); not the right idea.
 	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
