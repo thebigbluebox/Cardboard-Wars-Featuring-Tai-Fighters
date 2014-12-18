@@ -36,6 +36,7 @@ Vector3 mover;
 
 double thetaP = 3.14;
 bool flag = true;
+bool right = true;
 //float between;
 //int count = 0;
 
@@ -75,7 +76,12 @@ void updatePlayer(int deltaTime)
 			flag = false;
 
 		}
-		thetaR += 3.14159 / 30;
+		if (right == true){
+			thetaR += 3.14159 / 30;
+		}
+		if (right == false){
+			thetaR -= 3.14159 / 30;
+		}
 	}
 }
 
@@ -104,12 +110,11 @@ void updateKeyboard(void)
 	}
 	if ((keyStates['a'] || keyStates['A'])) {
 		flag = true;	
+		right = false;
 	}
 	else if (keyStates['d'] || keyStates['D']) {
-		/*thetaR -= 0.1;
-		cameraUp.x = 300 * cos(thetaR)/50;
-		cameraUp.y = 300 * sin(thetaR)/50;*/
-		
+		right = true;
+		flag = true;
 	}
 
 	//space
@@ -143,7 +148,7 @@ void updateKeyboard(void)
 		//lookAt.x += cameraUp.x;						attempts at real pitch
 		/*thetaP -= 0.01;
 		lookAt.y = 300*sin(thetaP);
-		lookAt.z = 300*cos(thetaP);*/
+		lookAt.z = 300*cos(thetaP);*/ 
 		//cameraUp.y = 300 * sin(thetaP - 3.14 / 2);
 		//cameraUp.z = 300 * cos(thetaP - 3.14 / 2);
 		
@@ -181,6 +186,7 @@ void update(int value)
 	updateKeyboard();
 	updateEnemies(deltaTime);
 	updatePlayer(deltaTime);
+
 
 
 
