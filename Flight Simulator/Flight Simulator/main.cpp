@@ -20,7 +20,7 @@ bool specialKeys[256] = { false };
 
 Hud hud;
 EnemyHandler enemies = EnemyHandler();
-GameInfo gameInfo = { 0, 3, 0, 5, 5 }; //score, lives
+GameInfo gameInfo = { 0, 3, 0, 5, 5 , false}; //score, lives
 GameInfo getGameInfo(void){	return gameInfo;}
 
 double thetaP = 3.14159;
@@ -35,6 +35,7 @@ Vector3 lookAt = { 300 * cosf(thetaY), 0, 300 * sinf(thetaY) };
 Vector3 cameraUp = { 300 * cosf(thetaR), 300 * sinf(thetaR), 0 };
 Vector3 mover;
 GLfloat lightposition[] = { 0, 2, 0 };
+
 
 //float oldx;
 //float oldy;
@@ -110,7 +111,7 @@ void updateKeyboard(void)
 	}
 
 	//space
-	if (keyStates[' '])
+	if (keyStates[' '] && gameInfo.gameOver == false)
 	{
 		//only shoot if the recoil has finished
 		if (gameInfo.lastShotTime + Set.recoilTime < totalTime)
@@ -118,6 +119,16 @@ void updateKeyboard(void)
 		enemies.spawnBullet(playerPos, playerPos.directionTo(lookAt));
 			gameInfo.lastShotTime = totalTime;
 		}
+
+	}
+	//restart
+	if (keyStates['R']||keyStates['r'])
+	{
+		gameInfo.gameOver = false;
+		gameInfo.lives = 3;
+		gameInfo.score = 0;
+		gameInfo.currentAmmo = 5;
+
 	}
 
 	// Special Keys
@@ -169,6 +180,10 @@ void updateKeyboard(void)
 /* timer function. */
 void update(int value)
 {
+	//game over
+	if (gameInfo.lives < 0){
+		gameInfo.gameOver = true;
+	}
 	// deltaTime
 	int elapsedTime = glutGet(GLUT_ELAPSED_TIME);
 	int deltaTime = elapsedTime - totalTime;
@@ -178,9 +193,6 @@ void update(int value)
 	updateKeyboard();
 	updateEnemies(deltaTime);
 	updatePlayer(deltaTime);
-
-
-
 
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
