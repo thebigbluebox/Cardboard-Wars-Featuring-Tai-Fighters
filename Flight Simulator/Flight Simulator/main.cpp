@@ -11,6 +11,7 @@ struct setting {
 	float eyeDistance = 0.2f;
 	//float parallaxFactor;
 	//float convergenceDistance;
+	int recoilTime = 800; //in ms
 } Set;
 
 int totalTime = 0;
@@ -19,7 +20,7 @@ bool specialKeys[256] = { false };
 
 Hud hud;
 EnemyHandler enemies = EnemyHandler();
-GameInfo gameInfo = { 3, 3 };
+GameInfo gameInfo = { 0, 3, 0, 5, 5 }; //score, lives
 GameInfo getGameInfo(void){	return gameInfo;}
 
 double thetaR = 3.14 / 2;
@@ -35,8 +36,8 @@ int count = 0;
 
 void updateGameInfo(void)
 {
-	gameInfo.score = totalTime/100;
-	gameInfo.lives = 3;
+	//gameInfo.score = totalTime/100;
+	//gameInfo.lives = 3;
 }
 
 
@@ -92,7 +93,12 @@ void updateKeyboard(void)
 	//space
 	if (keyStates[' '])
 	{
-		enemies.spawnBullet(playerPos, playerPos.directionTo(lookAt));
+		//only shoot if the recoil has finished
+		if (gameInfo.lastShotTime + Set.recoilTime < totalTime)
+		{
+			enemies.spawnBullet(playerPos, playerPos.directionTo(lookAt));
+			gameInfo.lastShotTime = totalTime;
+		}
 	}
 
 	// Special Keys
@@ -231,7 +237,7 @@ void init(void)
 	// Textures
 	glEnable(GL_TEXTURE_2D);
 	loadTextures();
-		}
+}
 
 
 void draw(void)

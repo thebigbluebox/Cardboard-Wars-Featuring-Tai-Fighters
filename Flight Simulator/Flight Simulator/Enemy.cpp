@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "TextureLoader.h"
+#include "main.h"
 
 //this needs to be global (doesn't work otherwise)
 ParticleSystem particleSystem;
@@ -30,24 +31,58 @@ EnemyHandler::EnemyHandler(void)
 
 void EnemyHandler::updateBullets(void)
 {
+	
+
 	for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray); i++)
 	{
+		//stop bullets that went too far
+		if (bulletArray[i].location.z < playerPos.z - 30)
+		{
+			//bulletArray[i].speed = 0;
+			//bulletArray[i].location.z = playerPos.z;
+		}
+
+		
+
+		//move bullets that are in motion
 		if (bulletArray[i].speed > 0)
 			bulletArray[i].location = bulletArray[i].location.add(bulletArray[i].direction);
 
+		//draw bullets
 		glPushMatrix();
 		glTranslatef(bulletArray[i].location.x, bulletArray[i].location.y, bulletArray[i].location.z);
 		glColor3f(1, 0, 0);
 		glutSolidCube(1);
 		glPopMatrix();
 	}
+
+	//reload
+	if (gameInfo.currentAmmo < 0)
+	{
+		for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray) - 1; i++)
+		{
+			bulletArray[i].speed = 0;
+		}
+		gameInfo.currentAmmo = sizeof(bulletArray) / sizeof(*bulletArray);
+	}
 }
 
 void EnemyHandler::spawnBullet(Vector3 location, Vector3 direction)
 {
-	bulletArray[0].location = location;
+	for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray); i++)
+	{
+		if (bulletArray[i].speed == 0 )
+		{
+			bulletArray[i].location = location;
+			bulletArray[i].direction = direction;
+			bulletArray[i].speed = 1;
+			gameInfo.currentAmmo -= 1;
+			break;
+		}
+	}
+	/*bulletArray[0].location = location;
 	bulletArray[0].direction = direction;
-	bulletArray[0].speed = 1;
+	bulletArray[0].speed = 1;*/
 }
 
 void EnemyHandler::update(Vector3 playerPos, float deltaTime)
@@ -111,10 +146,6 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			{
 				it->position.x += 0.02;
 			}
-			else
-			{
-				std::cout << "not this";
-			}
 			it->position.y += 0.04 * sin(it->position.x);
 		}
 		if (ai == FOUR)
@@ -140,7 +171,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			&& playerPos.z - 2 < it->position.z
 			&& playerPos.z + 1 > it->position.z)
 		{
-			std::cout << "\nYou have been hit";
+			gameInfo.lives -= 1;
 			eraseMe = true;
 		}
 		//check if bullet has hit enemy
@@ -160,6 +191,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 				
 				bulletArray[i].location = playerPos;
 				bulletArray[i].speed = 0;
+				gameInfo.score += 1;
 			}
 		}
 

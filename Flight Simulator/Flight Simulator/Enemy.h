@@ -35,7 +35,7 @@ private:
 	typedef _bullet bullet;
 	
 	//ParticleSystem particleSystem;
-	bullet bulletArray[10];
+	bullet bulletArray[5];
 	enum AI { ZERO, ONE, TWO, THREE, FOUR };
 	AI ai;
 	float lastAIUpdate;
