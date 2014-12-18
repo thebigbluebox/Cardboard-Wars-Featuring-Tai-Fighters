@@ -11,7 +11,7 @@ struct setting {
 	float eyeDistance = 0.2f;
 	//float parallaxFactor;
 	//float convergenceDistance;
-	int recoilTime = 600; //in ms
+	int recoilTime = 300; //in ms
 } Set;
 
 int totalTime = 0;
@@ -35,7 +35,6 @@ Vector3 lookAt = { 300 * cosf(thetaY), 0, 300 * sinf(thetaY) };
 Vector3 cameraUp = { 300 * cosf(thetaR), 300 * sinf(thetaR), 0 };
 Vector3 mover;
 GLfloat lightposition[] = { 0, 2, 0 };
-
 
 //float oldx;
 //float oldy;
@@ -180,15 +179,15 @@ void updateKeyboard(void)
 /* timer function. */
 void update(int value)
 {
-	//game over
-	if (gameInfo.lives < 0){
-		gameInfo.gameOver = true;
-	}
 	// deltaTime
 	int elapsedTime = glutGet(GLUT_ELAPSED_TIME);
 	int deltaTime = elapsedTime - totalTime;
 	totalTime = elapsedTime;
 
+	//game over
+	if (gameInfo.lives < 0){
+		gameInfo.gameOver = true;
+	}
 	// Other update routines
 	updateKeyboard();
 	updateEnemies(deltaTime);
@@ -340,8 +339,8 @@ int main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
 	glutInitWindowSize(Set.windowx, Set.windowy);
-	glutInitWindowPosition(100, 100);
-	glutCreateWindow("Final Assignment");
+	glutInitWindowPosition(400, 100);
+	glutCreateWindow("Turret Gunner");
 
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);	
