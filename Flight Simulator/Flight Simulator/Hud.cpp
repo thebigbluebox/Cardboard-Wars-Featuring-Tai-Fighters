@@ -2,6 +2,8 @@
 #include "main.h"
 #include "stdafx.h"
 
+bool left = false;
+
 Hud::Hud()
 {
 	width = 1920/2;
@@ -18,6 +20,16 @@ void Hud::setWindowSize(int width, int height)
 {
 	width = width;
 	height = height;
+}
+
+void Hud::setleft(void)
+{
+	left = true;
+}
+
+void Hud::setright(void)
+{
+	left = false;
 }
 
 void Hud::drawSentence(const char* line, float startX, float startY, Vector3 color, void* font)
@@ -37,8 +49,15 @@ void Hud::drawScoreText()
 	//glLoadIdentity();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+	if (left){
+		gluOrtho2D(width*0.01, width + width*0.03, height, 0);
+	}
+	else{
+		gluOrtho2D(-width*0.03, width - width*0.03, height, 0);
+	}
+	
 
-	gluOrtho2D(0, width, height, 0); // 0,0 is top left
+	//gluOrtho2D(0, width, height, 0); // 0,0 is top left
 
 	std::string text[2];
 	text[0] = "Score: " + std::to_string(gameInfo.score);
@@ -64,7 +83,12 @@ void Hud::drawCrosshairs(void)
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(-width / 2, width / 2, -height / 2, height / 2);
+	if (left){
+		gluOrtho2D((-width / 2) - width*0.01, (width / 2) - width*0.01, -height / 2, height / 2);
+	}
+	else{
+		gluOrtho2D((-width / 2) + width*0.01, (width / 2) + width*0.01, -height / 2, height / 2);
+	}
 
 	glPointSize(5);
 	glColor3d(0, 1, 1);

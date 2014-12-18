@@ -1,4 +1,4 @@
-/* CS 3GC3 - Texturing sample
+ /* CS 3GC3 - Texturing sample
  * by R. Teather
  */
 

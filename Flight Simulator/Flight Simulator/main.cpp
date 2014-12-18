@@ -264,7 +264,9 @@ void display(void)
 	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
 	draw();
 	glPopMatrix(); // pop!
+	hud.setleft();
 	hud.draw();
+
 	
 	//Viewport Right
 	glViewport(Set.windowx / 2, 0, Set.windowx / 2, Set.windowy);
@@ -278,6 +280,7 @@ void display(void)
 	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
 	draw();
 	glPopMatrix(); // pop!
+	hud.setright();
 	hud.draw();
 
 	glutSwapBuffers();
