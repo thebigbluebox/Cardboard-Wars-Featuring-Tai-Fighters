@@ -31,7 +31,6 @@ EnemyHandler::EnemyHandler(void)
 
 void EnemyHandler::updateBullets(void)
 {
-	
 
 	for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray); i++)
 	{
@@ -55,24 +54,25 @@ void EnemyHandler::updateBullets(void)
 		glutSolidCube(1);
 		glPopMatrix();
 	}
-
-	//reload
-	if (gameInfo.currentAmmo < 0)
-	{
-		for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray) - 1; i++)
-		{
-			bulletArray[i].speed = 0;
-			bulletArray[i].location.z *= -1;
-		}
-		gameInfo.currentAmmo = sizeof(bulletArray) / sizeof(*bulletArray);
-	}
 }
 
 void EnemyHandler::spawnBullet(Vector3 location, Vector3 direction)
 {
 	for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray); i++)
 	{
-		if (bulletArray[i].speed == 0 )
+		//reload
+		if (gameInfo.currentAmmo <= 0)
+		{
+			for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray) - 1; i++)
+			{
+				bulletArray[i].speed = 0;
+				bulletArray[i].location.z *= -1;
+			}
+			gameInfo.currentAmmo = sizeof(bulletArray) / sizeof(*bulletArray);
+			break;
+		}
+		//shoot
+		else if (gameInfo.currentAmmo > 0)
 		{
 			bulletArray[i].location = location;
 			bulletArray[i].direction = direction;
