@@ -24,6 +24,11 @@ public:
 	
 	/*The drawing of the GUI*/
 	void draw(void);
+
+	/*Sets parameter for right or left eye*/
+	void setright(void);
+
+	void setleft(void);
 };
 
 #endif

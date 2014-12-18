@@ -84,6 +84,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="textureloader.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>

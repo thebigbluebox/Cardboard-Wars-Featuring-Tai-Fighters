@@ -2,6 +2,8 @@
 #include "main.h"
 #include "stdafx.h"
 
+bool left = false;
+
 Hud::Hud()
 {
 	width = 1920/2;
@@ -33,6 +35,16 @@ void Hud::setWindowSize(int width, int height)
 	height = height;
 }
 
+void Hud::setleft(void)
+{
+	left = true;
+}
+
+void Hud::setright(void)
+{
+	left = false;
+}
+
 void Hud::drawSentence(const char* line, float startX, float startY, Vector3 color, void* font)
 {
 	glRasterPos2f(startX, startY);
@@ -42,16 +54,21 @@ void Hud::drawSentence(const char* line, float startX, float startY, Vector3 col
 	}
 }
 
+//deprectaed?
 void Hud::drawScoreText() 
 {
 	GameInfo gameInfo = getGameInfo();
 	
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
-	gluOrtho2D(0, width, height, 0); // 0,0 is top left
+	
+	if (left){
+		gluOrtho2D(-width*0.05, width + width*0.03, height, 0);
+	}
+	else{
+		gluOrtho2D(-width*0.1, width - width*0.03, height, 0);
+	}
+	//gluOrtho2D(0, width, height, 0); // 0,0 is top left
 
 	std::string text[2];
 	text[0] = "Score: " + std::to_string(gameInfo.score);
@@ -60,13 +77,6 @@ void Hud::drawScoreText()
 	for (int i = 0, Y = 20; i < 2; i++, Y += 20) {
 		drawSentence(text[i].c_str(), 10, Y, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
 	}
-	
-	//glRasterPos2i(20, Set.windowy - 30);  // or wherever in window coordinates
-	//if ('1' != NULL)
-	//{
-	//	for (char* p = Player.scoreAsString; *p; p++)
-	//		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *p);
-	//}
 }
 
 void Hud::drawCrosshairs(void)
@@ -76,7 +86,12 @@ void Hud::drawCrosshairs(void)
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(-width / 2, width / 2, -height / 2, height / 2);
+	if (left){
+		gluOrtho2D((-width / 2) - width*0.01, (width / 2) - width*0.01, -height / 2, height / 2);
+	}
+	else{
+		gluOrtho2D((-width / 2) + width*0.01, (width / 2) + width*0.01, -height / 2, height / 2);
+	}
 
 	glPointSize(5);
 	glColor3d(0, 1, 1);
@@ -98,20 +113,36 @@ void Hud::drawCrosshairs(void)
 		glVertex2f(-width / 20.0f, height / 20.0f);
 	glEnd();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	GameInfo gameInfo = getGameInfo();
+	
+	glRasterPos2i(-width / 2 + width*0.3f, -height / 2 + height*0.3f);
+	for (int i = 0; i < gameInfo.currentAmmo; i++)
+		glBitmap(32, 32, 0, 0, 32, 0, checker);
+		
+	std::string text[2];
+	text[0] = "Score: " + std::to_string(gameInfo.score);
+	text[1] = "Lives: " + std::to_string(gameInfo.lives);
+
+	for (int i = 0, Y = height / 2 - height*0.3f; i < 2; i++, Y += 20) {
+		drawSentence(text[i].c_str(), -width / 2 + width*0.3f, Y, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
+	}
 	glMatrixMode(GL_PROJECTION);
 }
 
+//decrepcated?
 void Hud::drawAmmo(void)
 {
 	GameInfo gameInfo = getGameInfo();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluOrtho2D(0, width, height, 0); // 0,0 is top left
-
-	
-
-	/* set the 2D drawing position, and draw the mask */
+	if (left){
+		gluOrtho2D(-width*0.05, width + width*0.03, height, 0);
+	}
+	else{
+		gluOrtho2D(-width*0.1, width - width*0.03, height, 0);
+	}	
 	glRasterPos2i(32, height - 16);
 	for (int i = 0; i < gameInfo.currentAmmo; i++)
 		glBitmap(64, 64, 0, 0, 64, 0, checker);
@@ -120,6 +151,6 @@ void Hud::drawAmmo(void)
 void Hud::draw(void)
 {
 	drawCrosshairs();
-	drawScoreText();
-	drawAmmo();
+	//drawScoreText();
+	//drawAmmo();
 }
