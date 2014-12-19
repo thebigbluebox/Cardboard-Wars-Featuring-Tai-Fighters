@@ -136,6 +136,7 @@ void Hud::drawCrosshairs(void)
 		glColor3d(1, 0, 0);
 		drawSentence("Reload", -width / 2 + width*0.3f, -height / 2 + height*0.3f, { 1, 1, 1 }, GLUT_BITMAP_HELVETICA_18);
 	}
+	//game over screen 
 	if (gameInfo.gameOver == true){
 		glColor3d(0, 0, 0);
 		drawSentence("Game Over", -width / 2 + width*0.4, 0, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);

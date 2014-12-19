@@ -22,9 +22,8 @@ EnemyHandler enemies = EnemyHandler();
 GameInfo gameInfo = { 0, 3, 0, 5, 5 , false}; //score, lives
 GameInfo getGameInfo(void){	return gameInfo;}
 
-double thetaP = 3.14159;
-double thetaR = 3.14159 / 2.0f;
-double thetaY = 3 * 3.14159 / 2.0f;
+double thetaR = 3.14159 / 2.0f; //rolling angle
+double thetaY = 3 * 3.14159 / 2.0f; //yaw angle
 int rollDirection = 1;
 bool isRolling = false;
 float playerSpeed = 1.0f/40.0f;
@@ -34,12 +33,6 @@ Vector3 lookAt = { 300 * cosf(thetaY), 0, 300 * sinf(thetaY) };
 Vector3 cameraUp = { 300 * cosf(thetaR), 300 * sinf(thetaR), 0 };
 Vector3 mover;
 GLfloat lightposition[] = { 0.0f, 0.0f, -5.0f, 1.0f };
-
-//float oldx;
-//float oldy;
-
-//float between;
-//int count = 0;
 
 void updateGameInfo(void)
 {
@@ -60,18 +53,13 @@ void updateLighting(void)
 	glLightfv(GL_LIGHT0, GL_SPECULAR, pureWhite);
 }
 
+/*Updates the players movement and direction*/
 void updatePlayer(int deltaTime)
 {	
 	lookAt.z -= 0.01;
 	mover = playerPos.directionTo(lookAt);
 	playerPos = playerPos.add(mover.scale(playerSpeed));
 	lookAt = lookAt.add(mover.scale(playerSpeed));
-
-	//Vector3 y = { 0, 1, 0 };
-	//between = acos(dotproduct(cameraUp, y) / (magnitude(y)*magnitude(cameraUp)));
-	/*Vector3 rotater = crossproduct(lookAt, cameraUp);
-	Vector3 x = { 1, 0, 0 };
-	between = acos(dotproduct(x, rotater)/(magnitude(x)*magnitude(rotater)));*/
 
 	// Roll
 	if (isRolling) {
@@ -104,16 +92,20 @@ void speedUp(){
 void updateKeyboard(void)
 {
 	// WASD
+	//insreases speed
 	if (keyStates['w'] || keyStates['W']) {
 		playerSpeed += (playerSpeed < 0.1f) ? 0.002f : 0;
 	}
+	//decreases speed
 	else if (keyStates['s'] || keyStates['S']) {
 		playerSpeed += (playerSpeed > 0.02f) ? -0.002f : 0;
 	}
+	//rolls counter clockwise
 	if ((keyStates['a'] || keyStates['A'])) {
 		if (!isRolling) rollDirection = -1;
 		isRolling = true;	
 	}
+	//rolls clockwise
 	else if (keyStates['d'] || keyStates['D']) {
 		if (!isRolling) rollDirection = 1;
 		isRolling = true;
@@ -141,47 +133,30 @@ void updateKeyboard(void)
 	}
 
 	// Special Keys
-	if (specialKeys[GLUT_KEY_LEFT] && thetaY > 7*3.14/6) {
+	//yaw left
+	if (specialKeys[GLUT_KEY_LEFT] && thetaY > 13*3.14/12) {
 		thetaY -= 0.01;
 		lookAt.x = 300 * cos(thetaY);
 		lookAt.z = 300 * sin(thetaY);
 		speedUp();
 	}
-	else if (specialKeys[GLUT_KEY_RIGHT] && thetaY <11*3.14/6) {
+	//yaw right
+	else if (specialKeys[GLUT_KEY_RIGHT] && thetaY <23*3.14/12) {
 		thetaY += 0.01;
 		lookAt.x = 300*cos(thetaY);
 		lookAt.z = 300*sin(thetaY);
 		speedUp();
 		
 	}
-	if (specialKeys[GLUT_KEY_UP] && lookAt.y < 400/*&& thetaP > 4*3.14/6*/) {
+	//pitch up
+	if (specialKeys[GLUT_KEY_UP] && lookAt.y < 400) {
 		lookAt.y += 3;
 		speedUp();
-		//lookAt.x += cameraUp.x;						attempts at real pitch
-		/*thetaP -= 0.01;
-		lookAt.y = 300*sin(thetaP);
-		lookAt.z = 300*cos(thetaP);*/ 
-		//cameraUp.y = 300 * sin(thetaP - 3.14 / 2);
-		//cameraUp.z = 300 * cos(thetaP - 3.14 / 2);
-		
 	}
-	else if (specialKeys[GLUT_KEY_DOWN] && lookAt.y > -400 /*(thetaP-between) < 8*3.14/6*/) {
+	//pitch down
+	else if (specialKeys[GLUT_KEY_DOWN] && lookAt.y > -400) {
 			lookAt.y -= 3;
-			speedUp();
-			//lookAt.x -= cameraUp.x;						attempts at real pitch
-			/*thetaP += 0.01;
-			float thetaU = thetaP - (3.14 / 2);
-			lookAt.y = 300 * sin(thetaP-between);
-			lookAt.z = 300 * cos(thetaP-between);
-			cameraUp.y = 300 * sin(thetaU - between);
-			cameraUp.z = 300 * cos(thetaU - between);*/
-		
-	}
-	if (specialKeys[GLUT_KEY_PAGE_DOWN] || specialKeys[GLUT_KEY_HOME]) {
-		
-	}
-	else if (specialKeys[GLUT_KEY_PAGE_UP] || specialKeys[GLUT_KEY_END]) {
-		
+			speedUp();	
 	}
 }
 
