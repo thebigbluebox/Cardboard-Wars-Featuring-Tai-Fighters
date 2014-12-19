@@ -5,9 +5,6 @@
 class Hud {
 private:
 	void drawSentence(const char* line, float startX, float startY, Vector3 color, void* font);
-	void drawCrosshairs(void);
-	void drawScoreText(void);
-	void drawAmmo(void);
 	int height;
 	int width;
 	GLubyte bitmapColorArray[2];

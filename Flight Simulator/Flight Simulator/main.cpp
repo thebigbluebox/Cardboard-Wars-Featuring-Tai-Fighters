@@ -31,7 +31,8 @@ GameInfo gameInfo = { 0,		// score
 					  false,	// leftCannon
 					  0,		// anglex
 					  0,		// angley
-					  0			// level
+					  0,		// level
+					  true		// shipLight
 					};
 
 GameInfo getGameInfo(void){	return gameInfo;}
@@ -46,18 +47,6 @@ Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negat
 Vector3 lookAt = { 300 * cosf(thetaY), 0, 300 * sinf(thetaY) };
 Vector3 cameraUp = { 300 * cosf(thetaR), 300 * sinf(thetaR), 0 };
 Vector3 mover;
-GLfloat lightposition[] = { 0.0f, 0.0f, 5.0f, 1.0f };
-
-void updateGameInfo(void)
-{
-	//gameInfo.score = totalTime/100;
-	//gameInfo.lives = 3;
-}
-
-void updateLighting(void)
-{
-	glLightfv(GL_LIGHT0, GL_POSITION, lightposition);
-}
 
 /*Updates the players movement and direction*/
 void updatePlayer(int deltaTime)
@@ -81,18 +70,12 @@ void updatePlayer(int deltaTime)
 	}
 }
 
-void updateEnemies(int deltaTime)
-{
-	enemies.update(playerPos, deltaTime);
-}
-
 /*increases speed*/
 void speedUp(){
 	playerPos.x += mover.x / 20.0f;
 	playerPos.y += mover.y / 20.0f;
 	playerPos.z += mover.z / 20.0f;
 }
-
 
 /* Keypresses for buttons that can happen at the same time */
 void updateKeyboard(void)
@@ -198,11 +181,11 @@ void update(int value)
 		gameInfo.level = 3;
 	if (gameInfo.score == 40)
 		gameInfo.level = 4;
+
 	// Other update routines
 	updateKeyboard();
-	updateEnemies(deltaTime);
 	updatePlayer(deltaTime);
-	updateLighting();
+	enemies.update(playerPos, deltaTime);
 
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
@@ -221,27 +204,36 @@ void keyboard(unsigned char key, int x, int y)
 	
 	switch (key)
 	{
-	case 'q':
-	case 27:
-		exit(0);
-		break;
-	case 'h':
-	case 'H':
-		if (!Set.isFullscreen)
-			glutFullScreen();
-		else
-			glutReshapeWindow(960, 540);
-		Set.isFullscreen = !Set.isFullscreen;
-		break;
-	case '1':
-		if (Set.mode == 1)
-		{
-			Set.mode = 2;
-		}
-		else
-		{
-			Set.mode = 1;
-		}
+		// Quit
+		case 'q':
+		case 27:
+			exit(0);
+			break;
+		// Fullscreen toggle
+		case 'h':
+		case 'H':
+			if (!Set.isFullscreen)
+				glutFullScreen();
+			else
+				glutReshapeWindow(960, 540);
+			Set.isFullscreen = !Set.isFullscreen;
+			break;
+		// 2D/3D toggle
+		case '1':
+			if (Set.mode == 1)
+				Set.mode = 2;
+			else
+				Set.mode = 1;
+			break;
+		// Ship light toggle
+		case 'L':
+		case 'l':
+			if (gameInfo.shipLight)
+				glDisable(GL_LIGHT0);
+			else
+				glEnable(GL_LIGHT0);
+			gameInfo.shipLight = !gameInfo.shipLight;
+			break;
 	}
 	glutPostRedisplay();
 }
@@ -254,10 +246,6 @@ void specialUp(int key, int x, int y)
 void special(int key, int x, int y)
 {
 	specialKeys[key] = true;
-
-	switch (key)
-	{
-	}
 }
 
 void init(void)
@@ -272,26 +260,26 @@ void init(void)
 	glCullFace(GL_BACK);
 
 	// Shading
-	//toggleShading(flatShading);
 	glShadeModel(GL_SMOOTH);
 
 	// Lighting
-	//toggleLighting(lightingEnabled);
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	float pureWhite[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float light0ambient[4] = { 0.804f, 1.f, 0.98f, 1.f };
-	float light0diffuse[4] = { 0.804f, 1.f, 0.98f, 1.f };
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light0ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, pureWhite);
+	glEnable(GL_LIGHT0); // ship light
+	float light0Position[] = { 0.0f, 0.0f, -1.0f, 1.0f };
+	float white[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float grey[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
+	float yellow[4] = { 1.0f, 1.0f, 0.6f, 1.f };
+	glLightfv(GL_LIGHT0, GL_POSITION, light0Position);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, grey);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, yellow);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, white);
 	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 60.0f);
-	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 100.0f);
+	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 128.0f);
 
 	// Meterials
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE); // use glColor for material
-	glMaterialfv(GL_FRONT, GL_SPECULAR, pureWhite);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
 	glMateriali(GL_FRONT, GL_SHININESS, 8);
 
 	// Textures

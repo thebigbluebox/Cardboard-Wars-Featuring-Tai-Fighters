@@ -12,12 +12,11 @@ typedef struct {
 	double anglex;
 	double angley;
 	int level;
+	bool shipLight;
 } GameInfo;
 
 extern GameInfo gameInfo;
 
 extern GameInfo getGameInfo(void);
-
-// .cpp
 
 #endif

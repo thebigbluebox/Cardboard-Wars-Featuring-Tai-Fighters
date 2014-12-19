@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "TextureLoader.h"
 
-GLuint textures[2];
+GLuint textures[8];
 GLubyte* hull_tex;
 GLubyte* window_tex;
 GLubyte* sky1;
@@ -111,10 +111,10 @@ void enemyModel(Vector3 centre, Vector3 color)
 	drawBox(centre, { fuselage_size / 2.0f, fuselage_size * 1.25f, fuselage_size }, cubeFaceTextures, color);
 }
 
-
+/* a box with the texture drawn on the inside */
 void skyBox(Vector3 centre, GLint distance)
 {
-	GLuint faceTextures[6] = { textures[2], textures[3], textures[4], textures[5], textures[6], textures[2] };
+	GLuint faceTextures[6] = { textures[2], textures[3], textures[4], textures[5], textures[6], textures[0] };
 	Vector3 size (distance,distance,distance);
 	Vector3 color (1,1,1); //background color
 	
@@ -135,7 +135,7 @@ void skyBox(Vector3 centre, GLint distance)
 			{ 3, 5, 6, 2 }, // bottom
 			{ 2, 6, 7, 1 }, // right
 			{ 1, 7, 4, 0 }, // top
-			{ 7, 6, 5, 4 }  // front
+			{ 4, 5, 6, 7 }  // front // ccw on purpose
 	};
 
 	float normals[6][3] = {
@@ -163,6 +163,7 @@ void skyBox(Vector3 centre, GLint distance)
 			glVertex3fv(vertices[faces[i][j]]);
 		}
 		glEnd();
+		
 	}
 }
 
