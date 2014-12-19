@@ -8,6 +8,7 @@ struct setting {
 	int windowy = 1080/2;
 	//float stereoOffset;
 	float eyeDistance = 0.2f;
+	int fieldOfView = 65;
 	//float parallaxFactor;
 	//float convergenceDistance;
 	int recoilTime = 300; //in ms
@@ -162,6 +163,15 @@ void updateKeyboard(void)
 	else if (specialKeys[GLUT_KEY_DOWN] && lookAt.y > -400) {
 			lookAt.y -= 3;
 			speedUp();	
+	}
+
+	// Zoom in
+	if (keyStates['+'] || keyStates['=']) {
+		Set.fieldOfView += (Set.fieldOfView > 20) ? -1 : 0;
+	}
+	// Zoom out
+	if (keyStates['-'] || keyStates['_']) {
+		Set.fieldOfView += (Set.fieldOfView < 140) ? 1 : 0;
 	}
 }
 
@@ -318,7 +328,7 @@ void display(void)
 		glViewport(0, 0, Set.windowx / 2, Set.windowy);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
+		gluPerspective(Set.fieldOfView, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glTranslatef(Set.eyeDistance, 0, 0);
@@ -334,7 +344,7 @@ void display(void)
 		glViewport(Set.windowx / 2, 0, Set.windowx / 2, Set.windowy);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
+		gluPerspective(Set.fieldOfView, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glTranslatef(-Set.eyeDistance, 0, 0);
@@ -350,7 +360,7 @@ void display(void)
 		glViewport(0, 0, Set.windowx, Set.windowy);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(65, Set.windowx / Set.windowy, 1, 200);
+		gluPerspective(Set.fieldOfView, Set.windowx / Set.windowy, 1, 200);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glPushMatrix(); // push!
