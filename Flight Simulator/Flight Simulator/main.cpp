@@ -69,6 +69,10 @@ void updatePlayer(int deltaTime)
 			isRolling = false;
 		}
 	}
+	if (gameInfo.gameOver == true)
+	{
+		playerPos.z = 0;
+	}
 }
 
 /*increases speed*/

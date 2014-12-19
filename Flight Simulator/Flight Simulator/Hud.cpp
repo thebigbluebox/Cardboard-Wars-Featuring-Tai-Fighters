@@ -112,7 +112,7 @@ void Hud::draw(void)
 	glEnd();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-
+	glColor3f(0, 1, 1);
 	//bullet status
 	glRasterPos2i(-width / 2 + width*0.3f, -height / 2 + height*0.3f);
 	for (int i = 0; i < gameInfo.currentAmmo; i++)
