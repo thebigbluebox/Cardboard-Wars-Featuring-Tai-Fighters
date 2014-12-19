@@ -24,7 +24,7 @@ bool specialKeys[256] = { false };
 Hud hud;
 EnemyHandler enemies = EnemyHandler();
 GameInfo gameInfo = { 0,		// score
-					  3,		// lives
+					  10,		// lives
 					  0,		// lastShotTime
 					  5,		// ammo
 					  5,		// currentAmmo
@@ -121,7 +121,7 @@ void updateKeyboard(void)
 	if (keyStates['R']||keyStates['r'])
 	{
 		gameInfo.gameOver = false;
-		gameInfo.lives = 3;
+		gameInfo.lives = 10;
 		gameInfo.score = 0;
 		gameInfo.currentAmmo = 5;
 		gameInfo.level = 0;

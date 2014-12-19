@@ -28,37 +28,40 @@ Enemy::Enemy(Vector3 pos)
 	//pick a random ai to spawn with
 	if (gameInfo.score > 10)
 	{
-		if ((rand() % 20 + 1)> 1){
-		switch (rand() % gameInfo.level + 1)
+		if ((rand() % 20 + 1)> 1)
 		{
-		case 1:
-			//std::cout << "one";
-			ai = ONE;
-			break;
-		case 2:
-			//std::cout << "two";
-			ai = TWO;
-			break;
-		case 3:
-			//std::cout << "three";
-			ai = THREE;
-			break;
-		case 4:
-			//std::cout << "four";
-			ai = FOUR;
-			break;
-		default:
-			//std::cout << "default";
-			ai = ONE;
-			break;
+			switch (rand() % gameInfo.level + 1)
+			{
+			case 1:
+				//std::cout << "one";
+				ai = ONE;
+				break;
+			case 2:
+				//std::cout << "two";
+				ai = TWO;
+				break;
+			case 3:
+				//std::cout << "three";
+				ai = THREE;
+				break;
+			case 4:
+				//std::cout << "four";
+				ai = FOUR;
+				break;
+			default:
+				//std::cout << "default";
+				ai = ONE;
+				break;
+			}
 		}
-	}
 		else
 		{
 			ai = HEALTH;
 			bullet.location.z = 50;
-}
+		}
 	}
+	if (gameInfo.level == 4)
+		ai = FOUR;
 }
 
 EnemyHandler::EnemyHandler(void)
@@ -246,10 +249,10 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			else
 			{
 				//home in on player
-				it->position.x += 0.005 * (playerPos.x - it->position.x);
-				it->position.y += 0.005 * (playerPos.y - it->position.y);
+				it->position.x += 0.02 * (playerPos.x - it->position.x);
+				it->position.y += 0.02 * (playerPos.y - it->position.y);
 				//go a bit faster
-				it->position.z += 0.02;
+				//it->position.z += 0.02;
 			}
 		}
 		//check if player has bumped a health pack
