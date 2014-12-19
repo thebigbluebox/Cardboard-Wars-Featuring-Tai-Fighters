@@ -305,7 +305,6 @@ void draw(void)
 {
 	enemies.drawEnemies();
 	enemies.updateBullets();
-	//hud.draw(); // moved to display
 	drawSkybox();
 }
 
@@ -330,7 +329,7 @@ void display(void)
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glTranslatef(Set.eyeDistance, 0, 0);
-		glPushMatrix(); // Pushing to attempt to save the translate for hud.draw(); not the right idea.
+		glPushMatrix(); 
 		gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
 		draw();
 		glPopMatrix(); // pop!

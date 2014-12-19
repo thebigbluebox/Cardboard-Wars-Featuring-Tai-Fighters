@@ -28,7 +28,7 @@ public:
 	Enemy(Vector3 pos);
 	bullet bullet;
 
-	enum AI { ZERO, ONE, TWO, THREE, FOUR, FIVE, HEALTH };
+	enum AI { ZERO, ONE, TWO, THREE, FOUR, FIVE, HEALTH }; //the numbers are different AI types 
 	AI ai;
 };
 
@@ -53,15 +53,10 @@ public:
 	void drawEnemies(void);
 
 private:
-	Vector3 playerPos;
-
-
-	//ParticleSystem particleSystem;
-	bullet bulletArray[6];
-	//enum AI { ZERO, ONE, TWO, THREE, FOUR, FIVE };
-	//AI ai;
-	float lastAIUpdate;
-	bool spawnEnemies;
+	Vector3 playerPos; //the location of the player
+	bullet bulletArray[6]; //the player's bullets
+	float lastAIUpdate; //the last time the AI changed
+	bool spawnEnemies; //whether enemies should spawn
 
 };
 
