@@ -167,6 +167,12 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 
 	for (auto it = list.begin(); it != list.end();) {
 		bool eraseMe = false; //whether to erase the current enemy list element
+		//if the game is over delete the current enemy
+		if (gameInfo.gameOver == true)
+		{
+			eraseMe = true;
+		}
+
 		//update enemy bullet location
 		if (it->bullet.location.z > playerPos.z + 100)
 			it->bullet.location.z = it->position.z;
@@ -228,14 +234,15 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 		{
 			if (it->rotation.z + 5 <= 360)
 			{
-				it->rotation.z += 5;
-				spawnEnemies = false;
+				it->rotation.z += 5; 
 			}
 			else
 			{
-				//it->rotation.z = 0;
-				it->ai = Enemy::ONE;
-				spawnEnemies = true;
+				//home in on player
+				it->position.x += 0.005 * (playerPos.x - it->position.x);
+				it->position.y += 0.005 * (playerPos.y - it->position.y);
+				//go a bit faster
+				it->position.z += 0.02;
 			}
 		}
 		
@@ -311,7 +318,10 @@ void EnemyHandler::drawEnemies(void)
 		if (it->ai == Enemy::TWO)
 			it->color = { randFloat(0, 0.4), 1, randFloat(0, 0.4) };
 		if (it->ai == Enemy::THREE)
+			it->color = { randFloat(0.3, 0.4), randFloat(0.6, 0.9), randFloat(0.6, 0.7) };
+		if (it->ai == Enemy::FOUR)
 			it->color = { 1, randFloat(0, 0.4), randFloat(0, 0.4) };
+		
 		enemyModel(origin, it->color);
 		glPopMatrix();
 
@@ -319,7 +329,7 @@ void EnemyHandler::drawEnemies(void)
 		if (it->bullet.location.z < playerPos.z)
 		{
 			glPushMatrix();
-			glColor3f(randFloat(0, 0.2), randFloat(0.3, 1), randFloat(0, 0.2));
+			glColor3f(randFloat(0, 0.2), randFloat(0.3, 0.8), randFloat(0, 0.2));
 			glTranslatef(it->bullet.location.x, it->bullet.location.y, it->bullet.location.z);
 			glScalef(1, 1, 8);
 			glutSolidCube(0.2);

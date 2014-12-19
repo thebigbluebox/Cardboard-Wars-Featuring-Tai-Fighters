@@ -187,7 +187,7 @@ GLubyte* LoadPPM(char* file, int* width, int* height, int* max)
 
 	// Remove comments
 	fscanf(fd, "%c",&c);
-	printf("%c\n", c);
+	//printf("%c\n", c);
 	while(c == '#') 
 	{
 		fscanf(fd, "%[^\n] ", b);
