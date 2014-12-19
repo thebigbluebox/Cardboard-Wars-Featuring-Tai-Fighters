@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "Particle.h"
-#include <stdlib.h>
 
 class ParticleSystem{
 public:

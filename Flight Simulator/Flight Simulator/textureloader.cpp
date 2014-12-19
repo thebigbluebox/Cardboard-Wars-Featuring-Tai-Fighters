@@ -1,6 +1,4 @@
- /* CS 3GC3 - Texturing sample
- * by R. Teather
- */
+ /* Texturing and PPM loader modified from R. Teather's code  */
 
 #include "stdafx.h"
 #include "TextureLoader.h"

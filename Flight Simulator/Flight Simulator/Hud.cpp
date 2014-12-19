@@ -1,5 +1,4 @@
-#include "HUD.h"
-#include "main.h"
+#include "Hud.h"
 #include "stdafx.h"
 
 bool left = false;

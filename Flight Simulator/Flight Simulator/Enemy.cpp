@@ -1,6 +1,5 @@
 #include "Enemy.h"
 #include "TextureLoader.h"
-#include "main.h"
 
 //this needs to be global (doesn't work otherwise)
 ParticleSystem particleSystem;
@@ -324,8 +323,7 @@ void EnemyHandler::drawEnemies(void)
 			glScalef(1, 1, 8);
 			glutSolidCube(0.2);
 			glPopMatrix();
-	}
-		
+		}
 	}
 	particleSystem.drawParticles();
 }

@@ -1,5 +1,5 @@
 #include "Particle.h"
-#include <iostream>
+#include "stdafx.h"
 
 long Particle::numParticles;
 

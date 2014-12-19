@@ -78,18 +78,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="calculations.cpp" />
-    <ClCompile Include="DrawClass.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Hud.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
-    <ClCompile Include="textureloader.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="calculations.h" />
-    <ClInclude Include="DrawClass.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Hud.h" />
     <ClInclude Include="main.h" />
@@ -102,6 +100,12 @@
   <ItemGroup>
     <None Include="front.ppm" />
     <None Include="metal.ppm" />
+    <None Include="sky1.ppm" />
+    <None Include="sky2.ppm" />
+    <None Include="sky3.ppm" />
+    <None Include="sky4.ppm" />
+    <None Include="sky5.ppm" />
+    <None Include="sky6.ppm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

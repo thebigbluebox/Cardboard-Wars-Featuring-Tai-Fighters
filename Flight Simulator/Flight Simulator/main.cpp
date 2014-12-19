@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Hud.h"
 #include "main.h"
+#include "Enemy.h"
 #include "TextureLoader.h"
 
 struct setting {

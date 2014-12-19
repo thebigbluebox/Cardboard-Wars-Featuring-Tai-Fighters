@@ -19,10 +19,11 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <cstring>
 
 // User libraries
 #include "calculations.h"
 #include "Vector3.h"
-#include "Enemy.h"
+#include "main.h"
 
 #endif 
