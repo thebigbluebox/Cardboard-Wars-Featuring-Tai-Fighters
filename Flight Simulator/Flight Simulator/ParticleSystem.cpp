@@ -267,20 +267,8 @@ void ParticleSystem::updateParticles(void)
 			//add the direction. apply speed and wind modifications
 			if (this->particleType == EXPLOSION)
 			{
-				int whiteParticle = rand() % 10 + 1;
-				float newColor[3];
-				if (whiteParticle == 1) {
-					newColor[0] = 1;
-					newColor[1] = 1;
-					newColor[2] = 1;
-				}
-				else {
-					newColor[0] = 1;
-					newColor[1] = (float)(rand() / (float)(RAND_MAX + 1)) - 0.2;
-					newColor[2] = 0;
-				}
 				newPosition[i] += iteratorA->element->getDirection(i) * gSpeed * 1.4 + this->wind[i];
-				iteratorA->element->setColor(newColor[0], newColor[1], newColor[2]);
+				iteratorA->element->setColor(randFloat(0.7,1), randFloat(0,0.4), randFloat(0, 0.3));
 			}
 			else
 				newPosition[i] += iteratorA->element->getDirection(i) * gSpeed + this->wind[i];

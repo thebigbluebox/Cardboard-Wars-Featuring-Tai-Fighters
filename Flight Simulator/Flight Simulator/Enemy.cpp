@@ -27,29 +27,32 @@ Enemy::Enemy(Vector3 pos)
 	bullet.direction.z = 1;
 	bullet.speed = 0;
 	//pick a random ai to spawn with
-	switch (rand() % 4 + 1)
+	if (gameInfo.score > 10)
 	{
-	case 1:
-		std::cout << "one";
-		ai = ONE;
-		break;
-	case 2:
-		std::cout << "two";
-		ai = TWO;
-		break;
-	case 3:
-		std::cout << "three";
-		ai = THREE;
-		break;
-	case 4: 
-		std::cout << "four";
-		ai = FOUR;
-		break;
-	default:
-		std::cout << "default";
-		ai = TWO;
-		break;
-}
+		switch (rand() % gameInfo.level + 1)
+		{
+		case 1:
+			//std::cout << "one";
+			ai = ONE;
+			break;
+		case 2:
+			//std::cout << "two";
+			ai = TWO;
+			break;
+		case 3:
+			//std::cout << "three";
+			ai = THREE;
+			break;
+		case 4:
+			//std::cout << "four";
+			ai = FOUR;
+			break;
+		default:
+			//std::cout << "default";
+			ai = ONE;
+			break;
+		}
+	}
 }
 
 EnemyHandler::EnemyHandler(void)
