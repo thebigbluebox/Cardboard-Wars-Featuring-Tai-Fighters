@@ -86,7 +86,7 @@ void ParticleSystem::spawnParticle(void)
 	}
 	else {
 		newColor[0] = 1;
-		newColor[1] = (float)(rand() / (float)(RAND_MAX + 1)) - 0.2;
+		newColor[1] = (float)(rand() / (float)(RAND_MAX - 1)) - 0.2f;
 		newColor[2] = 0;
 	}
 	
@@ -96,7 +96,7 @@ void ParticleSystem::spawnParticle(void)
 
 	//initialize the particle's direction to be random
 	float direction[3] = { 2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f,
-		(-0.5 * (float)rand() / (float)RAND_MAX) - 0.5,
+		(-0.5f * (float)rand() / (float)RAND_MAX) - 0.5f,
 		2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f };
 	if (this->particleType == 4)
 		direction[1] = 2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f;
@@ -105,10 +105,10 @@ void ParticleSystem::spawnParticle(void)
 	if (this->particleType == RANDOM)
 	{
 		std::cout << "\nRandomly selected mode is: ";
-		if ((float)rand() / (float)RAND_MAX > 0.66) {
+		if ((float)rand() / (float)RAND_MAX > 0.66f) {
 			setParticleType(2); std::cout << "Float\n";
 		}
-		else if ((float)rand() / (float)RAND_MAX > 0.33){
+		else if ((float)rand() / (float)RAND_MAX > 0.33f){
 			setParticleType(1); std::cout << "Bounce\n";
 		}
 		else{

@@ -1,8 +1,8 @@
 SRC = calculations.cpp Enemy.cpp Hud.cpp main.cpp Particle.cpp ParticleSystem.cpp TextureLoader.cpp Vector3.cpp
-EXE = Fault_Terrain
+EXE = Flight_Simulator
 
 CXX = g++
-CXXFLAGS = -Wall -std=c++11 -O2 -g
+CXXFLAGS = -Wall -std=c++11 -O2 -g -fpermissive
 LDLIBS = -lGL -lGLU -lglut -lm
 
 OBJ = $(SRC:.cpp=.o)
