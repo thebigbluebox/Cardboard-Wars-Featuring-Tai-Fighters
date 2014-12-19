@@ -54,31 +54,6 @@ void Hud::drawSentence(const char* line, float startX, float startY, Vector3 col
 	}
 }
 
-//deprectaed?
-void Hud::drawScoreText() 
-{
-	GameInfo gameInfo = getGameInfo();
-	
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	
-	if (left){
-		gluOrtho2D(-width*0.05, width + width*0.03, height, 0);
-	}
-	else{
-		gluOrtho2D(-width*0.1, width - width*0.03, height, 0);
-	}
-	//gluOrtho2D(0, width, height, 0); // 0,0 is top left
-
-	std::string text[2];
-	text[0] = "Score: " + std::to_string(gameInfo.score);
-	text[1] = "Lives: " + std::to_string(gameInfo.lives);
-
-	for (int i = 0, Y = 20; i < 2; i++, Y += 20) {
-		drawSentence(text[i].c_str(), 10, Y, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
-	}
-}
-
 void Hud::drawCrosshairs(void)
 {
 	glDisable(GL_LIGHTING);
@@ -93,15 +68,16 @@ void Hud::drawCrosshairs(void)
 	else{
 		gluOrtho2D((-width / 2) + width*0.01, (width / 2) + width*0.01, -height / 2, height / 2);
 	}
+	//fetch gameInfo
+	GameInfo gameInfo = getGameInfo();
 
-	glPointSize(5);
-	glColor3d(0, 1, 1);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
-	if (gameInfo.lives < 0){
+	//gameover screen
+	if (gameInfo.gameOver == true){
 		glColor3d(0, 0, 0);
 		drawSentence("Game Over", -width / 2 + width*0.4, 0, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
-		glColor4d(1, 0, 0, 0.5);
+		std::string score = "Score: " + std::to_string(gameInfo.score);
+		drawSentence(score.c_str(), -width / 2 + width*0.4, height / 2 - height*0.6, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
+		glColor3d(1, 0, 0);
 		glBegin(GL_POLYGON);
 		glVertex2f(-width / 2 + width*0.1f, -height / 2 + height*0.1f);
 		glVertex2f(width / 2 - width*0.1f, -height / 2 + height*0.1f);
@@ -110,7 +86,13 @@ void Hud::drawCrosshairs(void)
 		glEnd();
 
 	}
+	glPointSize(5);
+	glColor3d(0, 1, 1);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	
+	
+
+
 	// Outer square
 	glBegin(GL_POLYGON);
 		glVertex2f(-width / 2 + width*0.3f, -height / 2 + height*0.3f);
@@ -128,7 +110,7 @@ void Hud::drawCrosshairs(void)
 	glEnd();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	GameInfo gameInfo = getGameInfo();
+
 	//bullet status
 	glRasterPos2i(-width / 2 + width*0.3f, -height / 2 + height*0.3f);
 	for (int i = 0; i < gameInfo.currentAmmo; i++)
@@ -137,20 +119,7 @@ void Hud::drawCrosshairs(void)
 		glColor3d(1, 0, 0);
 		drawSentence("Reload", -width / 2 + width*0.3f, -height / 2 + height*0.3f, { 1, 1, 1 }, GLUT_BITMAP_HELVETICA_18);
 	}
-	if (gameInfo.gameOver == true){
-		glColor3d(0, 0, 0);
-		drawSentence("Game Over", -width / 2 + width*0.4, 0, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
-		std::string score = "Score: " + std::to_string(gameInfo.score);
-		drawSentence(score.c_str(), -width / 2 + width*0.4, height / 2 -height*0.6 , { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
-		glColor3d(1, 0, 0);
-		glBegin(GL_POLYGON);
-		glVertex2f(-width / 2 + width*0.1f, -height / 2 + height*0.1f);
-		glVertex2f(width / 2 - width*0.1f, -height / 2 + height*0.1f);
-		glVertex2f(width / 2 - width*0.1f, height / 2 - height*0.1f);
-		glVertex2f(-width / 2 + width*0.1f, height / 2 - height*0.1f);
-		glEnd();
-
-	}
+	//text for score and lives 
 	std::string text[2];
 	text[0] = "Score: " + std::to_string(gameInfo.score);
 	text[1] = "Lives: " + std::to_string(gameInfo.lives);
@@ -160,24 +129,6 @@ void Hud::drawCrosshairs(void)
 	}
 	glMatrixMode(GL_PROJECTION);
 	glEnable(GL_LIGHTING);
-}
-
-//decrepcated?
-void Hud::drawAmmo(void)
-{
-	GameInfo gameInfo = getGameInfo();
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	if (left){
-		gluOrtho2D(-width*0.05, width + width*0.03, height, 0);
-	}
-	else{
-		gluOrtho2D(-width*0.1, width - width*0.03, height, 0);
-	}	
-	glRasterPos2i(32, height - 16);
-	for (int i = 0; i < gameInfo.currentAmmo; i++)
-		glBitmap(64, 64, 0, 0, 64, 0, checker);
 }
 
 void Hud::draw(void)
