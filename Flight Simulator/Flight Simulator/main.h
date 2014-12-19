@@ -9,6 +9,7 @@ typedef struct {
 	int currentAmmo;
 	bool gameOver;
 	bool leftCannon;
+	int level;
 } GameInfo;
 
 extern GameInfo gameInfo;

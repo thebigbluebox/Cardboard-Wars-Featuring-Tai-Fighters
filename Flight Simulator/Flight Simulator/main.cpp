@@ -20,7 +20,7 @@ bool specialKeys[256] = { false };
 
 Hud hud;
 EnemyHandler enemies = EnemyHandler();
-GameInfo gameInfo = { 0, 3, 0, 5, 5 , false}; //score, lives
+GameInfo gameInfo = { 0, 3, 0, 5, 5 , false, 0}; //score, lives
 GameInfo getGameInfo(void){	return gameInfo;}
 
 double thetaP = 3.14159;
@@ -188,6 +188,15 @@ void update(int value)
 	if (gameInfo.lives < 0){
 		gameInfo.gameOver = true;
 	}
+	//update level
+	if (gameInfo.score == 10)
+		gameInfo.level = 1;
+	if (gameInfo.score == 20)
+		gameInfo.level = 2;
+	if (gameInfo.score == 30)
+		gameInfo.level = 3;
+	if (gameInfo.score == 40)
+		gameInfo.level = 4;
 	// Other update routines
 	updateKeyboard();
 	updateEnemies(deltaTime);
