@@ -49,15 +49,7 @@ void updateGameInfo(void)
 
 void updateLighting(void)
 {
-	float pureWhite[4] = { 1, 1, 1, 1 };
-	float light0ambient[4] = { 0.804f, 1.f, 0.98f, 1.f };
-	float light0diffuse[4] = { 0.804f, 1.f, 0.98f, 1.f };
-	float light1ambient[4] = { 0.8f, 0.2f, 0.4f, 1.f };
-	float light1diffuse[4] = { 0.8f, 1.f, 0.4f, 1.f };
 	glLightfv(GL_LIGHT0, GL_POSITION, lightposition);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light1ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light1diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, pureWhite);
 }
 
 void updatePlayer(int deltaTime)
@@ -276,8 +268,8 @@ void init(void)
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	float pureWhite[4] = { 1, 1, 1, 1 };
-	float light0ambient[4] = { 0.804f, 1.f, 0.98f, 1.f };
-	float light0diffuse[4] = { 0.804f, 1.f, 0.98f, 1.f };
+	float light0ambient[4] = { 1.f, 1.f, 1.f, 1.f };
+	float light0diffuse[4] = { 1.f, 1.f, 1.f, 1.f };
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light0ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, pureWhite);
