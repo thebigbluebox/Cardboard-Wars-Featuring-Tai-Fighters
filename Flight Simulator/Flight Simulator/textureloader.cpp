@@ -114,7 +114,7 @@ void enemyModel(Vector3 centre, Vector3 color)
 
 void skyBox(Vector3 centre, GLint distance)
 {
-	GLuint faceTextures[6] = { textures[2], textures[3], textures[4], textures[5], textures[6], textures[7] };
+	GLuint faceTextures[6] = { textures[2], textures[3], textures[4], textures[5], textures[6], textures[2] };
 	Vector3 size (distance,distance,distance);
 	Vector3 color (1,1,1); //background color
 	

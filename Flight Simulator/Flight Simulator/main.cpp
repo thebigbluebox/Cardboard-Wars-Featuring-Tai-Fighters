@@ -13,6 +13,7 @@ struct setting {
 	//float convergenceDistance;
 	int recoilTime = 300; //in ms
 	int mode = 1;
+	bool isFullscreen;
 } Set;
 
 int totalTime = 0;
@@ -226,7 +227,11 @@ void keyboard(unsigned char key, int x, int y)
 		break;
 	case 'h':
 	case 'H':
-		glutFullScreen();
+		if (!Set.isFullscreen)
+			glutFullScreen();
+		else
+			glutReshapeWindow(960, 540);
+		Set.isFullscreen = !Set.isFullscreen;
 		break;
 	case '1':
 		if (Set.mode == 1)
@@ -328,7 +333,7 @@ void display(void)
 		glViewport(0, 0, Set.windowx / 2, Set.windowy);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(Set.fieldOfView, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
+		gluPerspective(Set.fieldOfView, (float)(Set.windowx / 2.0f) / (float)Set.windowy, 1, 200);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glTranslatef(Set.eyeDistance, 0, 0);
@@ -344,7 +349,7 @@ void display(void)
 		glViewport(Set.windowx / 2, 0, Set.windowx / 2, Set.windowy);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(Set.fieldOfView, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
+		gluPerspective(Set.fieldOfView, (float)(Set.windowx / 2.0f) / (float)Set.windowy, 1, 200);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glTranslatef(-Set.eyeDistance, 0, 0);
@@ -360,7 +365,7 @@ void display(void)
 		glViewport(0, 0, Set.windowx, Set.windowy);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(Set.fieldOfView, Set.windowx / Set.windowy, 1, 200);
+		gluPerspective(Set.fieldOfView, (float)Set.windowx / (float)Set.windowy, 1, 200);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glPushMatrix(); // push!
