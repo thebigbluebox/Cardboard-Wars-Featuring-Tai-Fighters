@@ -4,4 +4,5 @@
 void enemyModel(Vector3 origin, Vector3 color);
 void skyBox(Vector3 centre, GLint distance);
 void loadTextures(void);
+void setParam(void);
 #endif

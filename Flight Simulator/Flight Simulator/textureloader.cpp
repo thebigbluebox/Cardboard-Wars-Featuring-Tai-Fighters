@@ -116,7 +116,7 @@ void skyBox(Vector3 centre, GLint distance)
 {
 	GLuint faceTextures[6] = { textures[2], textures[3], textures[4], textures[5], textures[6], textures[7] };
 	Vector3 size (distance,distance,distance);
-	Vector3 color (1,1,1);
+	Vector3 color (1,1,1); //background color
 	
 	float vertices[8][3] = {
 			{ centre.x - size.x / 2, centre.y + size.y / 2, centre.z - size.z / 2 }, // back LT
@@ -146,15 +146,6 @@ void skyBox(Vector3 centre, GLint distance)
 			{ 0, -1, 0 },
 			{ 0, 0, -1 }
 	};
-
-	/*float faceColors[6][3] = {
-	{ 0.5f, 0.5f, 0.5f },
-	{ 0.5f, 0.5f, 0.5f },
-	{ 0.5f, 0.5f, 0.5f },
-	{ 0.5f, 0.5f, 0.5f },
-	{ 0.5f, 0.5f, 0.5f },
-	{ 0.5f, 0.5f, 0.5f }
-	};*/
 
 	float texCoord[4][2] = {
 			{ 0, 0 }, { 1, 0 },
@@ -238,83 +229,50 @@ void loadTextures(void)
 	//setup first texture
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
 	//set texture parameters
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	setParam();
 	//create a texture using the "hull_tex" array data
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, hull_tex);
 	
-	//load the texture
 	window_tex = LoadPPM("front.ppm", &width, &height, &max);
-	//setup second texture
 	glBindTexture(GL_TEXTURE_2D, textures[1]);
-	//set texture parameters
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//create a texture using the "tex" array
+	setParam();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, window_tex);
 
-	//load the texture
 	sky1 = LoadPPM("sky1.ppm", &width, &height, &max);
 	glBindTexture(GL_TEXTURE_2D, textures[2]);
-	//set texture parameters
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//create a texture using the "tex" array
+	setParam();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, sky1);
 	
 	sky2 = LoadPPM("sky2.ppm", &width, &height, &max);
 	glBindTexture(GL_TEXTURE_2D, textures[3]);
-	//set texture parameters
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//create a texture using the "tex" array
+	setParam();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, sky2);
 	
 	sky3 = LoadPPM("sky3.ppm", &width, &height, &max);
 	glBindTexture(GL_TEXTURE_2D, textures[4]);
-	//set texture parameters
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//create a texture using the "tex" array
+	setParam();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, sky3);
 	
 	sky4 = LoadPPM("sky4.ppm", &width, &height, &max);
 	glBindTexture(GL_TEXTURE_2D, textures[5]);
-	//set texture parameters
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//create a texture using the "tex" array
+	setParam();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, sky4);
 	
 	sky5 = LoadPPM("sky5.ppm", &width, &height, &max);
 	glBindTexture(GL_TEXTURE_2D, textures[6]);
-	//set texture parameters
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//create a texture using the "tex" array
+	setParam();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, sky5);
 	
 	sky6 = LoadPPM("sky6.ppm", &width, &height, &max);
 	glBindTexture(GL_TEXTURE_2D, textures[7]);
-	//set texture parameters
+	setParam();
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, sky6);
+}
+
+void setParam(void)
+{
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//create a texture using the "tex" array
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, sky6);
 }

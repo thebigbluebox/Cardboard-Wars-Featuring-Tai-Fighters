@@ -54,31 +54,6 @@ void Hud::drawSentence(const char* line, float startX, float startY, Vector3 col
 	}
 }
 
-//deprectaed?
-void Hud::drawScoreText() 
-{
-	GameInfo gameInfo = getGameInfo();
-	
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	
-	if (left){
-		gluOrtho2D(-width*0.05, width + width*0.03, height, 0);
-	}
-	else{
-		gluOrtho2D(-width*0.1, width - width*0.03, height, 0);
-	}
-	//gluOrtho2D(0, width, height, 0); // 0,0 is top left
-
-	std::string text[2];
-	text[0] = "Score: " + std::to_string(gameInfo.score);
-	text[1] = "Lives: " + std::to_string(gameInfo.lives);
-
-	for (int i = 0, Y = 20; i < 2; i++, Y += 20) {
-		drawSentence(text[i].c_str(), 10, Y, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
-	}
-}
-
 void Hud::drawCrosshairs(void)
 {
 	glMatrixMode(GL_MODELVIEW);
@@ -136,6 +111,7 @@ void Hud::drawCrosshairs(void)
 		glColor3d(1, 0, 0);
 		drawSentence("Reload", -width / 2 + width*0.3f, -height / 2 + height*0.3f, { 1, 1, 1 }, GLUT_BITMAP_HELVETICA_18);
 	}
+	//gameover screen
 	if (gameInfo.gameOver == true){
 		glColor3d(0, 0, 0);
 		drawSentence("Game Over", -width / 2 + width*0.4, 0, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
@@ -150,6 +126,7 @@ void Hud::drawCrosshairs(void)
 		glEnd();
 
 	}
+	//text for score and lives 
 	std::string text[2];
 	text[0] = "Score: " + std::to_string(gameInfo.score);
 	text[1] = "Lives: " + std::to_string(gameInfo.lives);
@@ -158,24 +135,6 @@ void Hud::drawCrosshairs(void)
 		drawSentence(text[i].c_str(), -width / 2 + width*0.3f, Y, { 1, 1, 1 }, GLUT_BITMAP_HELVETICA_18);
 	}
 	glMatrixMode(GL_PROJECTION);
-}
-
-//decrepcated?
-void Hud::drawAmmo(void)
-{
-	GameInfo gameInfo = getGameInfo();
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	if (left){
-		gluOrtho2D(-width*0.05, width + width*0.03, height, 0);
-	}
-	else{
-		gluOrtho2D(-width*0.1, width - width*0.03, height, 0);
-	}	
-	glRasterPos2i(32, height - 16);
-	for (int i = 0; i < gameInfo.currentAmmo; i++)
-		glBitmap(64, 64, 0, 0, 64, 0, checker);
 }
 
 void Hud::draw(void)
