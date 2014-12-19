@@ -19,7 +19,17 @@ bool specialKeys[256] = { false };
 
 Hud hud;
 EnemyHandler enemies = EnemyHandler();
-GameInfo gameInfo = { 0, 3, 0, 5, 5 , false}; //score, lives
+GameInfo gameInfo = { 0,		// score
+					  3,		// lives
+					  0,		// lastShotTime
+					  5,		// ammo
+					  5,		// currentAmmo
+					  false,	// gameOver
+					  false,	// leftCannon
+					  0,		// anglex
+					  0			// angley
+					};
+
 GameInfo getGameInfo(void){	return gameInfo;}
 
 double thetaP = 3.14159;
@@ -33,7 +43,7 @@ Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negat
 Vector3 lookAt = { 300 * cosf(thetaY), 0, 300 * sinf(thetaY) };
 Vector3 cameraUp = { 300 * cosf(thetaR), 300 * sinf(thetaR), 0 };
 Vector3 mover;
-GLfloat lightposition[] = { 0.0f, 0.0f, -5.0f, 1.0f };
+GLfloat lightposition[] = { 0.0f, 0.0f, 5.0f, 1.0f };
 
 //float oldx;
 //float oldy;
@@ -48,16 +58,8 @@ void updateGameInfo(void)
 }
 
 void updateLighting(void)
-{
-	float pureWhite[4] = { 1, 1, 1, 1 };
-	float light0ambient[4] = { 0.804f, 1.f, 0.98f, 1.f };
-	float light0diffuse[4] = { 0.804f, 1.f, 0.98f, 1.f };
-	float light1ambient[4] = { 0.8f, 0.2f, 0.4f, 1.f };
-	float light1diffuse[4] = { 0.8f, 1.f, 0.4f, 1.f };
+{	
 	glLightfv(GL_LIGHT0, GL_POSITION, lightposition);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light1ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light1diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, pureWhite);
 }
 
 void updatePlayer(int deltaTime)
@@ -266,16 +268,20 @@ void init(void)
 	//toggleLighting(lightingEnabled);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	float pureWhite[4] = { 1, 1, 1, 1 };
+	float pureWhite[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float light0ambient[4] = { 0.804f, 1.f, 0.98f, 1.f };
 	float light0diffuse[4] = { 0.804f, 1.f, 0.98f, 1.f };
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light0ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, pureWhite);
+	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 60.0f);
+	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 100.0f);
 
 	// Meterials
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE); // use glColor for material
+	glMaterialfv(GL_FRONT, GL_SPECULAR, pureWhite);
+	glMateriali(GL_FRONT, GL_SHININESS, 128);
 
 	// Textures
 	glEnable(GL_TEXTURE_2D);
