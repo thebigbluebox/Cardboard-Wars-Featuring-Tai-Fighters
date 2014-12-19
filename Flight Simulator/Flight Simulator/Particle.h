@@ -36,6 +36,7 @@ public:
 	void setPosition(float newPosition[3]);
 	void setRotation(float newRotation[3]);
 	void setLifeRemaining(int newLifeRemaining); //set time to timeout
+	void setColor(float r, float g, float b);
 	void decrementNumParticles(void); //decrement the amount of alive particles
 	void invertYDirection(void); //flip the Y direction
 	void applyFriction(float friction);

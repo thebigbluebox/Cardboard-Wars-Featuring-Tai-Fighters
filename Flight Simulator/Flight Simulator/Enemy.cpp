@@ -26,13 +26,37 @@ Enemy::Enemy(Vector3 pos)
 	bullet.direction.y = 0;
 	bullet.direction.z = 1;
 	bullet.speed = 0;
+	//pick a random ai to spawn with
+	switch (rand() % 4 + 1)
+	{
+	case 1:
+		std::cout << "one";
+		ai = ONE;
+		break;
+	case 2:
+		std::cout << "two";
+		ai = TWO;
+		break;
+	case 3:
+		std::cout << "three";
+		ai = THREE;
+		break;
+	case 4: 
+		std::cout << "four";
+		ai = FOUR;
+		break;
+	default:
+		std::cout << "default";
+		ai = TWO;
+		break;
+	}
 }
 
 EnemyHandler::EnemyHandler(void)
 {
 	lastUpdate = 0;
 	spawnInterval = 400; // ms
-	ai = ONE;
+	//ai = ONE;
 	spawnEnemies = true;
 }
 
@@ -56,8 +80,8 @@ void EnemyHandler::updateBullets(void)
 		//draw bullets
 		glPushMatrix();
 		glTranslatef(bulletArray[i].location.x, bulletArray[i].location.y, bulletArray[i].location.z);
-		glColor3f(1, 0, 0);
-		glutSolidCube(1);
+		glColor3f(randFloat(0.2, 1), randFloat(0, 0.1), randFloat(0.2, 1));
+		glutSolidSphere(1, 20, 20);
 		glPopMatrix();
 	}
 }
@@ -79,7 +103,15 @@ void EnemyHandler::spawnBullet(Vector3 location, Vector3 direction)
 		}
 		//shoot
 		else if (gameInfo.currentAmmo > 0)
-		{
+		{/*
+			if (gameInfo.leftCannon) {
+				location.x -= 1;
+				gameInfo.leftCannon = false;
+			}
+			else {
+				location.x += 2;
+				gameInfo.leftCannon = true;
+			}*/
 			bulletArray[i].location = location;
 			bulletArray[i].direction = direction;
 			bulletArray[i].speed = 1;
@@ -96,11 +128,11 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 	lastUpdate += deltaTime;
 
 	//every time the player position is divisible by 10 the ai updates
-	if ((int)playerPos.z % 5 == 0 && (int)playerPos.z != lastAIUpdate)
+	if ((int)playerPos.z % 15 == 0 && (int)playerPos.z != lastAIUpdate)
 	{
 		lastAIUpdate = (int)playerPos.z;
 		//update the ai
-		switch (ai)
+		/*switch (ai)
 		{
 		case ONE:
 			ai = TWO;
@@ -112,14 +144,14 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			ai = FOUR;
 			break;
 		case FOUR:
-			ai = FIVE;
+			ai = ONE;
 			break;
 		case FIVE:
 			ai = ONE;
 		default:
 			ai = FOUR;
 			break;
-		}
+		}*/
 	}
 		
 
@@ -141,7 +173,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 		it->bullet.location.z += 0.8 * it->bullet.direction.z;
 
 		//enemies bahave based on the ai
-		if (ai == ONE)
+		/*if (ai == ONE)
 		{
 			it->position.x += 0.02 * sin(playerPos.z) + 0.01 * cos(playerPos.z);
 			it->position.y -= 0.02 * sin(playerPos.z);
@@ -155,10 +187,6 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 		}
 		if (ai == THREE)
 		{
-			/*if (it->position.x < playerPos.x + 400)
-			{
-				it->position.x += 0.02;
-			}*/
 			it->position.x += 0.04 * cos(it->position.z - playerPos.z);
 			it->position.y += 0.04 * sin(it->position.x);
 		}
@@ -173,31 +201,42 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			else
 			{
 				//it->rotation.z = 0;
-				ai = FIVE;
+				ai = ONE;
 				spawnEnemies = true;
 			}
-		}
-		if (ai == FIVE)
+		}*/
+		if (it->ai == Enemy::ONE)
 		{
-			//std::cout << "\n5: " << it->rotation.z;
-			if (it->rotation.z <= 720)
+			it->position.x += 0.02 * sin(playerPos.z) + 0.01 * cos(playerPos.z);
+			it->position.y -= 0.02 * sin(playerPos.z);
+		}
+		if (it->ai == Enemy::TWO)
+		{
+			if (it->position.x < playerPos.x)
+				it->position.x += 0.01;
+			if (it->position.x > playerPos.x)
+				it->position.x -= 0.01;
+		}
+		if (it->ai == Enemy::THREE)
+		{
+			it->position.x += 0.06 * cos(it->position.z - playerPos.z);
+			it->position.y += 0.06 * sin(it->position.x);
+		}
+		if (it->ai == Enemy::FOUR)
+		{
+			if (it->rotation.z + 5 <= 360)
 			{
-				it->position.z += abs(it->bullet.location.z / it->position.z);
-				it->rotation.z += 10;
+				it->rotation.z += 5;
 				spawnEnemies = false;
 			}
 			else
 			{
-				it->rotation.z = 0;
-				eraseMe = true;
-				ai = ONE;
+				//it->rotation.z = 0;
+				it->ai = Enemy::ONE;
 				spawnEnemies = true;
-				if (spawnInterval - 10 > 50)
-					spawnInterval -= 20;
-				std::cout << spawnInterval;
 			}
 		}
-		
+
 		
 		//check if enemy has bumped player
 		if (playerPos.x - 1 < it->position.x
@@ -205,12 +244,11 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			&& playerPos.y - 1 < it->position.y
 			&& playerPos.y + 1 > it->position.y
 			&& playerPos.z - 2 < it->position.z
-			&& playerPos.z + 1 > it->position.z
-			&& ai != FIVE)
-		{
-			eraseMe = true;
-			gameInfo.lives -= 1;
-		}
+			&& playerPos.z + 1 > it->position.z)
+			{
+				eraseMe = true;
+				gameInfo.lives -= 1;
+			}
 		//check if enemy has shot player
 		if (playerPos.x - 1 < it->bullet.location.x
 			&& playerPos.x + 1 > it->bullet.location.x
@@ -218,9 +256,9 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			&& playerPos.y + 1 > it->bullet.location.y
 			&& playerPos.z - 2 < it->bullet.location.z
 			&& playerPos.z + 1 > it->bullet.location.z)
-		{
-			gameInfo.lives -= 1;
-		}
+			{
+				gameInfo.lives -= 1;
+			}
 		//check if bullet has hit enemy
 		for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray); i++)
 		{
@@ -265,14 +303,20 @@ void EnemyHandler::drawEnemies(void)
 		glTranslatef(it->position.x, it->position.y, it->position.z);
 
 		glRotatef(it->rotation.z, 0, 0, 1);
+		if (it->ai == Enemy::ONE)
+			it->color = { randFloat(0, 0.4), randFloat(0, 0.4), 1 };
+		if (it->ai == Enemy::TWO)
+			it->color = { randFloat(0, 0.4), 1, randFloat(0, 0.4) };
+		if (it->ai == Enemy::THREE)
+			it->color = { 1, randFloat(0, 0.4), randFloat(0, 0.4) };
 		enemyModel(origin, it->color);
 		glPopMatrix();
 
 		//draw enemy bullet
-		if (it->bullet.location.z < playerPos.z && ai != FIVE)
+		if (it->bullet.location.z < playerPos.z)
 		{
 			glPushMatrix();
-			glColor3f(0, 1, 0);
+			glColor3f(randFloat(0, 0.2), randFloat(0.3, 1), randFloat(0, 0.2));
 			glTranslatef(it->bullet.location.x, it->bullet.location.y, it->bullet.location.z);
 			glScalef(1, 1, 8);
 			glutSolidCube(0.2);

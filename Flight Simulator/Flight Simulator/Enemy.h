@@ -27,6 +27,9 @@ public:
 	Enemy(void);
 	Enemy(Vector3 pos);
 	bullet bullet;
+
+	enum AI { ZERO, ONE, TWO, THREE, FOUR, FIVE };
+	AI ai;
 };
 
 
@@ -55,8 +58,8 @@ private:
 
 	//ParticleSystem particleSystem;
 	bullet bulletArray[6];
-	enum AI { ZERO, ONE, TWO, THREE, FOUR, FIVE };
-	AI ai;
+	//enum AI { ZERO, ONE, TWO, THREE, FOUR, FIVE };
+	//AI ai;
 	float lastAIUpdate;
 	bool spawnEnemies;
 

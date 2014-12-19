@@ -119,6 +119,13 @@ void Particle::setLifeRemaining(int newLifeRemaining)
 	this->lifeRemaining = newLifeRemaining;
 }
 
+void Particle::setColor(float r, float g, float b)
+{
+	this->color[0] = r;
+	this->color[1] = g;
+	this->color[2] = b;
+}
+
 void Particle::decrementNumParticles(void)
 {
 	this->numParticles--;
