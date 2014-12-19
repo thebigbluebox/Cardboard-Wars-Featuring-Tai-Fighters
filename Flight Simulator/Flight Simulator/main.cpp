@@ -27,7 +27,8 @@ GameInfo gameInfo = { 0,		// score
 					  false,	// gameOver
 					  false,	// leftCannon
 					  0,		// anglex
-					  0			// angley
+					  0,		// angley
+					  0			// level
 					};
 
 GameInfo getGameInfo(void){	return gameInfo;}
@@ -58,7 +59,7 @@ void updateGameInfo(void)
 }
 
 void updateLighting(void)
-{	
+{
 	glLightfv(GL_LIGHT0, GL_POSITION, lightposition);
 }
 
@@ -200,6 +201,15 @@ void update(int value)
 	if (gameInfo.lives < 0){
 		gameInfo.gameOver = true;
 	}
+	//update level
+	if (gameInfo.score == 10)
+		gameInfo.level = 1;
+	if (gameInfo.score == 20)
+		gameInfo.level = 2;
+	if (gameInfo.score == 30)
+		gameInfo.level = 3;
+	if (gameInfo.score == 40)
+		gameInfo.level = 4;
 	// Other update routines
 	updateKeyboard();
 	updateEnemies(deltaTime);

@@ -11,6 +11,7 @@ typedef struct {
 	bool leftCannon;
 	double anglex;
 	double angley;
+	int level;
 } GameInfo;
 
 extern GameInfo gameInfo;
