@@ -49,7 +49,7 @@ Enemy::Enemy(Vector3 pos)
 		std::cout << "default";
 		ai = TWO;
 		break;
-	}
+}
 }
 
 EnemyHandler::EnemyHandler(void)
@@ -236,7 +236,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 				spawnEnemies = true;
 			}
 		}
-
+		
 		
 		//check if enemy has bumped player
 		if (playerPos.x - 1 < it->position.x
@@ -245,10 +245,10 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			&& playerPos.y + 1 > it->position.y
 			&& playerPos.z - 2 < it->position.z
 			&& playerPos.z + 1 > it->position.z)
-			{
-				eraseMe = true;
-				gameInfo.lives -= 1;
-			}
+		{
+			eraseMe = true;
+			gameInfo.lives -= 1;
+		}
 		//check if enemy has shot player
 		if (playerPos.x - 1 < it->bullet.location.x
 			&& playerPos.x + 1 > it->bullet.location.x
@@ -256,9 +256,9 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			&& playerPos.y + 1 > it->bullet.location.y
 			&& playerPos.z - 2 < it->bullet.location.z
 			&& playerPos.z + 1 > it->bullet.location.z)
-			{
-				gameInfo.lives -= 1;
-			}
+		{
+			gameInfo.lives -= 1;
+		}
 		//check if bullet has hit enemy
 		for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray); i++)
 		{

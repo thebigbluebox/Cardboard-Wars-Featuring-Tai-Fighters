@@ -20,7 +20,7 @@ bool specialKeys[256] = { false };
 
 Hud hud;
 EnemyHandler enemies = EnemyHandler();
-GameInfo gameInfo = { 0, 3, 0, 6, 6 }; //score, lives, currentAmmo, maxAmmo
+GameInfo gameInfo = { 0, 3, 0, 5, 5 , false}; //score, lives
 GameInfo getGameInfo(void){	return gameInfo;}
 
 double thetaP = 3.14159;
@@ -51,7 +51,7 @@ void updateGameInfo(void)
 
 
 void updatePlayer(int deltaTime)
-{
+{	
 	lookAt.z -= 0.01;
 	mover = playerPos.directionTo(lookAt);
 	playerPos = playerPos.add(mover.scale(playerSpeed));
@@ -66,11 +66,11 @@ void updatePlayer(int deltaTime)
 	// Roll
 	if (isRolling) {
 		thetaR += rollDirection*(3.14159f / 30.0f); // rotation amount
-
+		
 		if (sin(thetaR) < 1) { // rotate camera
 			cameraUp.x = 300 * cos(thetaR);
 			cameraUp.y = 300 * sin(thetaR);
-		}
+		}	
 		if (cameraUp.y >= 300) { // stop rolling
 			isRolling = false;
 		}
@@ -110,7 +110,7 @@ void updateKeyboard(void)
 	}
 
 	//space
-	if (keyStates[' '])
+	if (keyStates[' '] && gameInfo.gameOver == false)
 	{
 		//only shoot if the recoil has finished
 		if (gameInfo.lastShotTime + Set.recoilTime < totalTime)
@@ -118,6 +118,16 @@ void updateKeyboard(void)
 			enemies.spawnBullet(playerPos, playerPos.directionTo(lookAt));
 			gameInfo.lastShotTime = totalTime;
 		}
+
+	}
+	//restart
+	if (keyStates['R']||keyStates['r'])
+	{
+		gameInfo.gameOver = false;
+		gameInfo.lives = 3;
+		gameInfo.score = 0;
+		gameInfo.currentAmmo = 5;
+
 	}
 
 	// Special Keys
@@ -174,13 +184,14 @@ void update(int value)
 	int deltaTime = elapsedTime - totalTime;
 	totalTime = elapsedTime;
 
+	//game over
+	if (gameInfo.lives < 0){
+		gameInfo.gameOver = true;
+	}
 	// Other update routines
 	updateKeyboard();
 	updateEnemies(deltaTime);
 	updatePlayer(deltaTime);
-
-
-
 
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
@@ -328,7 +339,7 @@ int main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
 	glutInitWindowSize(Set.windowx, Set.windowy);
-	glutInitWindowPosition(600, 100);
+	glutInitWindowPosition(400, 100);
 	glutCreateWindow("Turret Gunner");
 
 	glutReshapeFunc(reshape);
