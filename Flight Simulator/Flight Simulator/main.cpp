@@ -11,6 +11,7 @@ struct setting {
 	//float parallaxFactor;
 	//float convergenceDistance;
 	int recoilTime = 300; //in ms
+	int mode = 1;
 } Set;
 
 int totalTime = 0;
@@ -46,11 +47,6 @@ Vector3 cameraUp = { 300 * cosf(thetaR), 300 * sinf(thetaR), 0 };
 Vector3 mover;
 GLfloat lightposition[] = { 0.0f, 0.0f, 5.0f, 1.0f };
 
-//float oldx;
-//float oldy;
-
-//float between;
-//int count = 0;
 
 void updateGameInfo(void)
 {
@@ -106,6 +102,7 @@ void speedUp(){
 /* Keypresses for buttons that can happen at the same time */
 void updateKeyboard(void)
 {
+	
 	// WASD
 	if (keyStates['w'] || keyStates['W']) {
 		playerSpeed += (playerSpeed < 0.1f) ? 0.002f : 0;
@@ -241,6 +238,15 @@ void keyboard(unsigned char key, int x, int y)
 	case 'H':
 		glutFullScreen();
 		break;
+	case '1':
+		if (Set.mode == 1)
+		{
+			Set.mode = 2;
+		}
+		else
+		{
+			Set.mode = 1;
+		}
 	}
 	glutPostRedisplay();
 }
@@ -326,37 +332,54 @@ void display(void)
 	//glMatrixMode(GL_MODELVIEW);
 	//glLoadIdentity();
 
-	//Viewport Left
-	glViewport(0, 0, Set.windowx / 2, Set.windowy);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(Set.eyeDistance, 0, 0);
-	glPushMatrix(); // Pushing to attempt to save the translate for hud.draw(); not the right idea.
-	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
-	draw();
-	glPopMatrix(); // pop!
-	hud.setleft();
-	hud.draw();
+	if (Set.mode == 1)
+	{
+		//Viewport Left
+		glViewport(0, 0, Set.windowx / 2, Set.windowy);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glTranslatef(Set.eyeDistance, 0, 0);
+		glPushMatrix(); // Pushing to attempt to save the translate for hud.draw(); not the right idea.
+		gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
+		draw();
+		glPopMatrix(); // pop!
+		hud.setleft();
+		hud.draw();
 
-	
-	//Viewport Right
-	glViewport(Set.windowx / 2, 0, Set.windowx / 2, Set.windowy);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(-Set.eyeDistance, 0, 0);
-	glPushMatrix(); // push!
-	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
-	draw();
-	glPopMatrix(); // pop!
-	hud.setright();
-	hud.draw();
 
+		//Viewport Right
+		glViewport(Set.windowx / 2, 0, Set.windowx / 2, Set.windowy);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glTranslatef(-Set.eyeDistance, 0, 0);
+		glPushMatrix(); // push!
+		gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
+		draw();
+		glPopMatrix(); // pop!
+		hud.setright();
+		hud.draw();
+	}
+	if (Set.mode == 2)
+	{
+		glViewport(0, 0, Set.windowx, Set.windowy);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(65, Set.windowx / Set.windowy, 1, 200);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glPushMatrix(); // push!
+		gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
+		draw();
+		glPopMatrix(); // pop!
+		hud.setright();
+		hud.draw();
+	}
 	glutSwapBuffers();
 }
 

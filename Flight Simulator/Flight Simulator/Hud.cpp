@@ -84,14 +84,10 @@ void Hud::drawCrosshairs(void)
 		glVertex2f(width / 2 - width*0.1f, height / 2 - height*0.1f);
 		glVertex2f(-width / 2 + width*0.1f, height / 2 - height*0.1f);
 		glEnd();
-
 	}
 	glPointSize(5);
 	glColor3d(0, 1, 1);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
-	
-
 
 	// Outer square
 	glBegin(GL_POLYGON);
@@ -134,6 +130,4 @@ void Hud::drawCrosshairs(void)
 void Hud::draw(void)
 {
 	drawCrosshairs();
-	//drawScoreText();
-	//drawAmmo();
 }
