@@ -260,6 +260,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			&& playerPos.z + 1 > it->bullet.location.z)
 		{
 			gameInfo.lives -= 1;
+			it->bullet.location.z += 10; //move the bullet past the player to ensure it doesnt hit multiple times
 		}
 		//check if bullet has hit enemy
 		for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray); i++)

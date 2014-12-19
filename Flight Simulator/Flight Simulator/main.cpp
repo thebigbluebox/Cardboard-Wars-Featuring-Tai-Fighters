@@ -108,7 +108,7 @@ void updateKeyboard(void)
 		//only shoot if the recoil has finished
 		if (gameInfo.lastShotTime + Set.recoilTime < totalTime)
 		{
-		enemies.spawnBullet(playerPos, playerPos.directionTo(lookAt));
+			enemies.spawnBullet(playerPos, playerPos.directionTo(lookAt));
 			gameInfo.lastShotTime = totalTime;
 		}
 
@@ -120,7 +120,7 @@ void updateKeyboard(void)
 		gameInfo.lives = 3;
 		gameInfo.score = 0;
 		gameInfo.currentAmmo = 5;
-
+		gameInfo.level = 0;
 	}
 
 	// Special Keys
