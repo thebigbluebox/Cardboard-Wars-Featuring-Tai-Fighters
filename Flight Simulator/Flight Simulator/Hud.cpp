@@ -96,7 +96,7 @@ void Hud::drawCrosshairs(void)
 	glPointSize(5);
 	glColor3d(0, 1, 1);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+	
 	if (gameInfo.lives < 0){
 		glColor3d(0, 0, 0);
 		drawSentence("Game Over", -width / 2 + width*0.4, 0, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
@@ -128,7 +128,7 @@ void Hud::drawCrosshairs(void)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	GameInfo gameInfo = getGameInfo();
-	
+	//bullet status
 	glRasterPos2i(-width / 2 + width*0.3f, -height / 2 + height*0.3f);
 	for (int i = 0; i < gameInfo.currentAmmo; i++)
 		glBitmap(32, 32, 0, 0, 32, 0, checker);
