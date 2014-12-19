@@ -56,6 +56,7 @@ void Hud::drawSentence(const char* line, float startX, float startY, Vector3 col
 
 void Hud::drawCrosshairs(void)
 {
+	glDisable(GL_LIGHTING);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
@@ -127,6 +128,7 @@ void Hud::drawCrosshairs(void)
 		drawSentence(text[i].c_str(), -width / 2 + width*0.3f, Y, { 1, 1, 1 }, GLUT_BITMAP_HELVETICA_18);
 	}
 	glMatrixMode(GL_PROJECTION);
+	glEnable(GL_LIGHTING);
 }
 
 void Hud::draw(void)

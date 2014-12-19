@@ -266,7 +266,7 @@ void init(void)
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE); // use glColor for material
 	glMaterialfv(GL_FRONT, GL_SPECULAR, pureWhite);
-	glMateriali(GL_FRONT, GL_SHININESS, 128);
+	glMateriali(GL_FRONT, GL_SHININESS, 8);
 
 	// Textures
 	glEnable(GL_TEXTURE_2D);
