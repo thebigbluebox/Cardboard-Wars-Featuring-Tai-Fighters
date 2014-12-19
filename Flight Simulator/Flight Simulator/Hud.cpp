@@ -103,6 +103,13 @@ void Hud::draw(void)
 		glVertex2f(width / 20.0f, height / 20.0f);
 		glVertex2f(-width / 20.0f, height / 20.0f);
 	glEnd();
+	glColor3f(1, 0, 0);
+	glBegin(GL_POLYGON);
+		glVertex2f(-10, -10);
+		glVertex2f(10, -10);
+		glVertex2f(10, 10);
+		glVertex2f(-10, 10);
+	glEnd();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
