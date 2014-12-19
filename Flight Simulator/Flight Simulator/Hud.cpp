@@ -71,7 +71,7 @@ void Hud::drawCrosshairs(void)
 	//fetch gameInfo
 	GameInfo gameInfo = getGameInfo();
 
-	//gameover screen
+	//game over screen
 	if (gameInfo.gameOver == true){
 		glColor3d(0, 0, 0);
 		drawSentence("Game Over", -width / 2 + width*0.4, 0, { 1, 1, 1 }, GLUT_BITMAP_TIMES_ROMAN_24);
