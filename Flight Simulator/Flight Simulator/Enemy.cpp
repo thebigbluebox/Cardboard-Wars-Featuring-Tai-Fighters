@@ -28,28 +28,35 @@ Enemy::Enemy(Vector3 pos)
 	//pick a random ai to spawn with
 	if (gameInfo.score > 10)
 	{
-		switch (rand() % gameInfo.level + 1)
+		if ((rand() % 20 + 1)> 1){
+			switch (rand() % gameInfo.level + 1)
+			{
+			case 1:
+				//std::cout << "one";
+				ai = ONE;
+				break;
+			case 2:
+				//std::cout << "two";
+				ai = TWO;
+				break;
+			case 3:
+				//std::cout << "three";
+				ai = THREE;
+				break;
+			case 4:
+				//std::cout << "four";
+				ai = FOUR;
+				break;
+			default:
+				//std::cout << "default";
+				ai = ONE;
+				break;
+			}
+		}
+		else
 		{
-		case 1:
-			//std::cout << "one";
-			ai = ONE;
-			break;
-		case 2:
-			//std::cout << "two";
-			ai = TWO;
-			break;
-		case 3:
-			//std::cout << "three";
-			ai = THREE;
-			break;
-		case 4:
-			//std::cout << "four";
-			ai = FOUR;
-			break;
-		default:
-			//std::cout << "default";
-			ai = ONE;
-			break;
+			ai = HEALTH;
+			bullet.location.z = 50;
 		}
 	}
 }
@@ -72,9 +79,6 @@ void EnemyHandler::updateBullets(void)
 			//bulletArray[i].speed = 0;
 			//bulletArray[i].location.z = playerPos.z;
 		}
-
-		
-
 		//move bullets that are in motion
 		if (bulletArray[i].speed > 0)
 			bulletArray[i].location = bulletArray[i].location.add(bulletArray[i].direction);
@@ -168,11 +172,14 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 	for (auto it = list.begin(); it != list.end();) {
 		bool eraseMe = false; //whether to erase the current enemy list element
 		//update enemy bullet location
-		if (it->bullet.location.z > playerPos.z + 100)
+		if (it->bullet.location.z > playerPos.z + 100 && !(it->ai == Enemy::HEALTH))
 			it->bullet.location.z = it->position.z;
 		it->bullet.location.x = it->position.x;
 		it->bullet.location.y = it->position.y;
-		it->bullet.location.z += 0.8 * it->bullet.direction.z;
+		if (!(it->ai == Enemy::HEALTH))
+		{
+			it->bullet.location.z += 0.8 * it->bullet.direction.z;
+		}
 
 		//enemies bahave based on the ai
 		/*if (ai == ONE)
@@ -238,7 +245,8 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 				spawnEnemies = true;
 			}
 		}
-		
+		//check if player has bumped a health pack
+
 		
 		//check if enemy has bumped player
 		if (playerPos.x - 1 < it->position.x
@@ -249,7 +257,14 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			&& playerPos.z + 1 > it->position.z)
 		{
 			eraseMe = true;
-			gameInfo.lives -= 1;
+			if (!(it->ai == Enemy::HEALTH))
+			{
+				gameInfo.lives -= 1;
+			}
+			else
+			{
+				gameInfo.lives += 1;
+			}
 		}
 		//check if enemy has shot player
 		if (playerPos.x - 1 < it->bullet.location.x
@@ -312,7 +327,16 @@ void EnemyHandler::drawEnemies(void)
 			it->color = { randFloat(0, 0.4), 1, randFloat(0, 0.4) };
 		if (it->ai == Enemy::THREE)
 			it->color = { 1, randFloat(0, 0.4), randFloat(0, 0.4) };
-		enemyModel(origin, it->color);
+		//check what to draw depending on enum
+		
+		if (!(it->ai == Enemy::HEALTH))
+		{
+			enemyModel(origin, it->color);
+		}
+		else
+		{
+			healthPack(origin);
+		}
 		glPopMatrix();
 
 		//draw enemy bullet

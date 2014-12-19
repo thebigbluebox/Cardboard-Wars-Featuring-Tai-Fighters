@@ -12,7 +12,7 @@ GLubyte* sky3;
 GLubyte* sky4;
 GLubyte* sky5;
 GLubyte* sky6;
-
+GLubyte* redcross;
 
 
 /* Draws a textured box centered at a given position.
@@ -107,6 +107,15 @@ void enemyModel(Vector3 centre, Vector3 color)
 	//draw right wing
 	centre.x -= fuselage_size / 2;
 	drawBox(centre, { fuselage_size / 2.0f, fuselage_size * 1.25f, fuselage_size }, cubeFaceTextures, color);
+}
+
+/*A box with red cross on it*/
+void healthPack(Vector3 centre)
+{
+	GLuint cubeFaceTextures[6] = { textures[8], textures[8], textures[8], textures[8], textures[8], textures[8] };
+	float box_size = 1;
+	Vector3 color(1, 1, 1);
+	drawBox(centre, { box_size, box_size, box_size }, cubeFaceTextures, color);
 }
 
 /* a box with the texture drawn on the inside */
@@ -266,6 +275,11 @@ void loadTextures(void)
 	glBindTexture(GL_TEXTURE_2D, textures[7]);
 	setParam();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, sky6);
+
+	redcross = LoadPPM("rcross.ppm", &width, &height, &max);
+	glBindTexture(GL_TEXTURE_2D, textures[8]);
+	setParam();
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, redcross);
 }
 
 void setParam(void)
