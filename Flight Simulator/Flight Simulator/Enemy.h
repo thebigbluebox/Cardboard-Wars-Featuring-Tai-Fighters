@@ -28,7 +28,7 @@ public:
 	Enemy(Vector3 pos);
 	bullet bullet;
 
-	enum AI { ZERO, ONE, TWO, THREE, FOUR, FIVE };
+	enum AI { ZERO, ONE, TWO, THREE, FOUR, FIVE, HEALTH };
 	AI ai;
 };
 

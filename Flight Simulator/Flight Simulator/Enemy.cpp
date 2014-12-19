@@ -28,6 +28,7 @@ Enemy::Enemy(Vector3 pos)
 	//pick a random ai to spawn with
 	if (gameInfo.score > 10)
 	{
+		if ((rand() % 20 + 1)> 1){
 		switch (rand() % gameInfo.level + 1)
 		{
 		case 1:
@@ -52,6 +53,12 @@ Enemy::Enemy(Vector3 pos)
 			break;
 		}
 	}
+		else
+		{
+			ai = HEALTH;
+			bullet.location.z = 50;
+}
+	}
 }
 
 EnemyHandler::EnemyHandler(void)
@@ -72,9 +79,6 @@ void EnemyHandler::updateBullets(void)
 			//bulletArray[i].speed = 0;
 			//bulletArray[i].location.z = playerPos.z;
 		}
-
-		
-
 		//move bullets that are in motion
 		if (bulletArray[i].speed > 0)
 			bulletArray[i].location = bulletArray[i].location.add(bulletArray[i].direction);
@@ -174,11 +178,14 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 		}
 
 		//update enemy bullet location
-		if (it->bullet.location.z > playerPos.z + 100)
+		if (it->bullet.location.z > playerPos.z + 100 && !(it->ai == Enemy::HEALTH))
 			it->bullet.location.z = it->position.z;
 		it->bullet.location.x = it->position.x;
 		it->bullet.location.y = it->position.y;
+		if (!(it->ai == Enemy::HEALTH))
+		{
 		it->bullet.location.z += 0.8 * it->bullet.direction.z;
+		}
 
 		//enemies bahave based on the ai
 		/*if (ai == ONE)
@@ -234,7 +241,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 		{
 			if (it->rotation.z + 5 <= 360)
 			{
-				it->rotation.z += 5; 
+				it->rotation.z += 5;
 			}
 			else
 			{
@@ -245,6 +252,7 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 				it->position.z += 0.02;
 			}
 		}
+		//check if player has bumped a health pack
 		
 		
 		//check if enemy has bumped player
@@ -256,7 +264,14 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			&& playerPos.z + 1 > it->position.z)
 		{
 			eraseMe = true;
+			if (!(it->ai == Enemy::HEALTH))
+			{
 			gameInfo.lives -= 1;
+		}
+			else
+			{
+				gameInfo.lives += 1;
+			}
 		}
 		//check if enemy has shot player
 		if (playerPos.x - 1 < it->bullet.location.x
@@ -321,8 +336,16 @@ void EnemyHandler::drawEnemies(void)
 			it->color = { randFloat(0.3, 0.4), randFloat(0.6, 0.9), randFloat(0.6, 0.7) };
 		if (it->ai == Enemy::FOUR)
 			it->color = { 1, randFloat(0, 0.4), randFloat(0, 0.4) };
+		//check what to draw depending on enum
 		
+		if (!(it->ai == Enemy::HEALTH))
+		{
 		enemyModel(origin, it->color);
+		}
+		else
+		{
+			healthPack(origin);
+		}
 		glPopMatrix();
 
 		//draw enemy bullet
