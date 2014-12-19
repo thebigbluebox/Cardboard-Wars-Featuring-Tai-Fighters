@@ -112,12 +112,11 @@ void enemyModel(Vector3 centre, Vector3 color)
 }
 
 
-void skyBox(GLint distance)
+void skyBox(Vector3 centre, GLint distance)
 {
 	GLuint faceTextures[6] = { textures[2], textures[3], textures[4], textures[5], textures[6], textures[7] };
-	Vector3 centre (0, 0, 0);
 	Vector3 size (distance,distance,distance);
-	Vector3 color (0,0,0);
+	Vector3 color (1,1,1);
 	
 	float vertices[8][3] = {
 			{ centre.x - size.x / 2, centre.y + size.y / 2, centre.z - size.z / 2 }, // back LT

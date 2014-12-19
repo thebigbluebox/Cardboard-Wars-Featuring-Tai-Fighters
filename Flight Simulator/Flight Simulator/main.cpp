@@ -33,7 +33,7 @@ Vector3 playerPos = { 0, 0, 0 }; // aka cam pos // the camera looks in the negat
 Vector3 lookAt = { 300 * cosf(thetaY), 0, 300 * sinf(thetaY) };
 Vector3 cameraUp = { 300 * cosf(thetaR), 300 * sinf(thetaR), 0 };
 Vector3 mover;
-GLfloat lightposition[] = { 0, 2, 0 };
+GLfloat lightposition[] = { 0.0f, 0.0f, -5.0f, 1.0f };
 
 //float oldx;
 //float oldy;
@@ -47,7 +47,18 @@ void updateGameInfo(void)
 	//gameInfo.lives = 3;
 }
 
-
+void updateLighting(void)
+{
+	float pureWhite[4] = { 1, 1, 1, 1 };
+	float light0ambient[4] = { 0.804f, 1.f, 0.98f, 1.f };
+	float light0diffuse[4] = { 0.804f, 1.f, 0.98f, 1.f };
+	float light1ambient[4] = { 0.8f, 0.2f, 0.4f, 1.f };
+	float light1diffuse[4] = { 0.8f, 1.f, 0.4f, 1.f };
+	glLightfv(GL_LIGHT0, GL_POSITION, lightposition);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light1ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light1diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, pureWhite);
+}
 
 void updatePlayer(int deltaTime)
 {	
@@ -177,6 +188,7 @@ void update(int value)
 	updateKeyboard();
 	updateEnemies(deltaTime);
 	updatePlayer(deltaTime);
+	updateLighting();
 
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
@@ -238,18 +250,12 @@ void init(void)
 
 	// Lighting
 	//toggleLighting(lightingEnabled);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	float pureWhite[4] = { 1, 1, 1, 1 };
-	float light0ambient[4] = { 0.804f, 1.f, 0.98f, 1.f };
-	float light0diffuse[4] = { 0.804f, 1.f, 0.98f, 1.f };
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light0ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, pureWhite);
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT0);
 
 	// Meterials
-	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE); // use glColor for material
+	//glEnable(GL_COLOR_MATERIAL);
+	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE); // use glColor for material
 
 	// Textures
 	glEnable(GL_TEXTURE_2D);
@@ -257,11 +263,20 @@ void init(void)
 }
 
 
+void drawSkybox(void)
+{
+	glPushMatrix();
+	glTranslatef(0, 0, -10);
+	skyBox(playerPos,50);
+	glPopMatrix();
+}
+
 void draw(void)
 {
 	enemies.drawEnemies();
 	enemies.updateBullets();
 	//hud.draw(); // moved to display
+	drawSkybox();
 }
 
 	
@@ -282,7 +297,6 @@ void display(void)
 	gluPerspective(65, (Set.windowx / 2.0) / (Set.windowy), 1, 200);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	skyBox(20);
 	glTranslatef(Set.eyeDistance, 0, 0);
 	glPushMatrix(); // Pushing to attempt to save the translate for hud.draw(); not the right idea.
 	gluLookAt(playerPos.x, playerPos.y, playerPos.z, lookAt.x, lookAt.y, lookAt.z, cameraUp.x, cameraUp.y, cameraUp.z);
