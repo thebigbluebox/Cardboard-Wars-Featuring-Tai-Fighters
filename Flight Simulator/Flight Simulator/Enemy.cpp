@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include "TextureLoader.h"
 
-//this needs to be global (doesn't work otherwise)
+//This is used for explosions
 ParticleSystem particleSystem;
 
 Enemy::Enemy(void)
@@ -10,7 +10,6 @@ Enemy::Enemy(void)
 	color = { 0.5f, 0.5f, 0.5f };
 	size = 1;
 	shape = Shape::Cube;
-	
 }
 
 Enemy::Enemy(Vector3 pos)
@@ -26,7 +25,7 @@ Enemy::Enemy(Vector3 pos)
 	bullet.direction.y = 0;
 	bullet.direction.z = 1;
 	bullet.speed = 0;
-	//pick a random ai to spawn with
+	//pick a random ai to spawn with if the score is high enough
 	if (gameInfo.score > 10)
 	{
 		if ((rand() % 20 + 1)> 1)
@@ -67,6 +66,7 @@ EnemyHandler::EnemyHandler(void)
 	spawnEnemies = true;
 }
 
+/*Updates the player bullets*/
 void EnemyHandler::updateBullets(void)
 {
 	for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray); i++)
@@ -89,6 +89,7 @@ void EnemyHandler::updateBullets(void)
 	}
 }
 
+/*Spawn player bullets*/
 void EnemyHandler::spawnBullet(Vector3 location, Vector3 direction)
 {
 	for (int i = 0; i < sizeof(bulletArray) / sizeof(*bulletArray); i++)
@@ -117,13 +118,13 @@ void EnemyHandler::spawnBullet(Vector3 location, Vector3 direction)
 	}
 }
 
+/*Update enemies*/
 void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 {
-	
 	this->playerPos = playerPos;
 	lastUpdate += deltaTime;
 
-	//every time the player position is divisible by 10 the ai updates
+	//every time the player position is divisible by a set amount the ai updates
 	if ((int)playerPos.z % 15 == 0 && (int)playerPos.z != lastAIUpdate)
 	{
 		lastAIUpdate = (int)playerPos.z;
@@ -137,7 +138,8 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 	}
 
 	//iterate through enemy list
-	for (auto it = list.begin(); it != list.end();) {
+	for (auto it = list.begin(); it != list.end();) 
+	{
 		bool eraseMe = false; //whether to erase the current enemy list element
 
 		//if the game is over delete the current enemy
@@ -199,8 +201,8 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 			eraseMe = true;
 			if (!(it->ai == Enemy::HEALTH))
 			{
-			gameInfo.lives -= 1;
-		}
+				gameInfo.lives -= 1;
+			}
 			else
 			{
 				gameInfo.lives += 1;
@@ -233,11 +235,14 @@ void EnemyHandler::update(Vector3 playerPos, float deltaTime)
 				particleSystem.setPosition(it->position.x, it->position.y, it->position.z);
 				for (int i = 0; i < 50; i++)
 					particleSystem.spawnParticle();
+
 				//delete current enemy
 				eraseMe = true;
 				
+				//reset bullet
 				bulletArray[i].location = playerPos;
 				bulletArray[i].speed = 0;
+
 				gameInfo.score += 1;
 			}
 		}

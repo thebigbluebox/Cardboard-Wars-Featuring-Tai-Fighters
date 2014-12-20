@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "ParticleSystem.h"
 
+//data structure used for bullets
 struct _bullet {
 	Vector3 location = { 0, 0, 0 };
 	Vector3 direction = { 0, 0, 0 };
@@ -28,15 +29,13 @@ public:
 	Enemy(Vector3 pos);
 	bullet bullet;
 
-	enum AI { ZERO, ONE, TWO, THREE, FOUR, FIVE, HEALTH }; //the numbers are different AI types 
+	enum AI { ZERO, ONE, TWO, THREE, FOUR, FIVE, HEALTH }; 
 	AI ai;
 };
 
 
 class EnemyHandler
 {
-
-	
 public:
 	std::vector<Enemy> list;
 	
@@ -57,7 +56,6 @@ private:
 	bullet bulletArray[6]; //the player's bullets
 	float lastAIUpdate; //the last time the AI changed
 	bool spawnEnemies; //whether enemies should spawn
-
 };
 
 #endif

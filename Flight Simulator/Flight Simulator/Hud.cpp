@@ -9,13 +9,14 @@ Hud::Hud()
 	height = 1080/2;
 	bitmapColorArray[0] =  0x00;
 	bitmapColorArray[1] = 0xff;
+	//setup bitmap image
 	int i, j;
 
 	for (i = 0; i < 64; i++)
 	{
 		for (j = 0; j < 8; j++)
 		{
-			checker[i * 8 + j] = bitmapColorArray[(i / 8 + j) % 2];
+			ammoSprite[i * 8 + j] = bitmapColorArray[(i / 8 + j) % 2];
 		}
 	}
 }
@@ -116,7 +117,7 @@ void Hud::draw(void)
 	//bullet status
 	glRasterPos2i(-width / 2 + width*0.3f, -height / 2 + height*0.3f);
 	for (int i = 0; i < gameInfo.currentAmmo; i++)
-		glBitmap(32, 32, 0, 0, 32, 0, checker);
+		glBitmap(32, 32, 0, 0, 32, 0, ammoSprite);
 	if (gameInfo.currentAmmo == 0){
 		drawSentence("Reload", -width / 2 + width*0.3f, -height / 2 + height*0.3f, { 1, 0, 0 }, GLUT_BITMAP_HELVETICA_18);
 	}
