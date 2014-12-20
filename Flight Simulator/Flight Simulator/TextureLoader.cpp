@@ -191,6 +191,14 @@ GLubyte* LoadPPM(char* file, int* width, int* height, int* max)
 
 	// Open file
 	fd = fopen(file, "r");
+	if (fd == NULL) { // File not found
+		std::cout << "ERROR! Unable to find file " << file << std::endl;
+		*width = 1;
+		*height = 1;
+		*max = 255.0f;
+		GLubyte defaultTexture[3] = { 0, 0, 0};
+		return defaultTexture;
+	}
 	fscanf(fd,"%[^\n] ",b); // Read in the first line
 	if(b[0]!='P'|| b[1] != '3') exit(1); // Error if != P3
 
@@ -208,7 +216,7 @@ GLubyte* LoadPPM(char* file, int* width, int* height, int* max)
 	// Get texture info
 	fscanf(fd, "%d %d %d", &w, &h, &m);
 	size = w*h;
-	scale=255.0/m;
+	scale=255.0f/m;
 	img = (GLubyte*)malloc(3*sizeof(GLuint)*size);
 
 	// Store colors
