@@ -5,6 +5,10 @@ Group Members: Don Pham, Erica Cheyne, Ryan C Davis, Michael Currie, Tai Rui Ton
 
 A 3D stereographic game made using OpenGL. If you loved the 2D version of space invaders, you’ll love it even more after we add another dimension to it. The objectives are to kill all the Tai fighters, and to survive the longest in the harsh outer space.
 
+
+![Screen Shot](/cardboard.png "Look at this exciting gameplay")
+
+
 Controls:
 ----------
 + Keyboard Command Function
