@@ -39,3 +39,11 @@ Gameplay Mechanics
 + Destroying Tai fighters will increase your score by 1
 + Every 10 points, the level will increase. At each level increase, a harder type of enemy AI will be spawnable. Each AI type has its own distinct color.
 + Using stereographic display and Google Cardboard to show the game, and using the Moga Pro gamepad to control the game
+
+Required Library
+---
+glut.h
+
+Starting the Program
+---
+This is a Visual Studio 2013 solution. An exe is in the debug folder. 
