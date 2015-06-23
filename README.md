@@ -3,11 +3,14 @@ Cardboard Wars Featuring Tai Fighters
 Group Members: Don Pham, Erica Cheyne, Ryan C Davis, Michael Currie, Tai Rui Tong
 ---------------------------------------------------------
 
-A 3D stereographic game made using OpenGL. If you loved the 2D version of space invaders, you’ll love it even more after we add another dimension to it. The objectives are to kill all the Tai fighters, and to survive the longest in the harsh outer space.
+A 3D stereographic game made using OpenGL, designed for the [Google Cardboard](https://www.google.com/get/cardboard/).
+
+If you loved the 2D version of space invaders, you’ll love it even more after we add another dimension to it. The objectives are to kill all the Tai fighters, and to survive the longest in the harsh outer space.
 
 
-![Screen Shot](/cardboard.png "Look at this exciting gameplay")
+![alt-tag](http://i.imgur.com/4zg5NP2.png "Shoot down space ships before they shoot you")
 
+![alt-tag](http://i.imgur.com/RlJQupY.png "Collect health packs")
 
 Controls:
 ----------
@@ -33,7 +36,7 @@ Gameplay Mechanics
 --------------------
 
 + Destroy oncoming Tai fighters, and avoid getting hit by their projectiles.
-+ The amount of lives will decrease by 1 when crashing into other Tai fighters, and by being hit by the Tai fighter’s projectiles. 
++ The amount of lives will decrease by 1 when crashing into other Tai fighters, and by being hit by the Tai fighter’s projectiles.
 + Crashing into a health pack will increase the lives by 1.
 + Careful not to shoot health packs as they are destructible.
 + Destroying Tai fighters will increase your score by 1
@@ -46,4 +49,4 @@ glut.h
 
 Starting the Program
 ---
-This is a Visual Studio 2013 solution. An exe is in the debug folder. 
+This is a Visual Studio 2013 solution. An exe is in the debug folder.
